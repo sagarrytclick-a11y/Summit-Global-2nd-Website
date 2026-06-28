@@ -1,0 +1,45 @@
+'use client'
+
+import { AdminLayout as AdminLayoutComponent } from '@/components/admin/AdminLayout'
+import { AdminProvider } from '@/contexts/AdminContext'
+import { usePathname } from 'next/navigation'
+
+export default function AdminLayout({
+  children,
+}: {
+  children: React.ReactNode;
+}) {
+  const pathname = usePathname()
+
+  const getPageInfo = () => {
+    if (pathname === '/admin/dashboard' ) {
+      return { title: 'Dashboard', subtitle: 'Welcome to Education Times Abroad Admin Panel' }
+    }
+    if (pathname === '/admin/countries') {
+      return { title: 'Countries Management', subtitle: 'Manage countries for education destinations' }
+    }
+    if (pathname === '/admin/colleges') {
+      return { title: 'Colleges Management', subtitle: 'Manage educational institutions' }
+    }
+    if (pathname === '/admin/blogs') {
+      return { title: 'Blogs Management', subtitle: 'Manage blog posts and content' }
+    }
+    if (pathname === '/admin/exams') {
+      return { title: 'Exams Management', subtitle: 'Manage standardized tests and examinations' }
+    }
+    if (pathname === '/admin/enquiries') {
+      return { title: 'Enquiries Management', subtitle: 'Manage student enquiries and contact requests' }
+    }
+    return { title: 'Admin', subtitle: 'Education Times Abroad Admin Panel' }
+  }
+
+  const { title, subtitle } = getPageInfo()
+
+  return (
+    <AdminProvider>
+      <AdminLayoutComponent title={title} subtitle={subtitle}>
+        {children}
+      </AdminLayoutComponent>
+    </AdminProvider>
+  );
+}
