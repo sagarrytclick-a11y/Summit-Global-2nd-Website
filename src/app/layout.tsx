@@ -5,6 +5,7 @@ import { SITE_IDENTITY } from "@/site-identity";
 import { FormModalProvider } from "@/context/FormModalContext";
 import FormModalViewport from "@/components/FormModalViewport";
 import { QueryProvider } from "@/providers/QueryProvider";
+import { JsonLd } from "@/components/JsonLd";
 
 const bodyFont = Plus_Jakarta_Sans({
   subsets: ["latin"],
@@ -12,18 +13,25 @@ const bodyFont = Plus_Jakarta_Sans({
   display: "swap",
 });
 
+const BASE_URL = "https://summitglobal.com";
+
 export const metadata: Metadata = {
-  title: SITE_IDENTITY.meta.title,
+  title: {
+    default: SITE_IDENTITY.meta.title,
+    template: `%s | ${SITE_IDENTITY.name}`,
+  },
   description: SITE_IDENTITY.meta.description,
-   keywords: SITE_IDENTITY.meta.keywords,
+  keywords: SITE_IDENTITY.meta.keywords,
   authors: [{ name: SITE_IDENTITY.meta.author }],
   creator: SITE_IDENTITY.meta.author,
   publisher: SITE_IDENTITY.meta.author,
-  metadataBase: new URL("https://timesabroad.com"),
+  metadataBase: new URL(BASE_URL),
   openGraph: {
     title: SITE_IDENTITY.meta.title,
     description: SITE_IDENTITY.meta.description,
     type: "website",
+    siteName: SITE_IDENTITY.name,
+    locale: "en_IN",
     images: [SITE_IDENTITY.meta.ogImage || SITE_IDENTITY.assets.logo.main],
   },
   twitter: {
@@ -33,9 +41,23 @@ export const metadata: Metadata = {
     images: [SITE_IDENTITY.meta.ogImage || SITE_IDENTITY.assets.logo.main],
   },
   icons: {
-    icon: "/favicon.png"
+    icon: "/favicon.png",
   },
   manifest: "/manifest.json",
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-video-preview": -1,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+    },
+  },
+  verification: {
+    google: "YOUR_GOOGLE_VERIFICATION_CODE",
+  },
 };
 
 export const viewport: Viewport = {
@@ -53,6 +75,7 @@ export default function RootLayout({
       <body className={`${bodyFont.variable} antialiased`}>
         <QueryProvider>
           <FormModalProvider>
+            <JsonLd />
             {children}
             <FormModalViewport />
           </FormModalProvider>
