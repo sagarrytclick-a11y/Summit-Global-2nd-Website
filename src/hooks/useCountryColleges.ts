@@ -1,14 +1,17 @@
 import { useQuery } from '@tanstack/react-query'
 
-interface College {
+export interface CountryCollege {
   _id: string
   name: string
   slug: string
   category?: string
+  overview?: {
+    description?: string
+  }
 }
 
-const fetchCollegesByCountry = async (countrySlug: string): Promise<College[]> => {
-  const response = await fetch(`/api/colleges?country=${countrySlug}`)
+const fetchCollegesByCountry = async (countrySlug: string): Promise<CountryCollege[]> => {
+  const response = await fetch(`/api/colleges?country=${countrySlug}&limit=24`)
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
   }

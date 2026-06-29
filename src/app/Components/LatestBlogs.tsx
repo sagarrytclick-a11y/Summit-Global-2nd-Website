@@ -32,7 +32,7 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
 
   return (
     <Link href={`/blogs/${slug}`} className="group block">
-      <div className="flex flex-col group cursor-pointer bg-white rounded-[2.5rem] border-2 border-slate-200 shadow-[0_8px_30px_rgb(0,0,0,0.04)] hover:shadow-[0_20px_40px_rgba(0,0,0,0.08)] hover:border-blue-300 transition-all duration-500 overflow-hidden h-full">
+      <div className="premium-card-light flex h-full cursor-pointer flex-col overflow-hidden rounded-[2.5rem] border-2 border-slate-200 transition-all duration-500 hover:border-amber-300">
         
         {/* Image Container */}
         <div className="relative h-56 w-full overflow-hidden">
@@ -45,7 +45,7 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
           
           {/* Category Badge */}
           <div className="absolute top-4 left-4">
-            <span className="bg-blue-600 text-white px-4 py-2 rounded-full text-xs font-bold uppercase tracking-wider shadow-lg backdrop-blur-sm">
+            <span className="rounded-full bg-[var(--surface-navy)] px-4 py-2 text-xs font-bold uppercase tracking-wider text-amber-300 shadow-lg backdrop-blur-sm">
               {category}
             </span>
           </div>
@@ -53,7 +53,7 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
           {/* Date Badge */}
           <div className="absolute top-4 right-4">
             <div className="bg-white/90 backdrop-blur-sm px-3 py-2 rounded-full flex items-center gap-2 shadow-lg">
-              <Calendar size={14} className="text-blue-600" />
+              <Calendar size={14} className="text-amber-500" />
               <span className="text-xs font-bold text-slate-700">
                 {formatDate(createdAt).split(' ')[1]} {formatDate(createdAt).split(' ')[2]}
               </span>
@@ -77,7 +77,7 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
           )}
 
           {/* Title */}
-          <h3 className="text-xl font-black text-slate-900 mb-3 leading-tight group-hover:text-blue-600 transition-colors line-clamp-2">
+          <h3 className="mb-3 line-clamp-2 text-xl font-black leading-tight text-slate-900 transition-colors group-hover:text-amber-500">
             {title}
           </h3>
           
@@ -93,7 +93,7 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
               <span>{calculateReadTime(content)}</span> */}
             </div>
             
-            <button className="flex items-center gap-2 text-blue-600 font-bold text-sm hover:text-blue-700 transition-all group/btn">
+            <button className="group/btn flex items-center gap-2 text-sm font-bold text-amber-500 transition-all hover:text-amber-600">
               Read Article
               <ArrowRight size={16} className="transition-transform group-hover/btn:translate-x-1" />
             </button>
@@ -170,12 +170,12 @@ export default function LatestBlogs() {
 
   if (isError) {
     return (
-      <section className="max-w-7xl mx-auto px-4 py-20 bg-white">
+      <section className="section-home mx-auto max-w-7xl px-4 py-20">
         <div className="text-center mb-16">
-          <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-4 tracking-tighter">
-            LATEST <span className="text-blue-600">BLOGS</span>
+          <h2 className="mb-4 text-4xl font-black tracking-tighter text-[var(--surface-navy)] md:text-6xl">
+            LATEST <span className="heading-gold">BLOGS</span>
           </h2>
-          <p className="text-slate-500 font-medium text-lg">
+          <p className="text-lg font-medium text-slate-500">
             Educational insights, study tips, and success stories from our experts.
           </p>
         </div>
@@ -187,12 +187,12 @@ export default function LatestBlogs() {
   }
 
   return (
-    <section className="max-w-7xl mx-auto px-4 py-20 bg-white">
+    <section className="section-home mx-auto max-w-7xl px-4 py-20">
       <div className="text-left mb-16 max-w-3xl">
-        <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-4 tracking-tighter">
-          LATEST <span className="text-blue-600">BLOGS</span>
+        <h2 className="mb-4 text-4xl font-black tracking-tighter text-[var(--surface-navy)] md:text-6xl">
+          LATEST <span className="heading-gold">BLOGS</span>
         </h2>
-        <p className="text-slate-500 font-medium text-lg">
+        <p className="text-lg font-medium text-slate-500">
           Educational insights, study tips, and success stories from our experts.
         </p>
       </div>
@@ -209,7 +209,7 @@ export default function LatestBlogs() {
           <Button 
             onClick={loadMoreBlogs}
             disabled={isLoading}
-            className="inline-flex justify-center items-center gap-2 bg-blue-600 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-700 transition-all shadow-lg hover:shadow-xl transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="btn-primary inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-50"
           >
             {isLoading ? (
               <>
@@ -231,7 +231,7 @@ export default function LatestBlogs() {
         <div className="text-left mt-12">
           <Link 
             href="/blogs" 
-            className="inline-flex items-center gap-2 bg-slate-900 text-white px-8 py-4 rounded-full font-bold hover:bg-blue-600 transition-all shadow-lg hover:shadow-xl transform hover:scale-105"
+            className="inline-flex items-center gap-2 rounded-full border border-[var(--surface-navy)] px-8 py-4 font-bold text-[var(--surface-navy)] transition-all duration-200 hover:bg-slate-50"
           >
             View All Blogs
             <ArrowRight size={20} />

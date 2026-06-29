@@ -1,114 +1,70 @@
 "use client"
-import React, { useState, useEffect, memo } from 'react';
+import React from 'react';
 import Link from 'next/link';
-import { MapPin, ArrowRight, GraduationCap, ChevronLeft, ChevronRight, ShieldCheck, Users, Star, Heart } from 'lucide-react';
+import { ArrowRight } from 'lucide-react';
 import { useQuery } from '@tanstack/react-query';
 import { CountryCardSkeleton } from './CountryCardSkeleton';
 
-const CountryCard = ({ country }: { country: any; index: number }) => (
+interface Country {
+  name: string;
+  flag: string;
+  slug: string;
+  description?: string;
+  is_active: boolean;
+}
+
+const mappedCountrySlugs = [
+  'russia',
+  'bangladesh',
+  'georgia',
+  'kazakhstan',
+  'philippines',
+  'ukraine',
+  'germany',
+  'canada',
+];
+
+const countryImages: Record<string, string> = {
+  russia: 'https://i.pinimg.com/736x/aa/c4/b8/aac4b826e8bb7a1bb9426b05f5cdab67.jpg',
+  germany: 'https://i.pinimg.com/1200x/13/8b/18/138b188a7733e6c432924b851f60509e.jpg',
+  philippines: 'https://i.pinimg.com/736x/a6/d0/dd/a6d0ddadb1b95a301b3730f754a17ec7.jpg',
+  georgia: 'https://i.pinimg.com/1200x/72/74/d9/7274d95a5bd94f1d2a234211f2b6fe9e.jpg',
+  canada: 'https://i.pinimg.com/1200x/a7/1a/7b/a71a7b5e7a8171a07c2b78b6235db43a.jpg',
+  australia: 'https://i.pinimg.com/1200x/f7/57/52/f757529935694e281ac9847902eb1e09.jpg',
+  kyrgyzstan: 'https://i.pinimg.com/1200x/f5/ff/f3/f5fff30f2c6a0b8a1d43c82622950c93.jpg',
+  bangladesh: 'https://i.pinimg.com/736x/04/c4/c1/04c4c1c4573f00c1bf51a2fb622f32f7.jpg',
+  kazakhstan: 'https://images.unsplash.com/photo-1512453979798-5ea266f8880c?w=1200&q=80',
+  ukraine: 'https://i.pinimg.com/1200x/e9/d1/49/e9d14928b9ebbf9606adcc340c5a7667.jpg',
+};
+
+const CountryCard = ({ country }: { country: Country }) => (
   <Link href={`/countries/${country.slug}`} className="group block h-full">
-    <div className="relative bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl transition-all duration-500 flex flex-col h-full overflow-hidden hover:-translate-y-2">
-      
-      {/* Top Section - Flag & Badge */}
-      <div className="relative p-6 pb-0">
-        <div className="flex items-start justify-between mb-4">
-          <div className="relative">
-            <div className="w-16 h-16 bg-slate-50 border border-slate-100 rounded-2xl flex items-center justify-center text-3xl shadow-sm group-hover:scale-110 transition-transform duration-500 relative z-10">
-              {country.flag}
-            </div>
-          </div>
-          
-          <div className="flex flex-col gap-2">
-            <div className="bg-green-100 px-3 py-1 rounded-full flex items-center gap-1">
-              <ShieldCheck size={12} className="text-green-600" />
-              <span className="text-[10px] font-bold text-green-700 uppercase">NMC</span>
-            </div>
-            <div className="bg-blue-100 px-3 py-1 rounded-full">
-              <span className="text-[10px] font-bold text-blue-700 uppercase">
-                {country.is_active ? 'Available' : 'Closed'}
-              </span>
-            </div>
-          </div>
+    <div className="group relative overflow-hidden rounded-[1.25rem] border border-slate-200 shadow-sm transition-all duration-300 hover:-translate-y-1">
+      <img
+        src={countryImages[country.slug] || countryImages.canada}
+        alt={country.name}
+        loading="lazy"
+        className="h-56 w-full object-cover transition-transform duration-500 group-hover:scale-105"
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface-navy)]/90 via-[var(--surface-navy)]/25 to-transparent" />
+      <div className="absolute inset-x-0 bottom-0 p-5">
+        <div className="mb-2 text-xl font-extrabold text-white">{country.name}</div>
+        <div className="flex flex-wrap items-center gap-3 text-xs font-medium text-amber-300">
+          <span>{country.flag} 120+ Colleges</span>
+          <span>From ₹2.5L/yr</span>
         </div>
-
-        <h3 className="text-2xl font-black text-slate-900 leading-tight mb-2 group-hover:text-blue-600 transition-colors">
-          {country.name}
-        </h3>
-        
-        <div className="flex items-center gap-2">
-          <div className="flex items-center gap-1">
-            {[...Array(5)].map((_, i) => (
-              <Star key={i} size={12} className={`${i < 4 ? 'fill-amber-400 text-amber-400' : 'text-slate-300'}`} />
-            ))}
-          </div>
-          <span className="text-xs font-bold text-slate-500">(4.8)</span>
-        </div>
-      </div>
-
-      <div className="px-6 py-4 flex-grow">
-        <p className="text-slate-600 text-sm leading-relaxed line-clamp-3 mb-4">
-          {country.description}
-        </p>
-
-        <div className="grid grid-cols-2 gap-3 mb-4">
-          <div className="bg-blue-50 p-3 rounded-xl text-center">
-            < GraduationCap size={16} className="text-blue-600 mx-auto mb-1" />
-            <p className="text-xs font-bold text-slate-700">MBBS</p>
-          </div>
-          <div className="bg-green-50 p-3 rounded-xl text-center">
-            <Users size={16} className="text-green-600 mx-auto mb-1" />
-            <p className="text-xs font-bold text-slate-700">Affordable</p>
-          </div>
-        </div>
-
-        <div className="flex items-center justify-between text-xs">
-          <div className="flex items-center gap-1">
-            <MapPin size={12} className="text-slate-400" />
-            <span className="text-slate-500 font-medium">Popular Destination</span>
-          </div>
-          <div className="flex items-center gap-1">
-            <Heart size={12} className="text-red-400" />
-            <span className="text-slate-500 font-medium">500+ Students</span>
-          </div>
-        </div>
-      </div>
-
-      <div className="px-6 pb-6 pt-4 border-t border-slate-100">
-        <button className="w-full bg-blue-600 text-white py-3 rounded-2xl font-bold text-sm hover:bg-blue-700 transition-all duration-300 flex items-center justify-center gap-2">
-          Explore MBBS Programs
-          <ArrowRight size={16} className="group-hover:translate-x-1 transition-transform" />
-        </button>
       </div>
     </div>
   </Link>
 );
 
 const PopularCountries = () => {
-  const [currentIndex, setCurrentIndex] = useState(0);
-  const [cardsPerPage, setCardsPerPage] = useState(1);
-  
-  // Define constants for slider math
-  const SLIDER_GAP = 24; // This is the numerical value for gap-6
-
-  useEffect(() => {
-    const updateCardsPerPage = () => {
-      if (typeof window !== 'undefined') {
-        if (window.innerWidth >= 1024) setCardsPerPage(3);
-        else if (window.innerWidth >= 768) setCardsPerPage(2);
-        else setCardsPerPage(1);
-      }
-    };
-    updateCardsPerPage();
-    window.addEventListener('resize', updateCardsPerPage);
-    return () => window.removeEventListener('resize', updateCardsPerPage);
-  }, []);
-  
-  const fetchCountries = async () => {
+  const fetchCountries = async (): Promise<Country[]> => {
     const response = await fetch('/api/countries', { headers: { 'Content-Type': 'application/json' } });
     if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
     const result = await response.json();
     if (!result.success) throw new Error(result.message || 'Failed to fetch');
-    return result.data.slice(0, 6);
+    return Array.isArray(result.data) ? result.data : [];
   };
   
   const { data: countries = [], isLoading } = useQuery({
@@ -118,70 +74,56 @@ const PopularCountries = () => {
     retry: 2,
   });
   
-  const fallbackCountries = [
+  const fallbackCountries: Country[] = [
     { name: 'Russia', flag: '🇷🇺', slug: 'russia', description: 'Top destination for MBBS with NMC approved universities.', is_active: true },
     { name: 'Bangladesh', flag: '🇧🇩', slug: 'bangladesh', description: 'Close to India with similar curriculum.', is_active: true },
     { name: 'Georgia', flag: '🇬🇪', slug: 'georgia', description: 'European standard medical education.', is_active: true },
     { name: 'Kazakhstan', flag: '🇰🇿', slug: 'kazakhstan', description: 'Affordable MBBS programs.', is_active: true },
     { name: 'Philippines', flag: '🇵🇭', slug: 'philippines', description: 'English-medium medical education.', is_active: true },
-    { name: 'Ukraine', flag: '🇺🇦', slug: 'ukraine', description: 'Quality medical education.', is_active: true }
+    { name: 'Ukraine', flag: '🇺🇦', slug: 'ukraine', description: 'Quality medical education.', is_active: true },
+    { name: 'Germany', flag: '🇩🇪', slug: 'germany', description: 'Global study destination with strong academic reputation.', is_active: true },
+    { name: 'Canada', flag: '🇨🇦', slug: 'canada', description: 'High quality education with excellent student opportunities.', is_active: true }
   ];
 
-  const displayCountries = countries.length > 0 ? countries : fallbackCountries;
-  const maxIndex = Math.max(0, displayCountries.length - cardsPerPage);
-
-  const nextSlide = () => setCurrentIndex(prev => (prev >= maxIndex ? 0 : prev + 1));
-  const prevSlide = () => setCurrentIndex(prev => (prev <= 0 ? maxIndex : prev - 1));
-  const goToSlide = (index: number) => setCurrentIndex(Math.min(index, maxIndex));
+  const displayCountries = mappedCountrySlugs
+    .map((slug) => countries.find((country) => country.slug === slug) || fallbackCountries.find((country) => country.slug === slug))
+    .filter(Boolean) as Country[];
 
   return (
-    <section className="relative max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 bg-slate-50">
+    <section className="section-home relative mx-auto max-w-7xl px-4 py-16 sm:px-6 sm:py-24">
       <div className="relative z-10">
         <div className="text-center mb-16">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
-            <span>🏥</span> MBBS Destinations
+          <div className="eyebrow">
+            Study Destinations
           </div>
-          <h2 className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl font-black text-slate-900 leading-[0.9] tracking-tighter mb-6">
-            POPULAR <span className="text-blue-600"> DESTINATIONS</span>
+          <h2 className="mb-6 mt-6 text-4xl font-black leading-[0.9] tracking-tighter text-[var(--surface-navy)] sm:text-5xl md:text-6xl">
+            Explore Top <span className="heading-gold">Countries</span>
           </h2>
+          <p className="mx-auto max-w-3xl text-lg text-slate-500">
+            Choose from leading destinations offering world-class education, affordable living,
+            and strong career opportunities.
+          </p>
         </div>
 
-        <div className="relative">
-          {isLoading ? (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {[...Array(3)].map((_, i) => (
-                <CountryCardSkeleton key={i} />
-              ))}
-            </div>
-          ) : (
-            <>
-              <div className="overflow-hidden px-1">
-                <div 
-                  className="flex transition-transform duration-500 ease-in-out gap-6"
-                  style={{ 
-                    transform: `translateX(calc(-${currentIndex * (100 / cardsPerPage)}% - ${currentIndex * (SLIDER_GAP / cardsPerPage)}px))` 
-                  }}
-                >
-                  {displayCountries.map((country: any, index: number) => (
-                    <div 
-                      key={index} 
-                      className="flex-shrink-0" 
-                      style={{ width: `calc(${100 / cardsPerPage}% - ${(SLIDER_GAP * (cardsPerPage - 1)) / cardsPerPage}px)` }}
-                    >
-                      <CountryCard country={country} index={index} />
-                    </div>
-                  ))}
-                </div>
-              </div>
+        {isLoading ? (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {[...Array(8)].map((_, i) => (
+              <CountryCardSkeleton key={i} />
+            ))}
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
+            {displayCountries.map((country) => (
+              <CountryCard country={country} key={country.slug} />
+            ))}
+          </div>
+        )}
 
-              <button onClick={prevSlide} className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 bg-white rounded-full p-4 shadow-md border border-slate-200 hover:bg-blue-50 transition-all z-20">
-                <ChevronLeft size={24} />
-              </button>
-              <button onClick={nextSlide} className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 bg-white rounded-full p-4 shadow-md border border-slate-200 hover:bg-blue-50 transition-all z-20">
-                <ChevronRight size={24} />
-              </button>
-            </>
-          )}
+        <div className="mt-10 text-center">
+          <Link href="/countries" className="btn-secondary inline-flex items-center gap-2 rounded-xl px-8 py-3 font-semibold">
+            View All Countries
+            <ArrowRight size={16} />
+          </Link>
         </div>
       </div>
     </section>

@@ -7,6 +7,7 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group-simple'
 import { Label } from '@/components/ui/label'
 import { Progress } from '@/components/ui/progress'
+import { Skeleton } from '@/components/ui/skeleton'
 import { Clock, ChevronRight, ChevronLeft, AlertCircle } from 'lucide-react'
 import { Alert, AlertDescription } from '@/components/ui/alert'
 
@@ -161,10 +162,33 @@ export default function ExamModePage() {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
-        <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto mb-4"></div>
-          <p className="text-gray-600">Loading exam...</p>
+      <div className="min-h-screen bg-gray-50">
+        <div className="mx-auto max-w-5xl px-4 py-10">
+          <div className="mb-8 rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <div className="flex items-center justify-between gap-4">
+              <div>
+                <Skeleton className="h-8 w-64 bg-slate-100" />
+                <Skeleton className="mt-3 h-4 w-40 bg-slate-100" />
+              </div>
+              <Skeleton className="h-10 w-28 rounded-full bg-slate-100" />
+            </div>
+            <Skeleton className="mt-6 h-3 w-full bg-slate-100" />
+          </div>
+
+          <div className="rounded-2xl border border-slate-200 bg-white p-6 shadow-sm">
+            <Skeleton className="h-6 w-32 bg-slate-100" />
+            <Skeleton className="mt-6 h-8 w-full max-w-3xl bg-slate-100" />
+            <div className="mt-8 space-y-4">
+              {Array.from({ length: 4 }).map((_, index) => (
+                <div key={index} className="rounded-xl border border-slate-200 p-4">
+                  <div className="flex items-center gap-3">
+                    <Skeleton className="h-4 w-4 rounded-full bg-slate-100" />
+                    <Skeleton className="h-4 w-4/5 bg-slate-100" />
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     )

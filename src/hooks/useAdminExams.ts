@@ -4,57 +4,60 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 
 export interface AdminExam {
   _id?: string
-  name: string
-  slug: string
-  short_name: string
-  image_url: string
-  exam_type: string
-  conducting_body: string
-  exam_mode: string
-  frequency: string
-  description: string
-  is_active: boolean
-  display_order: number
-  hero_section: {
-    title: string
-    subtitle: string
-    image: string
+  name?: string
+  slug?: string
+  short_name?: string
+  image_url?: string
+  exam_type?: string
+  conducting_body?: string
+  exam_mode?: string
+  frequency?: string
+  description?: string
+  is_active?: boolean
+  display_order?: number
+  hero_section?: {
+    title?: string
+    subtitle?: string
+    image?: string
   }
-  overview: {
-    title: string
-    content: string
-    key_highlights: string[]
+  overview?: {
+    title?: string
+    content?: string
+    key_highlights?: string[]
   }
-  registration: {
-    title: string
-    description: string
-    bullet_points: string[]
+  registration?: {
+    title?: string
+    description?: string
+    bullet_points?: string[]
   }
-  exam_pattern: {
-    title: string
-    description: string
-    total_duration_mins: number
-    score_range: string
-    table_data: {
-      section: string
-      questions: number
-      duration_mins: number
-    }[]
+  exam_pattern?: {
+    title?: string
+    description?: string
+    total_duration_mins?: number
+    score_range?: string
+    table_data?: Array<{
+      section?: string
+      questions?: number
+      duration_mins?: number
+      [key: string]: unknown
+    }>
   }
-  exam_dates: {
-    title: string
-    important_dates: {
-      event: string
-      date: Date
-    }[]
+  exam_dates?: {
+    title?: string
+    important_dates?: Array<{
+      event?: string
+      date?: Date | string
+      [key: string]: unknown
+    }>
   }
-  result_statistics: {
-    title: string
-    description: string
-    passing_criteria: string
-    total_marks: number
-    passing_marks: number
+  result_statistics?: {
+    title?: string
+    description?: string
+    passing_criteria?: string
+    total_marks?: number
+    passing_marks?: number
   }
+  [key: string]: unknown
 }
 
 // Fetch paginated exams for admin

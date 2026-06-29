@@ -22,8 +22,8 @@ export default function MbbsMarquee() {
   const marqueeRef = useRef<HTMLDivElement>(null);
 
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-linear-to-r from-blue-900 via-blue-800 to-blue-900 text-white z-50 shadow-2xl border-t-2 border-yellow-400">
-      <div className="overflow-hidden py-3">
+    <div className="fixed bottom-0 left-0 right-0 z-50 border-t border-amber-400/50 bg-[var(--surface-navy)] text-white shadow-2xl shadow-slate-950/20">
+      <div className="overflow-hidden bg-[linear-gradient(90deg,rgba(255,255,255,0.02),transparent,rgba(245,158,11,0.06),transparent)] py-3">
         <div 
           ref={marqueeRef}
           className={`flex whitespace-nowrap ${isPaused ? '' : 'animate-marquee'}`}
@@ -34,9 +34,9 @@ export default function MbbsMarquee() {
           {countries.map((country, index) => (
             <div
               key={`first-${index}`}
-              className="inline-flex items-center px-6 mx-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 transition-all duration-300"
+              className="mx-4 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-6 py-2 backdrop-blur-sm transition-all duration-300 hover:border-amber-300/40 hover:bg-white/10"
             >
-              <div className="text-lg font-bold text-yellow-300">
+              <div className="text-sm font-black uppercase tracking-[0.14em] text-amber-300">
                 MBBS in {country}
               </div>
             </div>
@@ -46,9 +46,9 @@ export default function MbbsMarquee() {
           {countries.map((country, index) => (
             <div
               key={`second-${index}`}
-              className="inline-flex items-center px-6 mx-4 bg-white/10 backdrop-blur-sm rounded-lg border border-white/20 hover:bg-white/20 transition-all duration-300"
+              className="mx-4 inline-flex items-center rounded-full border border-white/10 bg-white/5 px-6 py-2 backdrop-blur-sm transition-all duration-300 hover:border-amber-300/40 hover:bg-white/10"
             >
-              <div className="text-lg font-bold text-yellow-300">
+              <div className="text-sm font-black uppercase tracking-[0.14em] text-amber-300">
                 MBBS in {country}
               </div>
             </div>

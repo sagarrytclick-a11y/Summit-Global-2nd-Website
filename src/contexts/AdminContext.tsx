@@ -16,132 +16,144 @@ export interface Country {
 
 export interface Exam {
   _id?: string
-  name: string
-  slug: string
-  exam_type: string
-  conducting_body: string
-  exam_mode: string
-  frequency: string
-  description: string
-  is_active: boolean
-  short_name: string
-  image_url: string
-  display_order: number
-  hero_section: {
-    title: string
-    subtitle: string
-    image: string
+  id?: string
+  name?: string
+  slug?: string
+  exam_type?: string
+  conducting_body?: string
+  exam_mode?: string
+  frequency?: string
+  description?: string
+  is_active?: boolean
+  short_name?: string
+  image_url?: string
+  display_order?: number
+  hero_section?: {
+    title?: string
+    subtitle?: string
+    image?: string
   }
-  overview: {
-    title: string
-    content: string
-    key_highlights: string[]
+  overview?: {
+    title?: string
+    content?: string
+    key_highlights?: string[]
   }
-  registration: {
-    title: string
-    description: string
-    bullet_points: string[]
+  registration?: {
+    title?: string
+    description?: string
+    bullet_points?: string[]
   }
-  exam_pattern: {
-    title: string
-    description: string
-    total_duration_mins: number
-    score_range: string
-    table_data: any[]
+  exam_pattern?: {
+    title?: string
+    description?: string
+    total_duration_mins?: number
+    score_range?: string
+    table_data?: Array<{ section?: string; questions?: number; duration_mins?: number; [key: string]: unknown }>
   }
-  exam_dates: {
-    title: string
-    important_dates: any[]
+  exam_dates?: {
+    title?: string
+    important_dates?: Array<{ event?: string; date?: Date | string; [key: string]: unknown }>
   }
-  result_statistics: {
-    title: string
-    description: string
-    passing_criteria: string
-    total_marks: number
-    passing_marks: number
+  result_statistics?: {
+    title?: string
+    description?: string
+    passing_criteria?: string
+    total_marks?: number
+    passing_marks?: number
   }
   createdAt?: string
   updatedAt?: string
+  [key: string]: unknown
 }
 
-export interface Blog extends Record<string, unknown> {
+export interface Blog {
   _id?: string
+  id?: string
   title: string
-  slug: string
+  slug?: string
   category: string
-  tags: string[]
+  tags?: string[]
   content: string
-  image: string
+  image?: string
+  featuredImage?: string
   excerpt?: string
-  is_active: boolean
-  related_exams: string[]
+  is_active?: boolean
+  related_exams?: string[]
   createdAt?: string
+  created_at?: string
   updatedAt?: string
+  status?: 'published' | 'draft'
+  [key: string]: unknown
 }
 
-export interface College extends Record<string, unknown> {
+export interface College {
   _id?: string
+  id?: string
   name: string
-  slug: string
+  slug?: string
   college_type?: 'study_abroad' | 'mbbs_abroad'
-  country_ref: string | { name: string; slug: string }
-  exams: string[]
+  country_ref?: string | { name: string; slug: string }
+  country?: string
+  exams?: string[]
   fees?: number
   duration?: string
   establishment_year?: string
   ranking?: string | {
-    title: string
-    description: string
-    country_ranking: string
-    world_ranking: string
-    accreditation: string[]
+    title?: string
+    description?: string
+    country_ranking?: string
+    world_ranking?: string
+    accreditation?: string[]
   }
   banner_url?: string
+  banner?: string
   about_content?: string
-  is_active: boolean
+  about?: string
+  is_active?: boolean
+  status?: 'active' | 'inactive'
   createdAt?: string
   updatedAt?: string
   logo?: string
   website?: string
-  description: string
-  features: string[]
+  description?: string
+  features?: string[]
   why_choose_us?: {
-    title: string
-    description: string
-    features: { title: string; description: string }[]
+    title?: string
+    description?: string
+    features?: { title: string; description: string }[]
   }
   ranking_section?: {
-    title: string
-    description: string
-    country_ranking: string
-    world_ranking: string
-    accreditation: string[]
+    title?: string
+    description?: string
+    country_ranking?: string
+    world_ranking?: string
+    accreditation?: string[]
   }
   admission_process?: {
-    title: string
-    description: string
-    steps: string[]
+    title?: string
+    description?: string
+    steps?: string[]
   }
   documents_required?: {
-    title: string
-    description: string
-    documents: string[]
+    title?: string
+    description?: string
+    documents?: string[]
   }
   fees_structure?: {
-    title: string
-    description: string
-    courses: { course_name: string; duration: string; annual_tuition_fee: string }[]
+    title?: string
+    description?: string
+    courses?: { course_name: string; duration: string; annual_tuition_fee: string }[]
   }
   scholarship?: {
-    title: string
-    description: string
-    scholarships: { name: string; amount: string; description: string }[]
+    title?: string
+    description?: string
+    scholarships?: { name: string; amount: string; description: string }[]
   }
   placement?: {
-    title: string
-    description: string
-    placement_rate: string
-    top_companies: string[]
+    title?: string
+    description?: string
+    placement_rate?: string
+    top_companies?: string[]
   }
   contact_info?: {
     phone?: string
@@ -154,19 +166,20 @@ export interface College extends Record<string, unknown> {
 
   // Comprehensive structure fields
   overview?: {
-    title: string
-    description: string
+    title?: string
+    description?: string
   }
   key_highlights?: {
-    title: string
-    description: string
-    features: string[]
+    title?: string
+    description?: string
+    features?: string[]
   }
   campus_highlights?: {
-    title: string
-    description: string
-    highlights: string[]
+    title?: string
+    description?: string
+    highlights?: string[]
   }
+  [key: string]: unknown
 }
 
 export interface Enquiry {

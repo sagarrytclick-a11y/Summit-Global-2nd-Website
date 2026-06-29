@@ -14,9 +14,9 @@ import { Pencil, Trash2, Eye } from 'lucide-react'
 import { Skeleton } from '@/components/ui/skeleton'
 
 interface Column<T> {
-  key: string
+  key: keyof T | (string & {})
   title: string
-  render?: (value: any, record: T, index: number) => ReactNode
+  render?: (value: unknown, record: T, index: number) => ReactNode
   width?: string
 }
 
@@ -47,7 +47,7 @@ export function AdminTable<T = Record<string, unknown>>({
 }: AdminTableProps<T>) {
   if (loading) {
     return (
-      <div className="space-y-3">
+      <div className="space-y-3 rounded-2xl border border-white/10 bg-zinc-950 p-4 shadow-sm">
         {Array.from({ length: 5 }).map((_, index) => (
           <div key={index} className="flex items-center space-x-4">
             <Skeleton className="h-4 w-4" />
@@ -63,7 +63,7 @@ export function AdminTable<T = Record<string, unknown>>({
 
   if (data.length === 0) {
     return (
-      <div className="text-center py-8 sm:py-12 text-gray-500">
+      <div className="rounded-2xl border border-dashed border-white/15 bg-zinc-950 py-8 text-center text-zinc-400 shadow-sm sm:py-12">
         <div className="text-base sm:text-lg font-medium mb-2">{emptyMessage}</div>
         <div className="text-sm">No records found</div>
       </div>
@@ -71,44 +71,45 @@ export function AdminTable<T = Record<string, unknown>>({
   }
 
   return (
-    <div className={`rounded-md border overflow-x-auto ${className}`}>
+    <div className={`overflow-x-auto rounded-2xl border border-white/10 bg-zinc-950 shadow-sm ${className}`}>
       <Table>
         <TableHeader>
-          <TableRow>
+          <TableRow className="border-white/10 bg-zinc-900 hover:bg-zinc-900">
             {columns.map((column) => (
               <TableHead 
                 key={String(column.key)} 
                 style={{ width: column.width }}
+                className="font-bold text-zinc-300"
               >
                 {column.title}
               </TableHead>
             ))}
             {actions && actions.length > 0 && (
-              <TableHead className="w-24">Actions</TableHead>
+              <TableHead className="w-24 font-bold text-zinc-300">Actions</TableHead>
             )}
           </TableRow>
         </TableHeader>
         <TableBody>
           {data.map((record, index) => (
-            <TableRow key={index}>
+            <TableRow key={index} className="border-white/10 hover:bg-zinc-900/70">
               {columns.map((column) => (
                 <TableCell key={String(column.key)}>
   {(() => {
     try {
-      const value = (record as any)[column.key];
+      const value = (record as Record<string | number | symbol, unknown>)[column.key];
 
       // 1. If a custom render function is provided, use it
       if (column.render) {
         const rendered = column.render(value, record, index);
         // Safety: If the render function accidentally returns an object, stringify it
-        return typeof rendered === 'object' && rendered !== null && !Array.isArray(rendered) && !(rendered as any).$$typeof
+        return typeof rendered === 'object' && rendered !== null && !Array.isArray(rendered) && !(rendered as { $$typeof?: symbol }).$$typeof
           ? JSON.stringify(rendered)
           : rendered;
       }
 
       // 2. Handle null or undefined
       if (value === undefined || value === null) {
-        return <span className="text-gray-400">N/A</span>;
+        return <span className="text-zinc-500">N/A</span>;
       }
 
       // 3. Handle Dates
@@ -120,14 +121,15 @@ export function AdminTable<T = Record<string, unknown>>({
       if (typeof value === 'object') {
         // If it's a specific object like your University data, 
         // we extract the most useful string (title or name)
-        const displayValue = value.title || value.name || value.label;
+        const objValue = value as Record<string | number | symbol, unknown>;
+        const displayValue = objValue.title || objValue.name || objValue.label;
         
         if (displayValue && typeof displayValue === 'string') {
           return displayValue;
         }
 
         // Fallback: Just stringify the whole thing so it doesn't crash
-        return <span className="text-xs text-gray-400 font-mono">{JSON.stringify(value)}</span>;
+        return <span className="font-mono text-xs text-zinc-500">{JSON.stringify(value)}</span>;
       }
 
       // 5. Default for strings, numbers, booleans
@@ -147,6 +149,7 @@ export function AdminTable<T = Record<string, unknown>>({
                         key={actionIndex}
                         variant={action.variant || 'ghost'}
                         size="sm"
+                        className="border border-white/10 bg-zinc-900 text-white hover:bg-white hover:text-black"
                         onClick={() => action.onClick(record, index)}
                         disabled={action.disabled}
                       >

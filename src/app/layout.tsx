@@ -1,10 +1,16 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
+import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { SITE_IDENTITY } from "@/site-identity";
 import { FormModalProvider } from "@/context/FormModalContext";
 import { FormModal } from "@/components/FormModal";
 import { QueryProvider } from "@/providers/QueryProvider";
-import MbbsMarquee from "@/components/MbbsMarquee";
+
+const bodyFont = Plus_Jakarta_Sans({
+  subsets: ["latin"],
+  variable: "--font-body",
+  display: "swap",
+});
 
 export const metadata: Metadata = {
   title: SITE_IDENTITY.meta.title,
@@ -13,7 +19,7 @@ export const metadata: Metadata = {
   authors: [{ name: SITE_IDENTITY.meta.author }],
   creator: SITE_IDENTITY.meta.author,
   publisher: SITE_IDENTITY.meta.author,
-  viewport: 'width=device-width, initial-scale=1',
+  metadataBase: new URL("https://timesabroad.com"),
   openGraph: {
     title: SITE_IDENTITY.meta.title,
     description: SITE_IDENTITY.meta.description,
@@ -32,6 +38,11 @@ export const metadata: Metadata = {
   manifest: "/manifest.json",
 };
 
+export const viewport: Viewport = {
+  width: "device-width",
+  initialScale: 1,
+};
+
 export default function RootLayout({
   children,
 }: {
@@ -39,14 +50,13 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className="antialiased">
+      <body className={`${bodyFont.variable} antialiased`}>
         <QueryProvider>
           <FormModalProvider>
             {children}
             <FormModal />
           </FormModalProvider>
         </QueryProvider>
-        <MbbsMarquee />
       </body>
     </html>
   );

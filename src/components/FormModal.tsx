@@ -64,23 +64,37 @@ export const FormModal: React.FC = () => {
             initial={{ opacity: 0, scale: 0.95, y: 20 }}
             animate={{ opacity: 1, scale: 1, y: 0 }}
             exit={{ opacity: 0, scale: 0.95, y: 20 }}
-            className="relative bg-white rounded-xl shadow-2xl border border-white/20 w-full max-w-xl max-h-[90vh] overflow-hidden my-auto"
+            className="relative my-auto max-h-[90vh] w-full max-w-2xl overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_24px_80px_rgba(15,23,42,0.18)]"
           >
-            <div className="relative p-4 sm:p-6 bg-linear-to-br from-blue-600 to-indigo-700 text-white">
+            <div className="relative border-b border-slate-200 bg-white px-5 py-5 sm:px-7 sm:py-6">
               <div className="flex justify-between items-start">
                 <div>
-                  <h2 className="text-xl sm:text-2xl lg:text-3xl font-bold tracking-tight">Get in Touch</h2>
-                  <p className="text-blue-100 mt-1 text-xs sm:text-sm opacity-90">
-                    We’d love to help you plan your future.
+                  <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-3 py-1.5 text-[10px] font-black uppercase tracking-[0.18em] text-amber-700 sm:text-[11px]">
+                    Student Enquiry
+                  </div>
+                  <h2 className="mt-4 text-xl font-black tracking-tight text-slate-950 sm:text-2xl lg:text-3xl">Get in Touch</h2>
+                  <p className="mt-2 text-xs text-slate-500 sm:text-sm">
+                    We’d love to help you plan your future with Summit Global.
                   </p>
                 </div>
-                <button onClick={handleClose} className="p-1.5 sm:p-2 hover:bg-white/20 rounded-full transition-colors">
-                  <X className="w-5 h-5 sm:w-6 sm:h-6" />
+                <button
+                  onClick={handleClose}
+                  className="rounded-full border border-slate-200 bg-slate-50 p-1.5 text-slate-500 transition-colors hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700 sm:p-2"
+                >
+                  <X className="h-5 w-5 sm:h-6 sm:w-6" />
                 </button>
+              </div>
+
+              <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                {['Quick response', 'Student-first support', 'MBBS & Study Abroad'].map((item) => (
+                  <div key={item} className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-xs font-bold text-slate-700">
+                    {item}
+                  </div>
+                ))}
               </div>
             </div>
 
-            <form onSubmit={handleSubmit} className="p-4 sm:p-6 lg:p-8 space-y-3 sm:space-y-4 max-h-[60vh] overflow-y-auto">
+            <form onSubmit={handleSubmit} className="max-h-[60vh] space-y-3 overflow-y-auto bg-[#FAFAFA] p-4 sm:space-y-4 sm:p-6 lg:p-8">
               <div className="flex flex-col sm:grid sm:grid-cols-2 gap-3 sm:gap-4">
                 <FormField
                   label="Full Name"
@@ -137,7 +151,7 @@ export const FormModal: React.FC = () => {
                 {submitStatus === 'success' && (
                   <motion.div 
                     initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                    className="flex items-center gap-2 p-3 sm:p-4 bg-emerald-50 text-emerald-700 border border-emerald-200 rounded-xl text-xs sm:text-sm font-medium"
+                    className="flex items-center gap-2 rounded-2xl border border-amber-200 bg-amber-50 p-3 text-xs font-medium text-amber-800 sm:p-4 sm:text-sm"
                   >
                     <CheckCircle2 className="w-4 h-4 sm:w-5 sm:h-5" />
                     Sent successfully!
@@ -146,7 +160,7 @@ export const FormModal: React.FC = () => {
                 {submitStatus === 'error' && (
                   <motion.div 
                     initial={{ opacity: 0, height: 0 }} animate={{ opacity: 1, height: 'auto' }}
-                    className="flex items-center gap-2 p-3 sm:p-4 bg-red-50 text-red-700 border border-red-200 rounded-xl text-xs sm:text-sm font-medium"
+                    className="flex items-center gap-2 rounded-2xl border border-red-200 bg-red-50 p-3 text-xs font-medium text-red-700 sm:p-4 sm:text-sm"
                   >
                     <AlertCircle className="w-4 h-4 sm:w-5 sm:h-5" />
                     Failed to send. Please try again.
@@ -155,13 +169,17 @@ export const FormModal: React.FC = () => {
               </AnimatePresence>
 
               <div className="flex flex-col sm:flex-row sm:justify-between gap-2 sm:gap-3 pt-3 sm:pt-4">
-                <button type="button" onClick={handleClose} className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-4 text-slate-500 font-semibold hover:bg-slate-50 rounded-2xl transition-all text-sm sm:text-base">
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="w-full rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm font-semibold text-slate-600 transition-all hover:border-amber-200 hover:bg-amber-50 hover:text-amber-700 sm:w-auto sm:px-6 sm:py-4 sm:text-base"
+                >
                   Cancel
                 </button>
                 <button
                   type="submit"
                   disabled={isSubmitting || submitStatus === 'success'}
-                  className="w-full sm:w-auto px-4 sm:px-6 py-3 sm:py-4 bg-blue-600 text-white font-bold rounded-2xl shadow-lg shadow-blue-200 hover:bg-blue-700 transition-all disabled:opacity-70 disabled:cursor-not-allowed text-sm sm:text-base"
+                  className="relative w-full overflow-hidden rounded-2xl bg-[var(--surface-navy)] px-4 py-3 text-sm font-bold text-white shadow-lg shadow-slate-300 transition-all hover:bg-slate-800 disabled:cursor-not-allowed disabled:opacity-70 sm:w-auto sm:px-6 sm:py-4 sm:text-base"
                 >
                   <span className={`flex items-center justify-center gap-1.5 sm:gap-2 transition-transform ${isSubmitting ? 'translate-y-10' : 'translate-y-0'}`}>
                     Submit Request <Send className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
@@ -193,7 +211,7 @@ interface FormFieldProps {
 
 const FormField: React.FC<FormFieldProps> = ({ label, id, type, placeholder, value, onChange, options }) => (
   <div className="space-y-1 sm:space-y-1.5 flex-1">
-    <label htmlFor={id} className="text-[9px] sm:text-[10px] font-bold uppercase tracking-widest text-slate-400 ml-1">
+    <label htmlFor={id} className="ml-1 text-[9px] font-bold uppercase tracking-widest text-slate-400 sm:text-[10px]">
       {label}
     </label>
     <div className="relative">
@@ -204,7 +222,7 @@ const FormField: React.FC<FormFieldProps> = ({ label, id, type, placeholder, val
             required
             value={value}
             onChange={(e) => onChange(e.target.value)}
-            className="w-full px-3 sm:px-4 py-2.5 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white outline-none transition-all text-slate-900 text-xs sm:text-sm appearance-none"
+            className="w-full appearance-none rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none transition-all focus:border-amber-300 focus:ring-4 focus:ring-amber-500/10 sm:px-4 sm:py-3.5 sm:text-sm"
           >
             {options?.map((opt) => (
               <option key={opt.value} value={opt.value} disabled={opt.value === ""}>
@@ -224,7 +242,7 @@ const FormField: React.FC<FormFieldProps> = ({ label, id, type, placeholder, val
           value={value}
           onChange={(e) => onChange(e.target.value)}
           placeholder={placeholder}
-          className="w-full px-3 sm:px-4 py-2.5 sm:py-3.5 bg-slate-50 border border-slate-200 rounded-xl focus:ring-4 focus:ring-blue-500/10 focus:border-blue-500 focus:bg-white outline-none transition-all text-slate-900 placeholder:text-slate-400 text-xs sm:text-sm"
+          className="w-full rounded-2xl border border-slate-200 bg-white px-3 py-2.5 text-xs text-slate-900 outline-none transition-all placeholder:text-slate-400 focus:border-amber-300 focus:ring-4 focus:ring-amber-500/10 sm:px-4 sm:py-3.5 sm:text-sm"
         />
       )}
     </div>

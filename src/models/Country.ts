@@ -36,4 +36,6 @@ const CountrySchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+CountrySchema.index({ is_active: 1, name: 1 });
+
 export default mongoose.models.Country || mongoose.model("Country", CountrySchema);

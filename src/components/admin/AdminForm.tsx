@@ -58,6 +58,7 @@ export function AdminForm({
             placeholder={field.placeholder}
             disabled={loading || field.disabled}
             required={field.required}
+            className="border-white/10 bg-zinc-950 text-white placeholder:text-zinc-500 focus-visible:ring-white/10 focus-visible:border-white"
           />
         )
         
@@ -70,6 +71,7 @@ export function AdminForm({
             placeholder={field.placeholder}
             disabled={loading || field.disabled}
             required={field.required}
+            className="border-white/10 bg-zinc-950 text-white placeholder:text-zinc-500 focus-visible:ring-white/10 focus-visible:border-white"
           />
         )
         
@@ -82,6 +84,7 @@ export function AdminForm({
             disabled={loading || field.disabled}
             required={field.required}
             rows={4}
+            className="border-white/10 bg-zinc-950 text-white placeholder:text-zinc-500 focus-visible:ring-white/10 focus-visible:border-white"
           />
         )
         
@@ -92,7 +95,7 @@ export function AdminForm({
             onValueChange={(newValue) => onChange(field.name, newValue)}
             disabled={loading || field.disabled}
           >
-            <SelectTrigger>
+            <SelectTrigger className="border-white/10 bg-zinc-950 text-white focus:ring-white/10">
               <SelectValue placeholder={field.placeholder || 'Select an option'} />
             </SelectTrigger>
             <SelectContent>
@@ -114,7 +117,7 @@ export function AdminForm({
               onCheckedChange={(checked) => onChange(field.name, checked)}
               disabled={loading || field.disabled}
             />
-            <Label htmlFor={field.name} className="text-sm font-normal">
+              <Label htmlFor={field.name} className="text-sm font-normal text-zinc-300">
               {field.label}
             </Label>
           </div>
@@ -133,9 +136,10 @@ export function AdminForm({
               }}
               disabled={loading || field.disabled}
               accept="image/*"
+              className="border-white/10 bg-zinc-950 text-white file:text-zinc-300 focus-visible:ring-white/10 focus-visible:border-white"
             />
             {value && typeof value === 'string' && (
-              <div className="text-sm text-gray-500">
+                <div className="text-sm text-zinc-500">
                 Current: {value}
               </div>
             )}
@@ -150,7 +154,7 @@ export function AdminForm({
           <div className="space-y-2">
             <div className="flex flex-wrap gap-2">
               {tags.map((tag: string) => (
-                <div className='flex bg-gray-600 text-white rounded-2xl px-2 py-1 items-center gap-1' key={tag}>
+                <div className='flex items-center gap-1 rounded-2xl bg-black px-2 py-1 text-white' key={tag}>
                   <p>{tag}</p>
                   <X
                     className="h-3 w-3 cursor-pointer"
@@ -174,6 +178,7 @@ export function AdminForm({
                   }
                 }}
                 disabled={loading || field.disabled}
+                className="border-white/10 bg-zinc-950 text-white placeholder:text-zinc-500 focus-visible:ring-white/10 focus-visible:border-white"
               />
               <Button
                 type="button"
@@ -185,6 +190,7 @@ export function AdminForm({
                   }
                 }}
                 disabled={loading || field.disabled}
+                className="border-white/10 bg-zinc-900 text-white hover:bg-zinc-800"
               >
                 Add
               </Button>
@@ -202,14 +208,14 @@ export function AdminForm({
       {fields.map((field) => (
         <div key={field.name} className="space-y-2">
           {field.type !== 'checkbox' && (
-            <Label htmlFor={field.name} className="text-sm font-medium">
+            <Label htmlFor={field.name} className="text-sm font-medium text-zinc-200">
               {field.label}
               {field.required && <span className="text-red-500 ml-1">*</span>}
             </Label>
           )}
           {renderField(field)}
           {field.description && (
-            <p className="text-xs text-gray-500">{field.description}</p>
+            <p className="text-xs text-zinc-500">{field.description}</p>
           )}
         </div>
       ))}

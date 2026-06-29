@@ -182,5 +182,9 @@ const CollegeSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+CollegeSchema.index({ is_active: 1, college_type: 1, country_ref: 1 });
+CollegeSchema.index({ is_active: 1, createdAt: -1 });
+CollegeSchema.index({ country_ref: 1, createdAt: -1 });
+
 export default mongoose.models.College ||
   mongoose.model("College", CollegeSchema);

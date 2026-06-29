@@ -1,24 +1,26 @@
 'use client'
 
 import React from 'react';
-import { MessageSquare, FileText, Briefcase, Plane, Home, ShieldCheck, ArrowRight, Sparkles } from 'lucide-react';
+import { MessageSquare, FileText, Plane, Home, ShieldCheck, ArrowRight, Sparkles, LucideIcon } from 'lucide-react';
 import { motion } from 'framer-motion';
 
-const JourneyStep = ({ icon: Icon, title, description, isBlue = false }: {
-  icon: any, title: string, description: string, isBlue?: boolean
+const JourneyCard = ({ icon: Icon, title, description, step }: {
+  icon: LucideIcon, title: string, description: string, step: string
 }) => (
   <motion.div 
-    whileHover={{ y: -5 }}
-    className="flex flex-col items-center text-center flex-1 z-10 group"
+    whileHover={{ y: -4 }}
+    className="group rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm transition-all duration-300"
   >
-    <div className={`w-14 h-14 sm:w-16 sm:h-16 rounded-[1.5rem] flex items-center justify-center mb-5 sm:mb-6 shadow-xl transition-all duration-300
-      ${isBlue 
-        ? 'bg-blue-600 text-white shadow-blue-200' 
-        : 'bg-white text-blue-600 border border-slate-100 group-hover:border-blue-200 group-hover:bg-blue-50/50'}`}>
-      <Icon size={24} className="sm:w-[26px] sm:h-[26px]" />
+    <div className="flex items-start justify-between gap-4">
+      <div className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-[var(--surface-navy)] text-amber-300">
+        <Icon size={22} />
+      </div>
+      <span className="rounded-full bg-amber-50 px-3 py-1 text-xs font-black tracking-[0.18em] text-amber-700">
+        {step}
+      </span>
     </div>
-    <h3 className="font-black text-slate-900 text-base sm:text-lg mb-2 tracking-tight">{title}</h3>
-    <p className="text-slate-500 text-xs sm:text-sm leading-relaxed max-w-[140px] sm:max-w-[180px] font-medium italic">
+    <h3 className="mt-5 text-xl font-black tracking-tight text-slate-950">{title}</h3>
+    <p className="mt-3 text-sm leading-7 text-slate-600">
       {description}
     </p>
   </motion.div>
@@ -26,74 +28,86 @@ const JourneyStep = ({ icon: Icon, title, description, isBlue = false }: {
 
 export default function ProcessJourney() {
   const steps = [
-    { icon: MessageSquare, title: "Strategic Discovery", description: "Expert profile evaluation & goal alignment", isBlue: true },
-    { icon: FileText, title: "Academic Liaison", description: "Seamless university application & tracking" },
-    { icon: ShieldCheck, title: "Visa Compliance", description: "Strict documentation & legal clearance" },
-    { icon: Plane, title: "Global Logistics", description: "Departure briefing & travel coordination" },
-    { icon: Home, title: "Campus Integration", description: "On-ground support & hostel settlement" }
+    { step: "01", icon: MessageSquare, title: "Strategic Discovery", description: "We begin with profile analysis, goals, budget, and destination fit so the next steps stay practical and personalized." },
+    { step: "02", icon: FileText, title: "Academic Liaison", description: "Our team manages university applications, documentation flow, and tracking across every stage of the process." },
+    { step: "03", icon: ShieldCheck, title: "Visa Compliance", description: "Students get clear support for documents, timelines, and compliance requirements to reduce delays and mistakes." },
+    { step: "04", icon: Plane, title: "Global Logistics", description: "Pre-departure support covers travel planning, next-step guidance, and transition preparation before you leave India." },
+    { step: "05", icon: Home, title: "Campus Integration", description: "After admission, we continue with arrival guidance, settlement help, and support for a smoother start abroad." }
   ];
 
   return (
-    <section className="py-20 sm:py-24 lg:py-32 bg-[#F8FAFC] overflow-hidden relative">
-      {/* Premium Background Accents */}
+    <section className="section-home relative overflow-hidden py-20 sm:py-24 lg:py-32">
       <div className="absolute inset-0 overflow-hidden pointer-events-none">
-        <div className="absolute top-0 right-0 w-[40%] h-[40%] bg-blue-100/40 rounded-full blur-[120px]" />
-        <div className="absolute bottom-0 left-0 w-[40%] h-[40%] bg-indigo-100/30 rounded-full blur-[120px]" />
+        <div className="absolute top-0 right-0 h-[40%] w-[40%] rounded-full bg-amber-300/10 blur-[120px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 lg:px-8 text-center relative z-10">
-        <div className="inline-flex items-center gap-2 bg-blue-600/10 text-blue-700 px-4 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em] mb-8">
-          <Sparkles className="w-3 h-3" />
-          The Path to Excellence
-        </div>
+      <div className="relative z-10 mx-auto max-w-7xl px-6 lg:px-8">
+        <div className="grid gap-12 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="lg:sticky lg:top-28">
+            <div className="eyebrow">
+              <Sparkles className="w-3 h-3" />
+              The Path to Excellence
+            </div>
 
-        <h2 className="text-4xl sm:text-5xl lg:text-7xl font-black text-slate-900 mb-6 tracking-tighter leading-[1.1]">
-          Your Gateway to a <br className="hidden sm:block" />
-          <span className="text-blue-600">Global Medical Career</span>
-        </h2>
+            <h2 className="mb-6 mt-8 text-4xl font-black leading-[1.05] tracking-tighter text-slate-950 sm:text-5xl lg:text-6xl">
+              A clearer route to your
+              <span className="heading-gold block">global medical career</span>
+            </h2>
 
-        <p className="text-lg sm:text-xl text-slate-500 max-w-3xl mx-auto mb-16 leading-relaxed font-medium">
-          Navigating international admissions shouldn't be a maze. We’ve distilled 
-          years of expertise into a <span className="text-slate-900 font-bold">seamless 5-stage transition</span> 
-          designed for the modern medical student.
-        </p>
+            <p className="max-w-2xl text-lg font-medium leading-relaxed text-slate-600 sm:text-xl">
+              We’ve replaced the usual confusing admission journey with a structured 5-step
+              support system that keeps students informed, prepared, and confident at every stage.
+            </p>
 
-        {/* High-Performance Metrics */}
-        <div className="flex flex-wrap justify-center items-center gap-6 sm:gap-12 lg:gap-16 mb-20">
-          <div className="text-center">
-            <div className="text-2xl sm:text-3xl font-black text-blue-600">99.2%</div>
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Visa Success Rate</div>
-          </div>
-          <div className="hidden md:block w-12 h-px bg-slate-200"></div>
-          <div className="text-center">
-            <div className="text-2xl sm:text-3xl font-black text-blue-600">24/7</div>
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">On-Ground Support</div>
-          </div>
-          <div className="hidden md:block w-12 h-px bg-slate-200"></div>
-          <div className="text-center">
-            <div className="text-2xl sm:text-3xl font-black text-blue-600">10k+</div>
-            <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Doctors Mentored</div>
-          </div>
-        </div>
+            <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-3 lg:grid-cols-1">
+              <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5">
+                <div className="text-3xl font-black text-amber-500">99.2%</div>
+                <div className="mt-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  Visa Success Rate
+                </div>
+              </div>
+              <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5">
+                <div className="text-3xl font-black text-amber-500">24/7</div>
+                <div className="mt-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  On-Ground Support
+                </div>
+              </div>
+              <div className="rounded-[1.5rem] border border-slate-200 bg-white p-5">
+                <div className="text-3xl font-black text-amber-500">10k+</div>
+                <div className="mt-2 text-[11px] font-black uppercase tracking-[0.18em] text-slate-500">
+                  Doctors Mentored
+                </div>
+              </div>
+            </div>
 
-        
-
-        <div className="relative mt-10">
-          {/* Connecting Line with Gradient */}
-          <div className="hidden lg:block absolute top-8 left-[10%] right-[10%] h-[2px] bg-gradient-to-r from-blue-600 via-blue-200 to-slate-100 z-0" />
-
-          <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-5 gap-12 lg:gap-4 relative z-10">
-            {steps.map((step, idx) => (
-              <JourneyStep key={idx} {...step} />
-            ))}
-          </div>
-        </div>
-
-        <div className="mt-20">
-            <button className="bg-slate-900 hover:bg-blue-600 text-white px-10 py-5 rounded-2xl font-black text-sm uppercase tracking-widest transition-all shadow-xl shadow-slate-200 flex items-center gap-3 mx-auto">
+            <div className="mt-10">
+              <button className="btn-primary inline-flex items-center gap-3 rounded-2xl px-10 py-5 text-sm font-black uppercase tracking-widest">
                 Begin Your Assessment
-                <ArrowRight className="w-4 h-4" />
-            </button>
+                <ArrowRight className="h-4 w-4" />
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-5 md:grid-cols-2">
+            {steps.map((step) => (
+              <JourneyCard key={step.step} {...step} />
+            ))}
+            <div className="rounded-[1.75rem] border border-dashed border-amber-200 bg-amber-50/40 p-6 md:col-span-2">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                  <p className="text-xs font-black uppercase tracking-[0.22em] text-amber-700">
+                    Student Promise
+                  </p>
+                  <h3 className="mt-2 text-2xl font-black text-slate-950">
+                    Every step is guided with clarity, transparency, and real support.
+                  </h3>
+                </div>
+                <button className="btn-secondary rounded-2xl px-6 py-3 font-bold">
+                  View Full Process
+                </button>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

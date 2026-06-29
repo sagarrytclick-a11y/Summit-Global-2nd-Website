@@ -9,7 +9,7 @@ export async function GET(request: Request) {
     const { searchParams } = new URL(request.url);
     const page = parseInt(searchParams.get('page') || '1');
     const limit = parseInt(searchParams.get('limit') || '9');
-    const search = searchParams.get('search') || '';
+    const search = searchParams.get('search')?.trim() || '';
     const category = searchParams.get('category') || '';
 
     let query: any = { is_active: true };
@@ -18,22 +18,25 @@ export async function GET(request: Request) {
       query.category = category;
     }
     
-    if (search) {
+    if (search.length >= 2) {
       query.$or = [
         { title: { $regex: search, $options: 'i' } },
-        { content: { $regex: search, $options: 'i' } },
+        { slug: { $regex: search, $options: 'i' } },
         { tags: { $in: [new RegExp(search, 'i')] } }
       ];
     }
 
-    const total = await Blog.countDocuments(query);
-    
-    const blogs = await Blog.find(query)
-      .select('title slug excerpt category tags banner_url author createdAt updatedAt')
+    const blogsQuery = Blog.find(query)
+      .select('title slug excerpt category tags banner_url author createdAt updatedAt published_at read_time views content image')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
+
+    const [total, blogs] = await Promise.all([
+      Blog.countDocuments(query),
+      blogsQuery,
+    ]);
     
     const response = NextResponse.json({
       success: true,
@@ -50,6 +53,8 @@ export async function GET(request: Request) {
     response.headers.set(
       'Cache-Control', 'public, s-maxage=300, stale-while-revalidate=600'
     );
+    response.headers.set('CDN-Cache-Control', 'public, s-maxage=600');
+    response.headers.set('Vercel-CDN-Cache-Control', 'public, s-maxage=600');
     
     return response;
   } catch (error) {

@@ -34,17 +34,14 @@ const MbbsAbroadPopup: React.FC = () => {
 
   return (
     <div className="fixed inset-0 z-[9999] flex items-center justify-center p-4 bg-black/50 animate-fade-in">
-      {/* Simple Popup with Only Image */}
-      <div className="relative max-w-xl w-full bg-white rounded-2xl shadow-2xl overflow-hidden animate-scale-in">
-        {/* Close Button - Top Right Corner */}
+      <div className="relative w-full max-w-xl overflow-hidden rounded-[1.75rem] border border-white/10 bg-[#0d1832] shadow-2xl animate-scale-in">
         <button
           onClick={handleClose}
-          className="absolute top-3 right-3 z-10 w-8 h-8 bg-white/90 hover:bg-white rounded-full shadow-lg flex items-center justify-center transition-all hover:scale-110"
+          className="absolute right-3 top-3 z-10 flex h-8 w-8 items-center justify-center rounded-full bg-white/90 shadow-lg transition-all hover:scale-110 hover:bg-white"
         >
           <X className="w-4 h-4 text-slate-700" />
         </button>
 
-        {/* Banner Image Only */}
         <img
           src="/mbbsbanner.png"
           alt="MBBS Abroad"

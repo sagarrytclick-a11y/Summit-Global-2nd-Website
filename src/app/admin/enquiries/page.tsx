@@ -176,46 +176,51 @@ export default function EnquiriesPage() {
 
   const getStatusColor = (status: Enquiry['status']) => {
     switch (status) {
-      case 'pending': return 'bg-yellow-100 text-yellow-800 border-yellow-200'
-      case 'contacted': return 'bg-blue-100 text-blue-800 border-blue-200'
-      case 'resolved': return 'bg-green-100 text-green-800 border-green-200'
-      case 'closed': return 'bg-gray-100 text-gray-800 border-gray-200'
-      default: return 'bg-gray-100 text-gray-800 border-gray-200'
+      case 'pending': return 'bg-zinc-100 text-zinc-800 border-zinc-200'
+      case 'contacted': return 'bg-zinc-100 text-zinc-800 border-zinc-200'
+      case 'resolved': return 'bg-black text-white border-black'
+      case 'closed': return 'bg-zinc-200 text-zinc-800 border-zinc-300'
+      default: return 'bg-zinc-100 text-zinc-800 border-zinc-200'
     }
   }
 
   const getInterestColor = (interest: string) => {
     switch (interest) {
-      case 'study-abroad': return 'bg-blue-600 text-white'
-      case 'mbbs-abroad': return 'bg-purple-600 text-white'
-      default: return 'bg-gray-600 text-white'
+      case 'study-abroad': return 'bg-black text-white'
+      case 'mbbs-abroad': return 'bg-zinc-700 text-white'
+      default: return 'bg-zinc-600 text-white'
     }
   }
 
-  const columns = [
+  const columns: Array<{
+    key: keyof Enquiry | string;
+    title: string;
+    render?: (value: unknown, record: Enquiry, index: number) => React.ReactNode;
+    width?: string;
+  }> = [
     {
-      key: 'name' as keyof Enquiry,
+      key: 'name',
       title: 'Student Name',
-      render: (value: string, record: Enquiry) => (
+      render: (value: unknown, record: Enquiry) => (
         <div className="flex items-center gap-2">
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center">
-            <User className="w-4 h-4 text-blue-600" />
+          <div className="w-8 h-8 bg-zinc-100 rounded-full flex items-center justify-center">
+            <User className="w-4 h-4 text-zinc-700" />
           </div>
           <div>
-            <div className="font-medium text-gray-900">{value}</div>
-            <div className="text-sm text-gray-500">{record.city}</div>
+            <div className="font-medium text-white">{value as string}</div>
+            <div className="text-sm text-zinc-500">{record.city}</div>
           </div>
         </div>
       )
     },
     {
-      key: 'email' as keyof Enquiry,
+      key: 'email',
       title: 'Contact',
-      render: (value: string, record: Enquiry) => (
+      render: (value: unknown, record: Enquiry) => (
         <div className="space-y-1">
           <div className="flex items-center gap-1 text-sm">
             <Mail className="w-3 h-3 text-gray-400" />
-            <span className="truncate">{value}</span>
+            <span className="truncate">{value as string}</span>
           </div>
           <div className="flex items-center gap-1 text-sm">
             <Phone className="w-3 h-3 text-gray-400" />
@@ -225,47 +230,51 @@ export default function EnquiriesPage() {
       )
     },
     {
-      key: 'interest' as keyof Enquiry,
+      key: 'interest',
       title: 'Interest',
-      render: (value: string) => (
-        <div className={`flex px-2 py-1 rounded-lg text-xs font-medium ${getInterestColor(value)}`}>
-          {value === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'}
+      render: (value: unknown) => (
+        <div className={`flex px-2 py-1 rounded-lg text-xs font-medium ${getInterestColor(value as string)}`}>
+          {(value as string) === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'}
         </div>
       )
     },
     {
-      key: 'status' as keyof Enquiry,
+      key: 'status',
       title: 'Status',
-      render: (value: Enquiry['status'], record: Enquiry) => (
-        <Select
-          value={value}
-          onValueChange={(newValue) => {
-            const enquiryId = record._id || record.id
-            if (enquiryId) {
-              handleStatusChange(enquiryId, newValue as Enquiry['status'])
-            }
-          }}
-        >
-          <SelectTrigger className={`w-32 ${getStatusColor(value)}`}>
-            <SelectValue />
-          </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="pending">Pending</SelectItem>
-            <SelectItem value="contacted">Contacted</SelectItem>
-            <SelectItem value="resolved">Resolved</SelectItem>
-            <SelectItem value="closed">Closed</SelectItem>
-          </SelectContent>
-        </Select>
-      )
+      render: (value: unknown, record: Enquiry) => {
+        const status = value as Enquiry['status'];
+        return (
+          <Select
+            value={status}
+            onValueChange={(newValue) => {
+              const enquiryId = record._id || record.id
+              if (enquiryId) {
+                handleStatusChange(enquiryId, newValue as Enquiry['status'])
+              }
+            }}
+          >
+            <SelectTrigger className={`w-32 ${getStatusColor(status)}`}>
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="contacted">Contacted</SelectItem>
+              <SelectItem value="resolved">Resolved</SelectItem>
+              <SelectItem value="closed">Closed</SelectItem>
+            </SelectContent>
+          </Select>
+        );
+      }
     },
     {
-      key: 'createdAt' as keyof Enquiry,
+      key: 'createdAt',
       title: 'Date',
-      render: (value: string) => {
-        const date = new Date(value)
+      render: (value: unknown) => {
+        const dateStr = value as string;
+        const date = new Date(dateStr)
         return (
           <div className="text-sm">
-            <div className="flex items-center gap-1 text-gray-500">
+            <div className="flex items-center gap-1 text-zinc-500">
               <Calendar className="w-3 h-3" />
               {date.toLocaleDateString('en-US', { 
                 month: 'short', 
@@ -284,15 +293,15 @@ export default function EnquiriesPage() {
       }
     },
     {
-      key: 'actions' as keyof Enquiry,
+      key: 'actions',
       title: 'Actions',
-      render: (value: any, record: Enquiry) => (
+      render: (_: unknown, record: Enquiry) => (
         <div className="flex items-center gap-2">
           <Button
             variant="outline"
             size="sm"
             onClick={() => handleViewEnquiry(record)}
-            className="text-blue-600 border-blue-200 !hover:bg-blue-50"
+            className="border-white/10 bg-zinc-900 text-white !hover:bg-zinc-800"
           >
             <MessageSquare className="w-4 h-4 mr-1" />
             View
@@ -301,7 +310,7 @@ export default function EnquiriesPage() {
             variant="outline"
             size="sm"
             onClick={() => handleDeleteEnquiry(record)}
-            className="text-red-600 border-red-200 !hover:bg-red-50"
+            className="border-white/10 bg-zinc-900 text-white !hover:bg-zinc-800"
           >
             Delete
           </Button>
@@ -315,8 +324,8 @@ export default function EnquiriesPage() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h2 className="text-lg font-semibold text-gray-900">Student Enquiries</h2>
-          <p className="text-sm text-gray-500">
+          <h2 className="text-lg font-semibold text-white">Student Enquiries</h2>
+          <p className="text-sm text-zinc-500">
             Manage student enquiries and contact requests
           </p>
         </div>
@@ -326,17 +335,17 @@ export default function EnquiriesPage() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-zinc-500 w-4 h-4" />
             <Input
               placeholder="Search by name, email, phone, city..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="border-white/10 bg-zinc-950 pl-10 text-white placeholder:text-zinc-500"
             />
           </div>
         </div>
         <Select value={statusFilter} onValueChange={setStatusFilter}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-40 border-white/10 bg-zinc-950 text-white">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
           <SelectContent>
@@ -348,7 +357,7 @@ export default function EnquiriesPage() {
           </SelectContent>
         </Select>
         <Select value={interestFilter} onValueChange={setInterestFilter}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-40 border-white/10 bg-zinc-950 text-white">
             <SelectValue placeholder="Filter by interest" />
           </SelectTrigger>
           <SelectContent>
@@ -361,53 +370,53 @@ export default function EnquiriesPage() {
 
       {/* Stats Cards */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="rounded-lg border border-white/10 bg-zinc-950 p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-              <Mail className="w-6 h-6 text-blue-600" />
+            <div className="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center">
+              <Mail className="w-6 h-6 text-zinc-800" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">{enquiries.length}</div>
-              <div className="text-sm text-gray-500">Total Enquiries</div>
+              <div className="text-2xl font-bold text-white">{enquiries.length}</div>
+              <div className="text-sm text-zinc-500">Total Enquiries</div>
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="rounded-lg border border-white/10 bg-zinc-950 p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-yellow-100 rounded-lg flex items-center justify-center">
-              <Calendar className="w-6 h-6 text-yellow-600" />
+            <div className="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center">
+              <Calendar className="w-6 h-6 text-zinc-800" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-2xl font-bold text-white">
                 {enquiries.filter(e => e.status === 'pending').length}
               </div>
-              <div className="text-sm text-gray-500">Pending</div>
+              <div className="text-sm text-zinc-500">Pending</div>
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="rounded-lg border border-white/10 bg-zinc-950 p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-green-100 rounded-lg flex items-center justify-center">
-              <MessageSquare className="w-6 h-6 text-green-600" />
+            <div className="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center">
+              <MessageSquare className="w-6 h-6 text-zinc-800" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-2xl font-bold text-white">
                 {enquiries.filter(e => e.status === 'resolved').length}
               </div>
-              <div className="text-sm text-gray-500">Resolved</div>
+              <div className="text-sm text-zinc-500">Resolved</div>
             </div>
           </div>
         </div>
-        <div className="bg-white p-4 rounded-lg border border-gray-200">
+        <div className="rounded-lg border border-white/10 bg-zinc-950 p-4">
           <div className="flex items-center gap-3">
-            <div className="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-              <User className="w-6 h-6 text-purple-600" />
+            <div className="w-12 h-12 bg-zinc-100 rounded-lg flex items-center justify-center">
+              <User className="w-6 h-6 text-zinc-800" />
             </div>
             <div>
-              <div className="text-2xl font-bold text-gray-900">
+              <div className="text-2xl font-bold text-white">
                 {enquiries.filter(e => e.interest === 'mbbs-abroad').length}
               </div>
-              <div className="text-sm text-gray-500">MBBS Enquiries</div>
+              <div className="text-sm text-zinc-500">MBBS Enquiries</div>
             </div>
           </div>
         </div>
@@ -422,9 +431,9 @@ export default function EnquiriesPage() {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-lg border">
+        <div className="flex flex-col items-center justify-between gap-4 rounded-lg border border-white/10 bg-zinc-950 p-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-zinc-400">
               Showing {((currentPage - 1) * 10) + 1}-{Math.min(currentPage * 10, totalCount)} of {totalCount} enquiries
             </span>
           </div>
@@ -491,23 +500,23 @@ export default function EnquiriesPage() {
           <div className="space-y-6">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
               <div>
-                <label className="text-sm font-medium text-gray-700">Name</label>
-                <p className="mt-1 text-gray-900 font-medium">{selectedEnquiry.name}</p>
+                <label className="text-sm font-medium text-zinc-400">Name</label>
+                <p className="mt-1 font-medium text-white">{selectedEnquiry.name}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Email</label>
-                <p className="mt-1 text-gray-900">{selectedEnquiry.email}</p>
+                <label className="text-sm font-medium text-zinc-400">Email</label>
+                <p className="mt-1 text-white">{selectedEnquiry.email}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Phone</label>
-                <p className="mt-1 text-gray-900">{selectedEnquiry.phone}</p>
+                <label className="text-sm font-medium text-zinc-400">Phone</label>
+                <p className="mt-1 text-white">{selectedEnquiry.phone}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">City</label>
-                <p className="mt-1 text-gray-900">{selectedEnquiry.city}</p>
+                <label className="text-sm font-medium text-zinc-400">City</label>
+                <p className="mt-1 text-white">{selectedEnquiry.city}</p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Interest</label>
+                <label className="text-sm font-medium text-zinc-400">Interest</label>
                 <div className="mt-1">
                   <div className={`inline-flex px-2 py-1 rounded-lg text-xs font-medium ${getInterestColor(selectedEnquiry.interest)}`}>
                     {selectedEnquiry.interest === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'}
@@ -515,7 +524,7 @@ export default function EnquiriesPage() {
                 </div>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Status</label>
+                <label className="text-sm font-medium text-zinc-400">Status</label>
                 <div className="mt-1">
                   <div className={`inline-flex px-2 py-1 rounded-lg text-xs font-medium ${getStatusColor(selectedEnquiry.status)}`}>
                     {selectedEnquiry.status.charAt(0).toUpperCase() + selectedEnquiry.status.slice(1)}
@@ -526,16 +535,16 @@ export default function EnquiriesPage() {
             
             {selectedEnquiry.message && (
               <div>
-                <label className="text-sm font-medium text-gray-700">Message</label>
-                <div className="mt-1 p-4 bg-gray-50 rounded-lg">
-                  <p className="text-gray-900 whitespace-pre-wrap">{selectedEnquiry.message}</p>
+                <label className="text-sm font-medium text-zinc-400">Message</label>
+                <div className="mt-1 rounded-lg bg-zinc-900 p-4">
+                  <p className="whitespace-pre-wrap text-white">{selectedEnquiry.message}</p>
                 </div>
               </div>
             )}
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm text-gray-500">
+            <div className="grid grid-cols-1 gap-4 text-sm text-zinc-500 sm:grid-cols-2">
               <div>
-                <label className="text-sm font-medium text-gray-700">Created</label>
+                <label className="text-sm font-medium text-zinc-400">Created</label>
                 <p className="mt-1">
                   {new Date(selectedEnquiry.createdAt!).toLocaleString('en-US', {
                     year: 'numeric',
@@ -547,7 +556,7 @@ export default function EnquiriesPage() {
                 </p>
               </div>
               <div>
-                <label className="text-sm font-medium text-gray-700">Last Updated</label>
+                <label className="text-sm font-medium text-zinc-400">Last Updated</label>
                 <p className="mt-1">
                   {new Date(selectedEnquiry.updatedAt!).toLocaleString('en-US', {
                     year: 'numeric',
@@ -571,15 +580,15 @@ export default function EnquiriesPage() {
         size="sm"
       >
         <div className="space-y-4">
-          <div className="flex items-center gap-3 p-4 bg-red-50 rounded-lg">
-            <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center">
-              <AlertCircle className="w-6 h-6 text-red-600" />
+          <div className="flex items-center gap-3 rounded-lg bg-zinc-900 p-4">
+            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white text-black">
+              <AlertCircle className="w-6 h-6" />
             </div>
             <div>
-              <h3 className="text-lg font-semibold text-gray-900 mb-2">
+              <h3 className="mb-2 text-lg font-semibold text-white">
                 Are you sure?
               </h3>
-              <p className="text-sm text-gray-600 mb-4">
+              <p className="mb-4 text-sm text-zinc-400">
                 This action cannot be undone. This will permanently delete the enquiry from 
                 <span className="font-medium">{deleteConfirmOpen?.name}</span>.
               </p>
@@ -590,14 +599,13 @@ export default function EnquiriesPage() {
             <Button
               variant="outline"
               onClick={() => setDeleteConfirmOpen(null)}
-              className="border-gray-300 text-gray-700 hover:bg-gray-50"
+              className="border-white/10 bg-zinc-900 text-white hover:bg-zinc-800"
             >
               Cancel
             </Button>
             <Button
-              variant="destructive"
               onClick={confirmDelete}
-              className="bg-red-600 hover:bg-red-700 text-white"
+              className="bg-white text-black hover:bg-zinc-200"
             >
               Yes, Delete
             </Button>

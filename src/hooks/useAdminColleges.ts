@@ -4,10 +4,13 @@ import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { College } from '@/contexts/AdminContext'
 
 export interface AdminCountry {
-  _id: string
+  _id?: string
+  id?: string
   name: string
   slug: string
   flag: string
+  is_active?: boolean
+  status?: 'active' | 'inactive'
 }
 
 // Fetch paginated colleges for admin
