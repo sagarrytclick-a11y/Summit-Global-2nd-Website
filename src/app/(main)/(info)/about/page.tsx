@@ -1,374 +1,238 @@
 "use client"
 import React from 'react';
-import Image from 'next/image';
 import {
-  PlayCircle, Star, Check, ShieldCheck,
-  GraduationCap, TrendingUp, MoveRight,
-  MapPin, Phone, Mail, ArrowUpRight,
-  Calendar, Users, Award, Globe, CheckCircle2,
-  ArrowRight
+  ArrowRight,
+  Calendar,
+  CheckCircle2,
+  Globe,
+  GraduationCap,
+  ShieldCheck,
+  Sparkles,
+  Users
 } from 'lucide-react';
 import { useFormModal } from '@/context/FormModalContext';
 
-// --- Types ---
-interface TimelineItem {
-  year: string;
-  title: string;
-  description: string;
-}
-
-interface Expert {
-  name: string;
-  role: string;
-  image: string;
-}
-
-interface Value {
-  icon: React.ReactNode;
-  title: string;
-  description: string;
-}
-
-// --- Data ---
-const timeline: TimelineItem[] = [
-  { year: "2018", title: "Foundation in Delhi", description: "Started with a mission to make MBBS abroad accessible and affordable for Indian students." },
-  { year: "2020", title: "Expansion to Medical Education", description: "Partnered with top NMC & WHO approved universities across Bangladesh, Russia, and Georgia." },
-  { year: "2023", title: "Digital Transformation", description: "Launched our student portal for seamless applications and real-time tracking." },
-];
-
-const experts: Expert[] = [
-  { name: "Dr. Rajesh Kumar", role: "Medical Education Director", image: "https://images.unsplash.com/photo-1560250097-0b93528c311a?w=400&h=500&fit=crop" },
-  { name: "Priya Sharma", role: "Student Counselor", image: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=400&h=500&fit=crop" },
-  { name: "Amit Patel", role: "Visa Specialist", image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=400&h=500&fit=crop" },
-  { name: "Sarah Johnson", role: "International Relations", image: "https://images.unsplash.com/photo-1580489944761-15a19d654956?w=400&h=500&fit=crop" },
+const milestones = [
+  {
+    year: "2005",
+    title: "Trusted Student Guidance Begins",
+    description: "Started with a focused mission to help Indian students access better international education pathways with honest support."
+  },
+  {
+    year: "2012",
+    title: "MBBS Abroad Specialization",
+    description: "Expanded into medical admissions with stronger university partnerships, clearer process support, and country-wise counselling."
+  },
+  {
+    year: "2020",
+    title: "End-to-End Process Model",
+    description: "Structured counselling, applications, visa support, documentation, and pre-departure help into one guided system."
+  },
+  {
+    year: "Today",
+    title: "Student-First Global Platform",
+    description: "Supporting MBBS Abroad and Study Abroad journeys with practical advice, transparent process management, and long-term trust."
+  }
 ];
 
 const values = [
   {
-    title: "Zero Donation Policy",
-    description:
-      "We believe in transparent education costs. No hidden charges, no donation fees - only genuine tuition fees for quality medical education.",
-    subtext:
-      "Making MBBS abroad affordable for every deserving student."
+    title: "Transparent Counselling",
+    description: "Students and parents get realistic guidance on budgets, destinations, timelines, and expected outcomes before any decision is made."
   },
   {
-    title: "NMC & WHO Approved Universities",
-    description:
-      "All our partner universities are approved by NMC (National Medical Commission) and WHO, ensuring your degree is valid globally.",
-    subtext:
-      "Your medical career is secure with recognized degrees."
+    title: "MBBS & Study Abroad Focus",
+    description: "Our approach is built specifically around medical admissions, global universities, eligibility planning, and complete admission pathways."
   },
   {
-    title: "Complete End-to-End Support",
-    description:
-      "From university selection to visa processing, accommodation to local support - we handle everything for your smooth journey.",
-    subtext:
-      "Focus on your studies while we handle the logistics."
+    title: "Application to Arrival Support",
+    description: "From shortlisting and documentation to visa and pre-departure readiness, the journey stays structured and supported."
   },
   {
-    title: "Indian Food & Hostel Guarantee",
-    description:
-      "We ensure comfortable accommodation with Indian food facilities, making your stay away from home feel like home.",
-    subtext:
-      "Your comfort and well-being are our top priorities."
-  }
-];
-
-const legacyTimeline = [
-  {
-    year: "2018",
-    title: "Started with Medical Focus",
-    description:
-      "Founded with a clear vision - to help Indian students pursue MBBS abroad without financial burden."
-  },
-  {
-    year: "2019",
-    title: "Partnership with Top Universities",
-    description:
-      "Built strong relationships with NMC approved universities in Bangladesh, Russia, Georgia, and other popular destinations."
-  },
-  {
-    year: "2021",
-    title: "500+ Students Placed",
-    description:
-      "Successfully placed over 500 students in top medical universities with 100% admission success rate."
-  },
-  {
-    year: "2022",
-    title: "Expanded Support Services",
-    description:
-      "Added complete visa support, accommodation assistance, and local guidance for students and parents."
-  },
-  {
-    year: "Today",
-    title: "Leading MBBS Abroad Consultancy",
-    description:
-      "Trusted by thousands of students and parents for transparent, affordable, and reliable medical education abroad."
+    title: "Better Decision Making",
+    description: "We help families compare countries, universities, exams, fee structures, and student life with far more clarity."
   }
 ];
 
 export default function AboutPage() {
-   const { openModal } = useFormModal();
+  const { openModal } = useFormModal();
+
   return (
-    <main className="min-h-screen bg-slate-50 text-slate-900 font-sans">
+    <main className="min-h-screen bg-[#FAFAFA] text-slate-900">
+      <section className="border-b border-slate-100 bg-white">
+        <div className="mx-auto grid max-w-7xl gap-12 px-6 py-14 lg:grid-cols-[1.05fr_0.95fr] lg:items-center lg:py-20">
+          <div>
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-amber-700">
+              <Sparkles className="h-3.5 w-3.5" />
+              About Summit Global
+            </div>
+            <h1 className="mt-6 max-w-4xl text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
+              Helping students build confident paths to
+              <span className="text-amber-500"> MBBS Abroad & Study Abroad</span>
+            </h1>
+            <p className="mt-6 max-w-2xl text-base leading-8 text-slate-500 md:text-lg">
+              We work with students and parents who need clarity, structure, and real support
+              through admissions, university shortlisting, scholarships, documentation, visa
+              planning, and transition guidance.
+            </p>
 
-      {/* Hero Section */}
-<section className="max-w-7xl mx-auto px-6 py-24 grid lg:grid-cols-2 gap-16 items-center bg-white">
-  
-  {/* LEFT CONTENT */}
-  <div>
-    <span className="text-sm font-semibold tracking-widest text-blue-700 uppercase">
-      About Education Times Abroad
-    </span>
-
-    <h1 className="mt-6 text-xl sm:text-5xl lg:text-4xl font-bold text-slate-900 leading-tight">
-      Making MBBS Abroad<br />
-      <span className="text-blue-600">Accessible & Affordable</span>
-    </h1>
-
-    <p className="mt-6 text-lg text-slate-600 max-w-xl leading-relaxed">
-      We are India's leading consultancy for MBBS abroad, helping students 
-      secure admissions in NMC & WHO approved universities with zero 
-      donation and complete support.
-    </p>
-
-    {/* STATS */}
-    <div className="mt-10 grid grid-cols-3 gap-8 max-w-xl">
-      <div>
-        <p className="text-3xl font-bold text-slate-900">1000+</p>
-        <p className="text-sm text-slate-500 mt-1">Students Placed</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold text-slate-900">15+</p>
-        <p className="text-sm text-slate-500 mt-1">Countries</p>
-      </div>
-      <div>
-        <p className="text-3xl font-bold text-slate-900">98%</p>
-        <p className="text-sm text-slate-500 mt-1">Success Rate</p>
-      </div>
-    </div>
-
-    {/* CTA */}
-    <div className="mt-12">
-      <button
-        onClick={openModal}
-        className="px-8 py-4 rounded-full bg-blue-600 hover:bg-blue-700 text-white font-semibold transition-colors"
-      >
-        Start Your MBBS Journey
-      </button>
-    </div>
-  </div>
-
-  {/* RIGHT IMAGE */}
-  <div className="relative">
-    <div className="rounded-3xl overflow-hidden border border-slate-200 bg-slate-50">
-      <img
-        src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=600&h=400&fit=crop"
-        alt="Medical students abroad"
-        className="w-full h-full object-cover"
-      />
-    </div>
-
-    {/* Rating Badge */}
-    <div className="absolute -bottom-6 left-6 bg-white border border-slate-200 rounded-2xl px-5 py-4 shadow-sm">
-      <p className="text-lg font-bold text-slate-900 leading-none">4.9 / 5</p>
-      <p className="text-xs text-slate-500 mt-1">
-        Rated by medical students & parents
-      </p>
-    </div>
-  </div>
-</section>
-
-      {/* Stats Bar */}
-      <section className="max-w-7xl mx-auto px-6 py-12 border-y border-slate-200 grid grid-cols-2 md:grid-cols-4 gap-8">
-        {[
-          { label: "NMC Approved", value: "100%" },
-          { label: "Partner Universities", value: "50+" },
-          { label: "Visa Success Rate", value: "99%" },
-          { label: "Zero Donation", value: "Guaranteed" }
-        ].map((stat, i) => (
-          <div key={i} className="text-center">
-            <h3 className="text-3xl font-bold text-blue-600">{stat.value}</h3>
-            <p className="text-slate-400 text-[10px] uppercase tracking-widest font-bold mt-1">{stat.label}</p>
-          </div>
-        ))}
-      </section>
-
-      {/* Our Story Section */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
-          <div className="space-y-8">
-            <div>
-              <h2 className="text-4xl lg:text-5xl font-bold text-slate-900 mb-6">
-                Your Medical Career <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-500 to-blue-600">Starts Here</span>
-              </h2>
-              <p className="text-slate-500 text-lg leading-relaxed mb-6">
-                Founded in 2018, Education Times Abroad specializes in MBBS admissions 
-                with a focus on transparency, affordability, and student success.
-              </p>
-              <p className="text-slate-500 text-lg leading-relaxed">
-                We've helped over 1000+ students fulfill their dreams of becoming doctors 
-                by securing admissions in top medical universities across 15+ countries.
-              </p>
+            <div className="mt-10 grid max-w-2xl grid-cols-2 gap-4 md:grid-cols-4">
+              {[
+                { value: "12K+", label: "Students Guided" },
+                { value: "30+", label: "Countries" },
+                { value: "500+", label: "Partner Institutions" },
+                { value: "98%", label: "Visa Success Focus" },
+              ].map((item) => (
+                <div key={item.label} className="rounded-[1.5rem] border border-slate-100 bg-slate-50 px-4 py-5">
+                  <p className="text-3xl font-black text-slate-950">{item.value}</p>
+                  <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">{item.label}</p>
+                </div>
+              ))}
             </div>
 
-            {/* Key Achievements */}
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <CheckCircle2 className="w-5 h-5 text-blue-600" />
-                </div>
-                <span className="text-slate-700 font-medium">Zero Donation Universities</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-blue-100 p-2 rounded-lg">
-                  <Award className="w-5 h-5 text-blue-600" />
-                </div>
-                <span className="text-slate-700 font-medium">NMC & WHO Approved Only</span>
-              </div>
-              <div className="flex items-center gap-4">
-                <div className="bg-purple-100 p-2 rounded-lg">
-                  <Users className="w-5 h-5 text-purple-600" />
-                </div>
-                <span className="text-slate-700 font-medium">Indian Food & Hostel</span>
-              </div>
+            <div className="mt-10 flex flex-col gap-4 sm:flex-row">
+              <button
+                onClick={openModal}
+                className="inline-flex items-center justify-center gap-3 rounded-2xl bg-amber-500 px-8 py-4 text-base font-black text-slate-950 transition-all hover:bg-amber-400"
+              >
+                Book Free Counselling
+                <ArrowRight size={18} />
+              </button>
+              <button
+                onClick={openModal}
+                className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-4 text-base font-black text-[var(--surface-navy)] transition-all hover:bg-slate-50"
+              >
+                Explore Your Options
+              </button>
             </div>
           </div>
 
           <div className="relative">
-            <div className="bg-gradient-to-br from-blue-100 to-blue-200 rounded-3xl p-8 shadow-xl">
-              <Image
-                src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=500&h=400&fit=crop"
-                alt="Medical Education"
-                width={500}
-                height={400}
-                className="rounded-2xl shadow-lg"
+            <div className="overflow-hidden rounded-[2.5rem] border border-slate-100 bg-slate-50 shadow-sm">
+              <img
+                src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=900&h=700&fit=crop"
+                alt="Students planning education abroad"
+                className="h-full w-full object-cover"
               />
+            </div>
+            <div className="absolute bottom-6 left-6 rounded-[1.5rem] border border-white/70 bg-white/95 px-5 py-4 shadow-sm backdrop-blur-sm">
+              <p className="text-sm font-black uppercase tracking-[0.16em] text-slate-400">Trusted Since</p>
+              <p className="mt-1 text-2xl font-black text-slate-950">2005</p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Timeline Section */}
-    <section className="max-w-7xl mx-auto px-6 py-28 bg-slate-50 rounded-3xl mx-6 mb-24 border border-slate-200">
-      
-      {/* Header */}
-      <div className="max-w-3xl mb-20">
-        <span className="text-sm font-semibold tracking-wider text-blue-700 uppercase">
-          Our Journey
-        </span>
-        <h2 className="text-4xl md:text-5xl font-bold text-slate-900 mt-4 mb-6 leading-tight">
-          Building Medical Careers Since 2018
-        </h2>
-        <p className="text-lg text-slate-600 leading-relaxed">
-          From a small startup to India's trusted MBBS abroad consultancy, 
-          our journey has been defined by student success.
-        </p>
-      </div>
-
-      {/* Timeline */}
-      <div className="relative">
-        {/* Vertical Line */}
-        <div className="absolute left-3 top-0 bottom-0 w-px bg-slate-300"></div>
-
-        <div className="space-y-14">
-          {legacyTimeline.map((item, index) => (
-            <div key={index} className="relative pl-12">
-              
-              {/* Dot */}
-              <div className="absolute left-0 top-2 w-6 h-6 rounded-full bg-white border-2 border-blue-700 flex items-center justify-center">
-                <div className="w-2 h-2 bg-blue-700 rounded-full"></div>
+      <section className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+        <div className="grid gap-6 md:grid-cols-2 xl:grid-cols-4">
+          {[
+            {
+              icon: <ShieldCheck className="h-6 w-6" />,
+              title: "Transparent Process",
+              text: "Clear guidance on fees, timelines, applications, and documentation without confusion."
+            },
+            {
+              icon: <GraduationCap className="h-6 w-6" />,
+              title: "Medical & Global Pathways",
+              text: "Focused support for MBBS Abroad, university admissions, and international education routes."
+            },
+            {
+              icon: <Globe className="h-6 w-6" />,
+              title: "Country-Wise Planning",
+              text: "Practical destination comparison for tuition, recognition, lifestyle, and long-term fit."
+            },
+            {
+              icon: <Users className="h-6 w-6" />,
+              title: "Student-Parent Support",
+              text: "The process stays easier when counselling is built for both students and their families."
+            }
+          ].map((item) => (
+            <div key={item.title} className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm">
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-navy)] text-amber-300">
+                {item.icon}
               </div>
-
-              <div className="bg-white border border-slate-200 rounded-2xl p-8">
-                <div className="flex items-center gap-4 mb-4">
-                  <span className="text-sm font-semibold text-blue-700">
-                    {item.year}
-                  </span>
-                  <Calendar className="w-4 h-4 text-slate-400" />
-                </div>
-
-                <h3 className="text-xl font-bold text-slate-900 mb-3">
-                  {item.title}
-                </h3>
-
-                <p className="text-slate-600 leading-relaxed">
-                  {item.description}
-                </p>
-              </div>
+              <h3 className="mt-5 text-xl font-black text-slate-950">{item.title}</h3>
+              <p className="mt-3 text-sm leading-7 text-slate-500">{item.text}</p>
             </div>
           ))}
         </div>
-      </div>
-    </section>
+      </section>
 
-      {/* Our Values Section */}
-    <section className="max-w-7xl mx-auto px-6 py-28 bg-white">
-  {/* Header */}
-<div className="max-w-3xl mx-auto mb-20 text-center">
-  <span className="text-sm font-semibold tracking-wider text-blue-700 uppercase">
-    Our Values
-  </span>
-
-  <h2 className="text-4xl md:text-5xl font-bold text-blue-700 mt-4 mb-6 leading-tight">
-    Principles That Guide Every Student's Success
-  </h2>
-
-  <p className="text-lg text-slate-600 leading-relaxed">
-    Our values are built around transparency, affordability, and complete 
-    student support for their medical education journey.
-  </p>
-</div>
-
-
-  {/* Values Grid */}
-  <div className="grid grid-cols-1 md:grid-cols-2 gap-12">
-    {values.map((value, index) => (
-      <div
-        key={index}
-        className="border border-slate-200 rounded-2xl p-10 hover:border-slate-300 transition-colors duration-300"
-      >
-        <div className="flex items-start gap-6">
-          <div className="flex-shrink-0 w-12 h-12 rounded-full border border-blue-700 flex items-center justify-center text-blue-700 font-semibold">
-            {index + 1}
-          </div>
-
+      <section className="mx-auto max-w-7xl px-6 pb-16 lg:pb-24">
+        <div className="grid gap-10 lg:grid-cols-[0.9fr_1.1fr]">
           <div>
-            <h3 className="text-2xl font-bold text-slate-900 mb-4">
-              {value.title}
-            </h3>
-            <p className="text-slate-600 leading-relaxed mb-4">
-              {value.description}
-            </p>
-            <p className="text-slate-500 text-sm leading-relaxed">
-              {value.subtext}
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">Our Journey</p>
+            <h2 className="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+              Built around long-term trust, not just admissions
+            </h2>
+            <p className="mt-5 max-w-xl text-base leading-8 text-slate-500">
+              Our growth has come from helping students take better decisions with less stress,
+              stronger information, and more reliable support through each stage of the process.
             </p>
           </div>
-        </div>
-      </div>
-    ))}
-  </div>
-</section>
 
-      {/* Contact CTA */}
-      <section className="max-w-7xl mx-auto px-6 py-24">
-        <div className="bg-gradient-to-r from-blue-600 to-blue-700 rounded-3xl p-12 text-center text-white">
-          <h2 className="text-4xl font-bold mb-6">
-            Ready to Start Your MBBS Journey?
-          </h2>
-          <p className="text-xl mb-8 text-blue-100">
-            Get expert guidance for NMC approved universities with zero donation
-          </p>
-          <button
-            onClick={openModal}
-            className="inline-flex items-center gap-2 bg-white text-blue-600 font-bold rounded-2xl transition-all duration-300 px-8 py-4 text-lg hover:bg-blue-50"
-          >
-            Get Free Consultation
-            <ArrowRight size={20} />
-          </button>
+          <div className="space-y-4">
+            {milestones.map((item) => (
+              <div key={item.year} className="rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm">
+                <div className="flex items-center gap-3">
+                  <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-amber-50 text-amber-600">
+                    <Calendar className="h-5 w-5" />
+                  </div>
+                  <span className="text-sm font-black uppercase tracking-[0.16em] text-amber-700">{item.year}</span>
+                </div>
+                <h3 className="mt-4 text-xl font-black text-slate-950">{item.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-slate-500">{item.description}</p>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
+      <section className="border-y border-slate-100 bg-white">
+        <div className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+          <div className="max-w-3xl">
+            <p className="text-xs font-black uppercase tracking-[0.18em] text-amber-700">What Guides Us</p>
+            <h2 className="mt-4 text-4xl font-black tracking-tight text-slate-950 md:text-5xl">
+              A more structured and student-first way to approach global education
+            </h2>
+          </div>
+
+          <div className="mt-12 grid gap-6 md:grid-cols-2">
+            {values.map((value, index) => (
+              <div key={value.title} className="rounded-[2rem] border border-slate-100 bg-slate-50 p-8">
+                <div className="flex h-12 w-12 items-center justify-center rounded-full border border-slate-200 bg-white text-lg font-black text-[var(--surface-navy)]">
+                  {index + 1}
+                </div>
+                <h3 className="mt-6 text-2xl font-black text-slate-950">{value.title}</h3>
+                <p className="mt-4 text-sm leading-7 text-slate-500">{value.description}</p>
+                <div className="mt-5 flex items-center gap-2 text-sm font-semibold text-slate-700">
+                  <CheckCircle2 className="h-4 w-4 text-amber-500" />
+                  Built for MBBS Abroad and Study Abroad decisions
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-6 py-16 lg:py-24">
+        <div className="rounded-[2.5rem] bg-[var(--surface-navy)] p-10 text-white lg:p-14">
+          <h2 className="max-w-3xl text-4xl font-black tracking-tight">
+            Ready to plan your next step with more clarity?
+          </h2>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
+            Speak with our team to discuss MBBS Abroad options, global university pathways,
+            scholarships, exams, or country shortlisting.
+          </p>
+          <button
+            onClick={openModal}
+            className="mt-8 inline-flex items-center gap-3 rounded-2xl bg-amber-500 px-8 py-4 text-base font-black text-slate-950 transition-all hover:bg-amber-400"
+          >
+            Get Free Consultation
+            <ArrowRight size={18} />
+          </button>
+        </div>
+      </section>
     </main>
   );
 }

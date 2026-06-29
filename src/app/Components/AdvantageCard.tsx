@@ -1,6 +1,6 @@
 "use client"
 import React from 'react';
-import { GraduationCap, ShieldCheck, Landmark, Globe2, Zap, CheckCircle2 } from 'lucide-react';
+import { ArrowUpRight, CheckCircle2, Globe2, Headphones, ShieldCheck, UserRoundCheck, BadgeCheck } from 'lucide-react';
 
 interface FeatureCardProps {
   icon: React.ReactNode;
@@ -11,9 +11,9 @@ interface FeatureCardProps {
 }
 
 const FeatureCard = ({ icon, title, description, className = "", iconBg = "bg-white" }: FeatureCardProps) => (
-  <div className={`group relative p-8 rounded-[2rem] transition-all duration-500 hover:shadow-2xl hover:shadow-blue-100/50 ${className}`}>
+  <div className={`group relative rounded-[2rem] p-8 transition-all duration-500 hover:-translate-y-2 ${className}`}>
     <div className="flex flex-col h-full space-y-5">
-      <div className={`p-3.5 w-fit rounded-2xl shadow-sm group-hover:scale-110 group-hover:rotate-3 transition-all duration-300 ${iconBg}`}>
+      <div className={`w-fit rounded-2xl p-3.5 shadow-sm transition-all duration-300 group-hover:scale-110 group-hover:rotate-3 ${iconBg}`}>
         {icon}
       </div>
       <div>
@@ -27,86 +27,96 @@ const FeatureCard = ({ icon, title, description, className = "", iconBg = "bg-wh
 );
 
 export default function EducationTimesAdvantage() {
+  const trustCards = [
+    {
+      icon: <ShieldCheck className="h-6 w-6 text-amber-500" />,
+      title: "100% Genuine Admissions",
+      description: "Direct partnerships with universities. No middlemen, no fraud.",
+    },
+    {
+      icon: <UserRoundCheck className="h-6 w-6 text-amber-500" />,
+      title: "Expert Counsellors",
+      description: "Certified counsellors with years of abroad admissions experience.",
+    },
+    {
+      icon: <Globe2 className="h-6 w-6 text-amber-500" />,
+      title: "Global Network",
+      description: "Partnerships spanning 500+ universities across 30+ countries.",
+    },
+    {
+      icon: <ArrowUpRight className="h-6 w-6 text-amber-500" />,
+      title: "Career-First Approach",
+      description: "We match your profile with programs that align with your goals.",
+    },
+    {
+      icon: <Headphones className="h-6 w-6 text-amber-500" />,
+      title: "Post-Landing Support",
+      description: "Dedicated on-ground team in every country to support students.",
+    },
+    {
+      icon: <BadgeCheck className="h-6 w-6 text-amber-500" />,
+      title: "Certified & Accredited",
+      description: "Recognized by trusted institutions and education bodies.",
+    },
+  ];
+
   return (
-    <section id="about" className="relative w-full max-w-7xl mx-auto px-6 py-20 lg:py-32 overflow-hidden bg-white">
-      {/* Decorative Gradient Glows */}
-      <div className="absolute -top-24 -right-24 w-96 h-96 bg-blue-100/50 rounded-full blur-[100px]" />
-      <div className="absolute -bottom-24 -left-24 w-96 h-96 bg-indigo-100/40 rounded-full blur-[100px]" />
+    <section id="about" className="section-home relative mx-auto w-full max-w-7xl overflow-hidden px-6 py-20 lg:py-32">
+      <div className="absolute -right-24 -top-24 h-96 w-96 rounded-full bg-amber-300/16 blur-[100px]" />
       
       <div className="relative z-10 flex flex-col lg:flex-row gap-12 lg:gap-20 items-start">
         
         {/* Left Content Side */}
         <div className="w-full lg:w-1/2 lg:sticky lg:top-12">
-          <div className="inline-flex items-center gap-2 px-4 py-2 rounded-full bg-blue-50 border border-blue-100 text-blue-700 text-xs font-bold uppercase tracking-widest mb-8">
-            <span className="flex h-2 w-2 rounded-full bg-blue-600 animate-pulse" />
-            2026 Global Standards
+          <div className="eyebrow mb-8">
+            <span className="flex h-2 w-2 rounded-full bg-amber-400 animate-pulse" />
+            Why Summit Global
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-black text-slate-900 leading-[1.05] mb-8">
-            Your Future, <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-indigo-700">Expertly Mapped.</span>
+          <h2 className="mb-8 text-4xl font-black leading-[1.05] text-[var(--surface-navy)] md:text-6xl">
+            The Most Trusted Name
+            <br />
+            in Abroad Admissions
           </h2>
 
-          <p className="text-slate-600 text-lg md:text-xl mb-10 leading-relaxed max-w-xl">
-            Navigating international education requires more than just a visa. We provide a 360° ecosystem—from AI-driven matching to post-landing career support.
+          <p className="mb-10 max-w-xl text-lg leading-relaxed text-slate-600 md:text-xl">
+            With years of experience and thousands of success stories, we deliver unmatched
+            expertise, transparency, and results for every student.
           </p>
 
-          {/* Stats Bar */}
-          <div className="flex flex-wrap gap-8 py-8 border-y border-slate-100 mb-10">
-            <div>
-              <div className="text-3xl font-black text-blue-600">99.2%</div>
-              <div className="text-xs font-bold text-slate-400 uppercase mt-1">Visa Success</div>
-            </div>
-            <div className="w-px h-12 bg-slate-100 hidden sm:block" />
-            <div>
-              <div className="text-3xl font-black text-blue-600">15k+</div>
-              <div className="text-xs font-bold text-slate-400 uppercase mt-1">Global Alumni</div>
-            </div>
-            <div className="w-px h-12 bg-slate-100 hidden sm:block" />
-            <div>
-              <div className="text-3xl font-black text-blue-600">500+</div>
-              <div className="text-xs font-bold text-slate-400 uppercase mt-1">Uni Partners</div>
-            </div>
+          <div className="mb-10 space-y-4">
+            {[
+              'NMC & WHO recognised university tie-ups only',
+              'Dedicated counsellor assigned from day one',
+              'Zero hidden charges and transparent fee guidance',
+              '24/7 student support after landing abroad',
+            ].map((point) => (
+              <div key={point} className="flex items-center gap-3 text-[15px] font-semibold text-[var(--surface-navy)]">
+                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-100 text-amber-600">
+                  <CheckCircle2 size={16} />
+                </span>
+                <span>{point}</span>
+              </div>
+            ))}
           </div>
 
-          <button className="group flex items-center gap-3 bg-blue-600 text-white px-10 py-5 rounded-2xl font-bold hover:bg-slate-900 transition-all duration-300 shadow-xl shadow-blue-200 hover:shadow-slate-200">
-            Book Free Consultation
-            <Zap className="w-5 h-5 fill-current transition-transform group-hover:scale-125" />
+          <button className="btn-primary group flex items-center gap-3 rounded-xl px-8 py-4 font-bold">
+            Talk to a Counsellor
+            <ArrowUpRight className="h-5 w-5 transition-transform group-hover:translate-x-1 group-hover:-translate-y-1" />
           </button>
         </div>
 
-        {/* Right Bento Grid Side */}
         <div className="w-full lg:w-1/2 grid grid-cols-1 md:grid-cols-2 gap-5">
-          <FeatureCard 
-            className="bg-gradient-to-br from-blue-600 to-indigo-700 text-white md:col-span-2"
-            icon={<GraduationCap className="w-7 h-7 text-blue-600" />}
-            title="Strategic Ivy-League Mentorship"
-            description="Consult with mentors who are alumni of the world's top 1% universities. We offer firsthand insights into campus life and recruitment."
-          />
-          
-          <FeatureCard 
-            className="bg-white border-2 border-slate-50 shadow-sm text-slate-900"
-            iconBg="bg-blue-50"
-            icon={<ShieldCheck className="w-6 h-6 text-blue-600" />}
-            title="Smart Visa Hub"
-            description="Our 2026 automated compliance check ensures your GIC and Financial docs meet the latest 2026 standards."
-          />
-
-          <FeatureCard 
-            className="bg-white border-2 border-slate-50 shadow-sm text-slate-900"
-            iconBg="bg-blue-50"
-            icon={<Landmark className="w-6 h-6 text-blue-600" />}
-            title="Scholarship Desk"
-            description="Access exclusive 2026-27 waivers. We've secured over ₹45Cr in student aid this year alone."
-          />
-
-          <FeatureCard 
-            className="bg-slate-900 text-white md:col-span-2"
-            iconBg="bg-blue-600"
-            icon={<Globe2 className="w-6 h-6 text-white" />}
-            title="Global Career Network"
-            description="Our service doesn't end at the airport. Connect with our 15,000+ strong alumni network in tech, finance, and medicine hubs worldwide."
-          />
+          {trustCards.map((item) => (
+            <FeatureCard
+              key={item.title}
+              className="premium-card-light text-[var(--surface-navy)]"
+              iconBg="bg-[var(--surface-navy)]/6"
+              icon={item.icon}
+              title={item.title}
+              description={item.description}
+            />
+          ))}
         </div>
       </div>
     </section>

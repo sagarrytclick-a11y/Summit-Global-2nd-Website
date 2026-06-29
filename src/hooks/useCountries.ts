@@ -20,7 +20,7 @@ const fetchCountries = async (): Promise<Country[]> => {
   return result.data
 }
 
-export function useCountries() {
+export function useCountries(initialData?: Country[]) {
   return useQuery({
     queryKey: ['countries'],
     queryFn: fetchCountries,
@@ -28,6 +28,7 @@ export function useCountries() {
     gcTime: 45 * 60 * 1000, // 45 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    initialData,
   })
 }
 

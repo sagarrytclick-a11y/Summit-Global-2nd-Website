@@ -1,6 +1,7 @@
 'use client'
 
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useMemo, useState } from 'react'
+import Link from 'next/link'
 import { ChevronLeft, ChevronRight, Building2 } from 'lucide-react'
 import CollegeCard from '@/app/Components/CollegeCard'
 import { CollegeGridSkeleton } from '@/app/Components/CollegeCardSkeleton'
@@ -59,13 +60,18 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
     retry: 2,
     refetchOnWindowFocus: false,
   });
-  
+
+  const [currentIndex, setCurrentIndex] = useState(0)
+
   // Reset current index when country changes
   useEffect(() => {
     setCurrentIndex(0);
   }, [countrySlug]);
-  
-  const [currentIndex, setCurrentIndex] = useState(0)
+
+  const visibleColleges = useMemo(
+    () => colleges.slice(currentIndex * 3, (currentIndex + 1) * 3),
+    [colleges, currentIndex]
+  )
 
   const nextSlide = () => {
     setCurrentIndex((prev) => (prev + 1) >= Math.ceil(colleges.length / 3) ? 0 : prev + 1)
@@ -77,10 +83,10 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
 
   if (isError) {
     return (
-      <div className="py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <div className="w-16 h-16 text-red-500 mx-auto mb-4">
+      <div className="py-4">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-10 text-center">
+            <div className="mx-auto mb-4 w-16 text-amber-500">
               <Building2 size={48} />
             </div>
             <h3 className="text-xl font-bold text-slate-900 mb-2">Error Loading Colleges</h3>
@@ -94,10 +100,13 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
 
   if (isLoading) {
     return (
-      <div className="py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
-            <h3 className="text-xl font-bold text-slate-900 mb-2">Loading Colleges...</h3>
+      <div className="py-4">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="mb-10 flex items-end justify-between gap-6">
+            <div>
+              <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-700">College Directory</p>
+              <h3 className="mt-3 text-3xl font-black tracking-tight text-slate-900">Top colleges in {countryName || 'this country'}</h3>
+            </div>
           </div>
           <CollegeGridSkeleton count={6} />
         </div>
@@ -107,9 +116,9 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
 
   if (colleges.length === 0) {
     return (
-      <div className="py-16">
-        <div className="max-w-7xl mx-auto px-4">
-          <div className="text-center mb-12">
+      <div className="py-4">
+        <div className="mx-auto max-w-7xl px-6">
+          <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-10 text-center">
             <Building2 size={48} className="text-slate-300 mx-auto mb-4" />
             <h3 className="text-xl font-bold text-slate-900 mb-2">No Colleges Available</h3>
             <p className="text-slate-500 font-medium">Check back soon for colleges in this destination.</p>
@@ -119,44 +128,45 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
     )
   }
 
-  const visibleColleges = React.useMemo(() => colleges.slice(currentIndex * 3, (currentIndex + 1) * 3), [colleges, currentIndex])
-
   return (
-    <div className="py-16 bg-gradient-to-b from-white to-slate-50">
-      <div className="max-w-7xl mx-auto px-4">
-        {/* Header */}
-        <div className="text-center mb-12">
-          <h2 className="text-4xl font-black text-slate-900 mb-4">
+    <div className="py-4">
+      <div className="mx-auto max-w-7xl px-6">
+        <div className="mb-12 flex flex-col gap-6 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-700">College Directory</p>
+            <h2 className="mt-3 text-4xl font-black tracking-tight text-slate-900">
             Top Colleges in {countryName || 'This Country'}
-          </h2>
-          <p className="text-xl text-slate-600 max-w-3xl mx-auto font-medium">
-            Explore prestigious universities and colleges offering world-class education
-          </p>
+            </h2>
+            <p className="mt-4 max-w-3xl text-base font-medium leading-8 text-slate-600">
+              Explore university options curated for students planning MBBS Abroad and Study Abroad pathways in {countryName || 'this destination'}.
+            </p>
+          </div>
+          <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 px-5 py-4">
+            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Available Options</p>
+            <p className="mt-1 text-2xl font-black text-slate-900">{colleges.length}</p>
+          </div>
         </div>
 
-        {/* Slider Container */}
         <div className="relative">
-          {/* Navigation Buttons */}
           {colleges.length > 3 && (
             <>
               <button
                 onClick={prevSlide}
-                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg border border-slate-200 hover:bg-slate-50 transition-all duration-200 group"
+                className="absolute left-0 top-1/2 z-10 -translate-x-3 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-3 shadow-lg transition-all duration-200 group hover:border-amber-200 hover:bg-amber-50"
                 aria-label="Previous colleges"
               >
-                <ChevronLeft size={20} className="text-slate-600 group-hover:text-green-600 transition-colors" />
+                <ChevronLeft size={20} className="text-slate-600 transition-colors group-hover:text-amber-600" />
               </button>
               <button
                 onClick={nextSlide}
-                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-4 z-10 bg-white rounded-full p-3 shadow-lg border border-slate-200 hover:bg-slate-50 transition-all duration-200 group"
+                className="absolute right-0 top-1/2 z-10 translate-x-3 -translate-y-1/2 rounded-full border border-slate-200 bg-white p-3 shadow-lg transition-all duration-200 group hover:border-amber-200 hover:bg-amber-50"
                 aria-label="Next colleges"
               >
-                <ChevronRight size={20} className="text-slate-600 group-hover:text-green-600 transition-colors" />
+                <ChevronRight size={20} className="text-slate-600 transition-colors group-hover:text-amber-600" />
               </button>
             </>
           )}
 
-          {/* College Cards */}
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {visibleColleges.map((college: any) => {
               if (!college || typeof college !== 'object') return null;
@@ -192,7 +202,7 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
                 onClick={() => setCurrentIndex(index)}
                 className={`w-2 h-2 rounded-full transition-all duration-300 ${
                   index === currentIndex 
-                    ? 'bg-green-600 w-8' 
+                    ? 'w-8 bg-[var(--surface-navy)]' 
                     : 'bg-slate-300 hover:bg-slate-400'
                 }`}
                 aria-label={`Go to slide ${index + 1}`}
@@ -201,12 +211,11 @@ const fetchColleges = async (countrySlug?: string): Promise<College[]> => {
           </div>
         )}
 
-        {/* View All Button */}
         <div className="text-center mt-12">
-          <button className="inline-flex items-center gap-2 bg-slate-900 hover:bg-green-600 text-white font-black rounded-2xl transition-all duration-300 px-8 py-4 text-lg group">
+          <Link href="/colleges" className="inline-flex items-center gap-2 rounded-2xl bg-[var(--surface-navy)] px-8 py-4 text-lg font-black text-white transition-all duration-300 group hover:bg-slate-800">
             View All Colleges
             <ChevronRight size={20} className="group-hover:translate-x-1 transition-transform" />
-          </button>
+          </Link>
         </div>
       </div>
     </div>

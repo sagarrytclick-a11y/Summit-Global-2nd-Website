@@ -17,16 +17,16 @@ import MbbsAbroadPopup from "../Components/MbbsAbroadPopup";
 
 const page = () => {
   return (
-    <div className="w-full bg-white text-black overflow-x-hidden">
+    <div className="w-full overflow-x-hidden text-slate-950">
       <Hero />
       <MbbsAbroad />
-      <FeaturedSection />
       <PopularCountries />
-      <StudyPrograms />
       <EducationStats />
+      <EducationTimesAdvantage />
+      <FeaturedSection />
+      <StudyPrograms />
       <LatestBlogs />
       <Services />
-      <EducationTimesAdvantage />
       <ProcessJourney />
       <StudentTestimonials />
       <FAQ />

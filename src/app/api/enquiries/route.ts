@@ -3,6 +3,42 @@ import { connectDB } from '@/lib/db'
 import Enquiry from '@/models/Enquiry'
 import { sendEmail, emailTemplates } from '@/lib/email'
 
+async function sendEnquiryEmails(payload: {
+  name: string
+  email: string
+  phone: string
+  city: string
+  interest: string
+  message: string
+}) {
+  const adminEmail = process.env.ADMIN_EMAIL
+
+  if (!adminEmail) {
+    return
+  }
+
+  const adminTemplate = emailTemplates.enquiryNotification(payload)
+  const studentTemplate = emailTemplates.enquiryConfirmation({
+    name: payload.name,
+    interest: payload.interest,
+  })
+
+  await Promise.allSettled([
+    sendEmail({
+      to: adminEmail,
+      subject: adminTemplate.subject,
+      html: adminTemplate.html,
+      text: adminTemplate.text,
+    }),
+    sendEmail({
+      to: payload.email,
+      subject: studentTemplate.subject,
+      html: studentTemplate.html,
+      text: studentTemplate.text,
+    }),
+  ])
+}
+
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json()
@@ -54,55 +90,16 @@ export async function POST(request: NextRequest) {
     // Save to database
     await enquiry.save()
 
-    // Send email notification to admin
-    try {
-      const adminEmail = process.env.ADMIN_EMAIL
-      if (adminEmail) {
-        const adminTemplate = emailTemplates.enquiryNotification({
-          name: name.trim(),
-          email: email.trim().toLowerCase(),
-          phone: phone.trim(),
-          city: city.trim(),
-          interest: interest,
-          message: body.message?.trim() || ''
-        })
-
-        const emailResult = await sendEmail({
-          to: adminEmail,
-          subject: adminTemplate.subject,
-          html: adminTemplate.html,
-          text: adminTemplate.text
-        })
-
-        if (!emailResult.success) {
-          console.error('Failed to send admin notification email:', emailResult.error)
-        } else {
-          console.log('Admin notification email sent successfully')
-        }
-
-        // Send confirmation email to student
-        const studentTemplate = emailTemplates.enquiryConfirmation({
-          name: name.trim(),
-          interest: interest
-        })
-
-        const studentEmailResult = await sendEmail({
-          to: email.trim().toLowerCase(),
-          subject: studentTemplate.subject,
-          html: studentTemplate.html,
-          text: studentTemplate.text
-        })
-
-        if (!studentEmailResult.success) {
-          console.error('Failed to send student confirmation email:', studentEmailResult.error)
-        } else {
-          console.log('Student confirmation email sent successfully')
-        }
-      }
-    } catch (emailError) {
+    void sendEnquiryEmails({
+      name: name.trim(),
+      email: email.trim().toLowerCase(),
+      phone: phone.trim(),
+      city: city.trim(),
+      interest,
+      message: body.message?.trim() || '',
+    }).catch((emailError) => {
       console.error('Email sending error:', emailError)
-      // Don't fail the request if email fails
-    }
+    })
 
     return NextResponse.json(
       {
@@ -114,7 +111,6 @@ export async function POST(request: NextRequest) {
     )
 
   } catch (error) {
-    console.error('Error saving enquiry:', error)
     return NextResponse.json(
       { error: 'Failed to submit enquiry. Please try again.' },
       { status: 500 }

@@ -4,97 +4,146 @@ import Link from 'next/link';
 import { useQuery } from '@tanstack/react-query';
 import {
   MapPin, Trophy, DollarSign, Calendar, ArrowUpRight,
-  FileText, Award, Building2, ArrowRight, GraduationCap, 
+  FileText, Building2, ArrowRight, GraduationCap,
   ChevronRight, Sparkles
 } from 'lucide-react';
 
 // --- Interfaces (Kept as per your original structure) ---
-interface UniversityCardProps {
+interface FeaturedCollegeApiItem {
+  name: string;
+  slug: string;
+  banner_url?: string;
+  fees?: number;
+  duration?: string;
+  establishment_year?: string;
+  about_content?: string;
+  college_type?: string;
+  country_ref?: {
+    name?: string;
+    city?: string;
+    slug?: string;
+  } | string | null;
+  ranking?: {
+    country_ranking?: string;
+  } | string | null;
+  fees_structure?: {
+    courses?: Array<{
+      annual_tuition_fee?: string;
+      duration?: string;
+    }>;
+  };
+}
+
+interface FeaturedExamApiItem {
+  name: string;
+  slug: string;
+  short_name?: string;
+  exam_type?: string;
+  conducting_body?: string;
+  exam_mode?: string;
+  frequency?: string;
+  description?: string;
+}
+
+interface FeaturedCollegeCardProps {
   name: string; image: string; location: string; ranking?: string;
-  fees?: number; duration?: string; establishment_year?: string;
+  fees?: number | string; duration?: string; establishment_year?: string;
   slug: string; country?: string; about?: string; college_type?: string;
 }
 
 interface ExamCardProps {
   name: string; short_name?: string; exam_type?: string;
-  conducting_body?: string; exam_mode?: string; frequency?: string;
+  conducting_body?: string; exam_mode?: string;
   description?: string; slug: string;
 }
 
-// --- Component 1: Premium University Card ---
+// --- Component 1: Featured College Card ---
 
-const UniversityCard = ({ name, image, location, college_type ,  ranking, fees, duration, establishment_year, slug, country, about }: UniversityCardProps) => (
+const FeaturedCollegeCard = ({ name, image, location, college_type, ranking, fees, duration, establishment_year, slug, country, about }: FeaturedCollegeCardProps) => (
   <Link href={`/colleges/${slug}`} className="group block h-full">
-    <div className="relative h-full bg-white rounded-3xl border border-slate-200 hover:border-blue-500/50 shadow-sm hover:shadow-[0_20px_50px_rgba(59,130,246,0.15)] transition-all duration-500 overflow-hidden flex flex-col hover:-translate-y-2">
-      
-      {/* Image & Badges */}
-      <div className="relative h-52 w-full overflow-hidden">
+    <div className="premium-card-light relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-200 transition-all duration-300 hover:-translate-y-1 hover:border-amber-300/40">
+      <div className="relative h-56 w-full overflow-hidden">
         <img 
           src={image || "/next.svg"} 
           alt={name} 
-          className="w-full h-full object-cover transition-transform duration-1000 group-hover:scale-110" 
+          className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105" 
         />
-        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent" />
-        
+        <div className="absolute inset-0 bg-gradient-to-t from-[var(--surface-navy)]/70 via-[var(--surface-navy)]/10 to-transparent" />
+
+        <div className="absolute left-4 top-4 rounded-full bg-white/95 px-3 py-1.5 text-[11px] font-bold text-[var(--surface-navy)] shadow-lg">
+          {country || "Global Campus"}
+        </div>
+
         {ranking && (
-          <div className="absolute top-4 right-4 backdrop-blur-md bg-white/90 border border-white/50 text-slate-900 px-3 py-1.5 rounded-2xl flex items-center gap-1.5 shadow-xl">
-            <Trophy size={14} className="text-amber-500 fill-amber-500/20" />
-            <span className="text-[11px] font-bold tracking-tight">Ranked {ranking}</span>
+          <div className="absolute bottom-4 right-4 flex items-center gap-1.5 rounded-full bg-white px-3 py-1.5 text-[11px] font-bold text-[var(--surface-navy)] shadow-lg">
+            <Trophy size={13} className="text-amber-500" />
+            <span>{ranking}</span>
           </div>
         )}
-
-        <div className="absolute bottom-4 left-4 right-4 flex items-center gap-2">
-          <div className="backdrop-blur-md bg-black/30 border border-white/20 px-3 py-1.5 rounded-xl flex items-center gap-2 text-white">
-            <MapPin size={14} className="text-blue-400" />
-            <span className="text-[11px] font-semibold truncate">{country}</span>
-          </div>
-        </div>
       </div>
 
-      {/* Content */}
-      <div className="p-6 flex flex-col flex-grow bg-gradient-to-b from-white to-slate-50/50">
-        <div className="mb-4">
-          <div className="flex items-center gap-2 text-blue-600 font-bold text-[10px] tracking-widest uppercase mb-1.5">
-            <Building2 size={12} />
-            <span>ESTD. {establishment_year}</span>
+      <div className="flex flex-grow flex-col p-6">
+        <div className="mb-5 flex items-start justify-between gap-3">
+          <div className="min-w-0">
+            <div className="mb-2 flex flex-wrap items-center gap-2 text-[10px] font-bold uppercase tracking-[0.22em] text-amber-600">
+              <span className="inline-flex items-center gap-1 rounded-full bg-amber-50 px-2.5 py-1">
+                <Building2 size={11} />
+                Top College
+              </span>
+              {establishment_year && <span>Estd. {establishment_year}</span>}
+            </div>
+            <h3 className="line-clamp-2 text-xl font-black leading-tight text-slate-950 transition-colors group-hover:text-amber-600">
+              {name}
+            </h3>
           </div>
-          <h3 className="text-xl font-bold text-slate-900 leading-tight group-hover:text-blue-600 transition-colors line-clamp-2 uppercase">
-            {name}
-          </h3>
+          <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-[var(--surface-navy)] text-amber-300">
+            <GraduationCap size={22} />
+          </div>
+        </div>
+
+        <div className="mb-5 flex flex-wrap gap-2">
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-600">
+            <MapPin size={13} className="text-amber-500" />
+            <span>{location || country || "Location not available"}</span>
+          </div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-3 py-1.5 text-[11px] font-semibold text-slate-600">
+            <Building2 size={12} />
+            <span>{college_type || "University"}</span>
+          </div>
         </div>
 
         {about && (
-          <p className="text-slate-500 text-xs leading-relaxed line-clamp-2 mb-6 italic border-l-2 border-blue-200 pl-3">
+          <p className="mb-6 line-clamp-3 text-sm leading-6 text-slate-500">
             {about}
           </p>
         )}
 
-        {/* Stats Grid */}
-        <div className="grid grid-cols-2 gap-4 mb-6">
-          <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm group-hover:border-blue-100 transition-colors">
-            <p className="text-[9px] text-slate-400 uppercase font-black mb-1 flex items-center gap-1">
-              <DollarSign size={10} /> Tuition Fee
+        <div className="mb-6 grid grid-cols-2 gap-3">
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="mb-1 flex items-center gap-1 text-[9px] font-black uppercase text-slate-400">
+              <DollarSign size={10} /> Annual Fee
             </p>
-            <p className="text-slate-900 font-bold text-sm">
+            <p className="text-sm font-bold text-slate-900">
               {typeof fees === 'string' ? fees : (fees ? `$${fees.toLocaleString()}` : 'N/A')}
             </p>
           </div>
-          <div className="bg-white p-3 rounded-2xl border border-slate-100 shadow-sm group-hover:border-blue-100 transition-colors">
-            <p className="text-[9px] text-slate-400 uppercase font-black mb-1 flex items-center gap-1">
+          <div className="rounded-2xl bg-slate-50 p-4">
+            <p className="mb-1 flex items-center gap-1 text-[9px] font-black uppercase text-slate-400">
               <Calendar size={10} /> Duration
             </p>
-            <p className="text-slate-900 font-bold text-sm">{duration} Years</p>
+            <p className="text-sm font-bold text-slate-900">{duration ? `${duration} Years` : 'N/A'}</p>
           </div>
         </div>
 
-        {/* Footer */}
-        <div className="mt-auto pt-4 border-t border-slate-100 flex items-center justify-between">
-          <div className="flex items-center gap-1.5 text-blue-600">
-            <GraduationCap size={16} />
-            <span className="text-[10px] font-black uppercase tracking-wider">{college_type}</span>
+        <div className="mt-auto flex items-center justify-between border-t border-slate-100 pt-4">
+          <div className="text-xs font-bold uppercase tracking-[0.22em] text-slate-400">
+            View Profile
           </div>
-          <div className="flex items-center gap-1 text-slate-900 text-xs font-bold group-hover:translate-x-1 transition-transform">
-            DETAILS <ArrowUpRight size={14} className="text-blue-600" />
+          <div className="flex items-center gap-2 text-sm font-bold text-[var(--surface-navy)] transition-transform group-hover:translate-x-1">
+            Explore
+            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-amber-50 text-amber-600">
+              <ArrowUpRight size={14} />
+            </span>
           </div>
         </div>
       </div>
@@ -104,23 +153,23 @@ const UniversityCard = ({ name, image, location, college_type ,  ranking, fees, 
 
 // --- Component 2: Modern Exam Card ---
 
-const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, frequency, description, slug }: ExamCardProps) => (
+const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, description, slug }: ExamCardProps) => (
   <Link href={`/exams/${slug}`} className="group block h-full">
-    <div className="relative h-full bg-white rounded-3xl border border-slate-200 shadow-sm hover:shadow-xl hover:border-indigo-400 transition-all duration-300 overflow-hidden flex flex-col">
-      <div className="h-2 w-full bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600" />
+    <div className="premium-card-light relative flex h-full flex-col overflow-hidden rounded-3xl border border-slate-200 transition-all duration-300 hover:border-amber-300">
+      <div className="h-2 w-full bg-gradient-to-r from-amber-400 via-amber-500 to-orange-500" />
       
       <div className="p-6 flex-grow flex flex-col">
         <div className="flex justify-between items-start mb-4">
-          <div className="w-12 h-12 bg-indigo-50 rounded-2xl flex items-center justify-center text-indigo-600 group-hover:bg-indigo-600 group-hover:text-white transition-all duration-500">
+          <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-navy)] text-amber-300 transition-all duration-500 group-hover:bg-amber-400 group-hover:text-[var(--surface-navy)]">
             <FileText size={24} />
           </div>
-          <span className="bg-green-50 text-green-600 text-[10px] font-black px-2 py-1 rounded-lg uppercase">Active</span>
+          <span className="rounded-lg bg-amber-300/15 px-2 py-1 text-[10px] font-black uppercase text-amber-600">Active</span>
         </div>
 
-        <h3 className="text-2xl font-black text-slate-900 mb-1 group-hover:text-indigo-600 transition-colors">
+        <h3 className="mb-1 text-2xl font-black text-slate-900 transition-colors group-hover:text-amber-500">
           {short_name || name}
         </h3>
-        <p className="text-[10px] text-slate-400 font-bold uppercase tracking-widest mb-4">{conducting_body}</p>
+        <p className="mb-4 text-[10px] font-bold uppercase tracking-widest text-slate-400">{conducting_body || "Exam Route"}</p>
 
         <p className="text-xs text-slate-500 leading-relaxed line-clamp-3 mb-6">
           {description}
@@ -136,9 +185,9 @@ const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, fre
         </div>
       </div>
 
-      <div className="px-6 py-4 bg-slate-50/50 border-t border-slate-100 flex items-center justify-between group-hover:bg-indigo-50 transition-colors">
-        <span className="text-[10px] font-black text-indigo-600 uppercase">View Exam Pattern</span>
-        <ChevronRight size={16} className="text-indigo-600 group-hover:translate-x-1 transition-transform" />
+      <div className="flex items-center justify-between border-t border-slate-100 bg-slate-50/50 px-6 py-4 transition-colors group-hover:bg-amber-50">
+        <span className="text-[10px] font-black uppercase text-amber-600">View Exam Pattern</span>
+        <ChevronRight size={16} className="text-amber-600 transition-transform group-hover:translate-x-1" />
       </div>
     </div>
   </Link>
@@ -147,44 +196,44 @@ const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, fre
 // --- Sections & Main Logic ---
 
 export default function FeaturedSection() {
-  const { universities, exams, isLoading, error } = useFeaturedData();
-  const [uCount, setUCount] = useState(6);
+  const { featuredColleges, exams, isLoading, error } = useFeaturedData();
+  const [collegeCount, setCollegeCount] = useState(6);
   const [eCount, setECount] = useState(8);
 
   if (error) return <div className="py-20 text-center text-red-500 font-bold">Error loading featured content.</div>;
 
   return (
-    <div className="space-y-32 py-24 bg-white overflow-hidden">
+    <div className="section-home overflow-hidden py-24 space-y-32">
       
       {/* Universities Section */}
       <section className="max-w-7xl mx-auto px-4">
         <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-6">
           <div className="max-w-2xl">
-            <div className="flex items-center gap-2 text-blue-600 font-bold text-sm mb-3">
+            <div className="mb-3 flex items-center gap-2 text-sm font-bold text-amber-600">
               <Sparkles size={18} className="animate-pulse" />
               <span>NMC Approved Institutions</span>
             </div>
-            <h2 className="text-4xl md:text-6xl font-black text-slate-900 tracking-tighter uppercase leading-none">
-              FEATURED <span className="text-blue-600">COLLEGES</span>
+            <h2 className="text-4xl font-black uppercase leading-none tracking-tighter text-slate-950 md:text-6xl">
+              TOP <span className="heading-gold">COLLEGES</span>
             </h2>
           </div>
-          <Link href="/colleges" className="hidden md:flex items-center gap-2 text-slate-900 font-bold hover:text-blue-600 transition-colors">
+          <Link href="/colleges" className="hidden items-center gap-2 font-bold text-slate-900 transition-colors hover:text-amber-600 md:flex">
             Explore All <ArrowRight size={20} />
           </Link>
         </div>
 
         {isLoading ? <SkeletonGrid /> : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-            {universities.slice(0, uCount).map((uni: UniversityCardProps, i: number) => <UniversityCard key={i} {...uni} />)}
+            {featuredColleges.slice(0, collegeCount).map((college: FeaturedCollegeCardProps) => <FeaturedCollegeCard key={college.slug} {...college} />)}
           </div>
         )}
 
-        {uCount < universities.length && (
+        {collegeCount < featuredColleges.length && (
           <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-4 text-center">
-            <button onClick={() => setUCount(prev => prev + 3)} className="bg-slate-900 text-white px-10 py-4 rounded-full font-bold hover:bg-blue-600 transition-all shadow-xl shadow-slate-200">
+            <button onClick={() => setCollegeCount(prev => prev + 3)} className="btn-primary rounded-full px-10 py-4 font-bold">
               Show More Colleges
             </button>
-            <Link href="/colleges"  className="bg-slate-900 ml-3 text-white px-10 py-4 rounded-full font-bold hover:bg-blue-600 transition-all shadow-xl shadow-slate-200">
+            <Link href="/colleges"  className="inline-flex items-center rounded-full border border-[var(--surface-navy)] px-10 py-4 font-bold text-[var(--surface-navy)] transition-all duration-200 hover:bg-slate-50">
               All colleges
             </Link>
           </div>
@@ -192,18 +241,18 @@ export default function FeaturedSection() {
       </section>
 
       {/* Exams Section */}
-      <section className="bg-slate-50 py-24">
+      <section className="section-home py-24">
         <div className="max-w-7xl mx-auto px-4">
           <div className="text-center mb-16">
-            <h2 className="text-4xl md:text-5xl font-black text-slate-900 tracking-tight uppercase mb-4">
-              CRACK THE <span className="text-indigo-600">EXAMS</span>
+            <h2 className="mb-4 text-4xl font-black uppercase tracking-tight text-slate-950 md:text-5xl">
+              CRACK THE <span className="heading-gold">EXAMS</span>
             </h2>
-            <p className="text-slate-500 font-medium text-lg">Your gateway to medical excellence starts here.</p>
+            <p className="text-lg font-medium text-slate-600">Your gateway to medical excellence starts here.</p>
           </div>
 
           {isLoading ? <SkeletonGrid count={4} /> : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {exams.slice(0, eCount).map((exam: ExamCardProps, i: number) => <ExamCard key={i} {...exam} />)}
+              {exams.slice(0, eCount).map((exam: ExamCardProps) => <ExamCard key={exam.slug} {...exam} />)}
             </div>
           )}
         </div>
@@ -214,7 +263,7 @@ export default function FeaturedSection() {
 
 // Helper Skeleton Component
 const SkeletonGrid = ({ count = 3 }) => (
-  <div className={`grid grid-cols-1 md:grid-cols-2 lg:grid-cols-${count} gap-8`}>
+  <div className={`grid grid-cols-1 gap-8 md:grid-cols-2 ${count === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}>
     {[...Array(count)].map((_, i) => (
       <div key={i} className="bg-slate-100 h-[400px] rounded-3xl animate-pulse" />
     ))}
@@ -228,7 +277,7 @@ const useFeaturedData = () => {
     queryFn: async () => {
       const res = await fetch('/api/colleges');
       const json = await res.json();
-      return json.data.colleges || [];
+      return json?.data?.colleges || [];
     }
   });
 
@@ -237,23 +286,23 @@ const useFeaturedData = () => {
     queryFn: async () => {
       const res = await fetch('/api/exams');
       const json = await res.json();
-      return json.data || [];
+      return json?.data || [];
     }
   });
 
-  const universities = useMemo(() => {
+  const featuredColleges = useMemo(() => {
     if (!collegesData) return [];
-    return collegesData.map((college: any) => ({
+    return collegesData.map((college: FeaturedCollegeApiItem) => ({
       name: college.name,
       image: college.banner_url,
-      location: college.country_ref?.city,
-      ranking: college.ranking?.country_ranking || college.ranking,
+      location: typeof college.country_ref === 'object' ? (college.country_ref?.city || college.country_ref?.name || '') : '',
+      ranking: typeof college.ranking === 'object' ? college.ranking?.country_ranking : (college.ranking || undefined),
       fees: college.fees_structure?.courses?.[0]?.annual_tuition_fee ? 
         college.fees_structure.courses[0].annual_tuition_fee : college.fees,
       duration: college.fees_structure?.courses?.[0]?.duration || college.duration,
       establishment_year: college.establishment_year,
       slug: college.slug,
-      country: college.country_ref?.name,
+      country: typeof college.country_ref === 'object' ? college.country_ref?.name : undefined,
       about: college.about_content,
       college_type: college.college_type || 'University'
     }));
@@ -261,7 +310,7 @@ const useFeaturedData = () => {
 
   const transformedExams = useMemo(() => {
     if (!examsData) return [];
-    return examsData.map((exam: any) => ({
+    return examsData.map((exam: FeaturedExamApiItem) => ({
       name: exam.name,
       short_name: exam.short_name,
       exam_type: exam.exam_type,
@@ -273,5 +322,5 @@ const useFeaturedData = () => {
     }));
   }, [examsData]);
 
-  return { universities, exams: transformedExams, isLoading: collegesLoading || examsLoading, error: collegesError || examsError };
+  return { featuredColleges, exams: transformedExams, isLoading: collegesLoading || examsLoading, error: collegesError || examsError };
 };

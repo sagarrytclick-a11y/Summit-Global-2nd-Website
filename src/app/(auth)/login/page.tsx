@@ -2,7 +2,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { SITE_IDENTITY } from "@/site-identity";
-import { GraduationCap, Eye, EyeOff, Shield, Mail, Lock } from "lucide-react";
+import { Eye, EyeOff, Shield, Mail, Lock } from "lucide-react";
 
 export default function LoginPage() {
   const [formData, setFormData] = useState({ username: "", password: "" });
@@ -42,34 +42,34 @@ export default function LoginPage() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-white to-green-50 flex items-center justify-center p-4 relative overflow-hidden">
-      {/* Background Pattern */}
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,#22c55e_0%,transparent_50%)] opacity-10" />
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,#ea580c_0%,transparent_50%)] opacity-10" />
-
-      {/* Floating Elements */}
-      <div className="absolute top-20 left-20 w-32 h-32 bg-green-100 rounded-full blur-3xl opacity-30 animate-pulse" />
-      <div className="absolute bottom-20 right-20 w-40 h-40 bg-orange-100 rounded-full blur-3xl opacity-30 animate-pulse delay-1000" />
-
+    <div className="relative flex min-h-screen items-center justify-center overflow-hidden bg-black p-4">
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top,#262626_0%,transparent_45%)] opacity-70" />
+      <div className="absolute inset-0 bg-[linear-gradient(135deg,rgba(255,255,255,0.04),transparent_45%,rgba(255,255,255,0.02))]" />
       <div className="w-full max-w-md relative z-10">
-        {/* Login Card */}
-        <div className="bg-white/95 backdrop-blur-sm rounded-[2rem] shadow-2xl border border-slate-200 p-8">
-          <div className="text-center mb-2">
-            <div className="inline-flex items-center justify-center rounded-2xl mb-1">
+        <div className="overflow-hidden rounded-[2rem] border border-white/10 bg-zinc-950/90 shadow-[0_24px_90px_rgba(0,0,0,0.45)] backdrop-blur-sm">
+          <div className="border-b border-white/10 px-8 py-8">
+            <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] font-black uppercase tracking-[0.18em] text-zinc-300">
+              Summit Global Admin
+            </div>
+            <div className="mt-6 flex items-center gap-4">
               <img
                 src={SITE_IDENTITY.assets.logo.main}
                 alt={SITE_IDENTITY.name}
-                className="w-20 h-auto"
+                className="h-auto w-16 rounded-xl bg-white p-2"
               />
+              <div>
+                <h1 className="text-2xl font-black text-white">Summit Global</h1>
+                <p className="text-sm font-medium text-zinc-400">Black & white admin access</p>
+              </div>
             </div>
-            <h2 className="text-2xl font-black text-slate-900 mb-2">Admin Portal</h2>
-            <p className="text-slate-600 text-sm">Enter your credentials to access dashboard</p>
+            <h2 className="mt-8 text-2xl font-black text-white">Admin Portal</h2>
+            <p className="mt-2 text-sm text-zinc-400">Enter your credentials to access dashboard</p>
           </div>
 
-          <form onSubmit={handleLogin} className="space-y-6">
+          <form onSubmit={handleLogin} className="space-y-6 bg-white px-8 py-8">
             {error && (
-              <div className="rounded-xl bg-red-50 p-4 text-sm text-red-600 border border-red-200 flex items-center gap-3">
-                <div className="w-2 h-2 bg-red-500 rounded-full animate-pulse" />
+              <div className="flex items-center gap-3 rounded-2xl border border-black/10 bg-zinc-100 p-4 text-sm text-zinc-700">
+                <div className="h-2 w-2 rounded-full bg-black animate-pulse" />
                 {error}
               </div>
             )}
@@ -89,7 +89,7 @@ export default function LoginPage() {
                     type="text"
                     required
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-3 py-3 border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all bg-slate-50/50"
+                    className="block w-full rounded-2xl border-2 border-zinc-200 bg-zinc-50/80 py-3 pl-10 pr-3 text-slate-900 placeholder-slate-400 transition-all focus:border-black focus:outline-none focus:ring-2 focus:ring-black/10"
                     placeholder="Enter your username"
                   />
                 </div>
@@ -109,7 +109,7 @@ export default function LoginPage() {
                     type={showPassword ? "text" : "password"}
                     required
                     onChange={handleChange}
-                    className="block w-full pl-10 pr-12 py-3 border-2 border-slate-200 rounded-xl text-slate-900 placeholder-slate-400 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 transition-all bg-slate-50/50"
+                    className="block w-full rounded-2xl border-2 border-zinc-200 bg-zinc-50/80 py-3 pl-10 pr-12 text-slate-900 placeholder-slate-400 transition-all focus:border-black focus:outline-none focus:ring-2 focus:ring-black/10"
                     placeholder="Enter your password"
                   />
                   <button
@@ -131,7 +131,7 @@ export default function LoginPage() {
             <button
               type="submit"
               disabled={loading}
-              className="group relative w-full flex justify-center items-center gap-3 rounded-xl bg-gradient-to-r from-blue-600 to-blue-700 px-4 py-4 text-sm font-black text-white hover:from-blue-700 hover:to-blue-800 focus:outline-none focus:ring-2 focus:ring-blue-500/20 disabled:from-slate-400 disabled:to-slate-500 transition-all duration-300 shadow-lg hover:shadow-xl transform hover:-translate-y-0.5"
+              className="group relative flex w-full items-center justify-center gap-3 rounded-2xl bg-black px-4 py-4 text-sm font-black text-white transition-all duration-300 hover:bg-zinc-800 focus:outline-none focus:ring-2 focus:ring-black/20 disabled:bg-zinc-400"
             >
               {loading ? (
                 <>
@@ -148,21 +148,19 @@ export default function LoginPage() {
           </form>
 
           {/* Footer */}
-          <div className="mt-8 pt-6 border-t border-slate-100">
+          <div className="border-t border-zinc-200 bg-white px-8 pb-8 pt-6">
             <div className="text-center">
-              <p className="text-xs text-slate-500 mb-2">
+              <p className="mb-2 text-xs text-slate-500">
                 Secure admin access for {SITE_IDENTITY.name}
               </p>
               <div className="flex items-center justify-center gap-4 text-xs text-slate-400">
-                <span>🔒 Encrypted</span>
+                <span>Secure Login</span>
                 <span>•</span>
-                <span>🛡️ Protected</span>
+                <span>Protected Panel</span>
               </div>
             </div>
           </div>
         </div>
-
-
       </div>
     </div>
   );

@@ -20,7 +20,7 @@ export async function GET() {
       Enquiry.countDocuments({ status: 'pending' })
     ]);
     
-    return NextResponse.json({
+    const response = NextResponse.json({
       success: true,
       message: "Stats fetched successfully",
       data: {
@@ -33,6 +33,10 @@ export async function GET() {
         pending_enquiries: pendingEnquiriesCount
       },
     });
+
+    response.headers.set('Cache-Control', 'private, max-age=30, stale-while-revalidate=60');
+
+    return response;
   } catch (error) {
     return NextResponse.json(
       { success: false, message: "Failed to fetch stats", error: error instanceof Error ? error.message : "Unknown error" },

@@ -269,39 +269,47 @@ export default function SimpleExamsPage() {
     { name: 'description', label: 'Description', type: 'textarea' as const, required: true }
   ]
 
-  const columns = [
+  const columns: Array<{
+    key: keyof AdminExam | string;
+    title: string;
+    render?: (value: unknown, record: AdminExam, index: number) => React.ReactNode;
+    width?: string;
+  }> = [
     {
-      key: 'name' as keyof AdminExam,
+      key: 'name',
       title: 'Exam Name',
-      render: (value: string, record: AdminExam) => (
+      render: (value: unknown, record: AdminExam) => (
         <div>
-          <div className="font-medium">{value}</div>
+          <div className="font-medium">{value as string}</div>
           <div className="text-sm text-gray-500">{record.short_name}</div>
         </div>
       )
     },
     {
-      key: 'exam_type' as keyof AdminExam,
+      key: 'exam_type',
       title: 'Type',
-      render: (value: string) => <div className='flex bg-gray-600 text-white rounded-2xl px-2 py-1 items-center gap-1'><p>{value}</p></div>
+      render: (value: unknown) => <div className='flex bg-gray-600 text-white rounded-2xl px-2 py-1 items-center gap-1'><p>{value as string}</p></div>
     },
     {
-      key: 'conducting_body' as keyof AdminExam,
+      key: 'conducting_body',
       title: 'Conducting Body'
     },
     {
-      key: 'is_active' as keyof AdminExam,
+      key: 'is_active',
       title: 'Status',
-      render: (value: boolean) => (
-        <div className={`flex items-center justify-center ${value ? 'bg-green-600' : 'bg-gray-600'} text-white rounded-2xl px-2 py-1 gap-1`}>
-          <p className="text-center">{value ? 'Active' : 'Inactive'}</p>
-        </div>
-      )
+      render: (value: unknown) => {
+        const isActive = Boolean(value);
+        return (
+          <div className={`flex items-center justify-center ${isActive ? 'bg-black' : 'bg-zinc-500'} text-white rounded-2xl px-2 py-1 gap-1`}>
+            <p className="text-center">{isActive ? 'Active' : 'Inactive'}</p>
+          </div>
+        );
+      }
     },
     {
-      key: 'actions' as keyof AdminExam,
+      key: 'actions',
       title: 'Actions',
-      render: (value: any, record: AdminExam) => (
+      render: (_: unknown, record: AdminExam) => (
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
             <Button variant="ghost" className="h-8 w-8 p-0">
@@ -430,9 +438,9 @@ export default function SimpleExamsPage() {
 
       {/* Pagination Controls */}
       {totalPages > 1 && (
-        <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-lg border">
+        <div className="flex flex-col items-center justify-between gap-4 rounded-lg border border-white/10 bg-zinc-950 p-4 sm:flex-row">
           <div className="flex items-center gap-2">
-            <span className="text-sm text-gray-600">
+            <span className="text-sm text-zinc-400">
               Showing {((currentPage - 1) * 10) + 1}-{Math.min(currentPage * 10, totalCount)} of {totalCount} exams
             </span>
           </div>
@@ -524,40 +532,40 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Hero Title</label>
               <Input
-                value={formData.hero_section.title}
+                value={formData.hero_section?.title ?? ''}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  hero_section: { ...prev.hero_section, title: e.target.value }
+                  hero_section: { ...(prev.hero_section || { title: '', subtitle: '', image: '' }), title: e.target.value }
                 }) )}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Hero Subtitle</label>
               <Input
-                value={formData.hero_section.subtitle}
+                value={formData.hero_section?.subtitle ?? ''}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  hero_section: { ...prev.hero_section, subtitle: e.target.value }
+                  hero_section: { ...(prev.hero_section || { title: '', subtitle: '', image: '' }), subtitle: e.target.value }
                 }) )}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Hero Image</label>
               <Input
-                value={formData.hero_section.image}
+                value={formData.hero_section?.image ?? ''}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  hero_section: { ...prev.hero_section, image: e.target.value }
+                  hero_section: { ...(prev.hero_section || { title: '', subtitle: '', image: '' }), image: e.target.value }
                 }) )}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Overview Title</label>
               <Input
-                value={formData.overview.title}
+                value={formData.overview?.title ?? ''}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  overview: { ...prev.overview, title: e.target.value }
+                  overview: { ...(prev.overview || { title: '', content: '', key_highlights: [] }), title: e.target.value }
                 }) )}
               />
             </div>
@@ -566,35 +574,35 @@ export default function SimpleExamsPage() {
               <textarea
                 className="w-full px-3 py-2 border rounded-md"
                 rows={4}
-                value={formData.overview.content}
+                value={formData.overview?.content ?? ''}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
-                  overview: { ...prev.overview, content: e.target.value }
+                  overview: { ...(prev.overview || { title: '', content: '', key_highlights: [] }), content: e.target.value }
                 }) )}
               />
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Key Highlights</label>
-              {formData.overview.key_highlights.map((highlight, index) => (
+              {(formData.overview?.key_highlights || []).map((highlight, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     value={highlight}
                     onChange={(e) => {
-                      const newHighlights = [...formData.overview.key_highlights]
+                      const newHighlights = [...(formData.overview?.key_highlights || [])]
                       newHighlights[index] = e.target.value
                       setFormData(prev => ({
                         ...prev,
-                        overview: { ...prev.overview, key_highlights: newHighlights }
+                        overview: { ...(prev.overview || { title: '', content: '', key_highlights: [] }), key_highlights: newHighlights }
                       }) as AdminExam)
                     }}
                   />
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newHighlights = formData.overview.key_highlights.filter((_, i) => i !== index)
+                      const newHighlights = (formData.overview?.key_highlights || []).filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
-                        overview: { ...prev.overview, key_highlights: newHighlights }
+                        overview: { ...(prev.overview || { title: '', content: '', key_highlights: [] }), key_highlights: newHighlights }
                       }) as AdminExam)
                     }}
                   >
@@ -606,7 +614,7 @@ export default function SimpleExamsPage() {
                 variant="outline"
                 onClick={() => setFormData(prev => ({
                   ...prev,
-                  overview: { ...prev.overview, key_highlights: [...prev.overview.key_highlights, ''] }
+                  overview: { ...(prev.overview || { title: '', content: '', key_highlights: [] }), key_highlights: [...(prev.overview?.key_highlights || []), ''] }
                 }) as AdminExam)}
               >
                 Add Highlight
@@ -618,7 +626,7 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Registration Title</label>
               <Input
-                value={formData.registration.title}
+                value={formData.registration?.title}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   registration: { ...prev.registration, title: e.target.value }
@@ -630,7 +638,7 @@ export default function SimpleExamsPage() {
               <textarea
                 className="w-full px-3 py-2 border rounded-md"
                 rows={3}
-                value={formData.registration.description}
+                value={formData.registration?.description}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   registration: { ...prev.registration, description: e.target.value }
@@ -639,12 +647,12 @@ export default function SimpleExamsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Bullet Points</label>
-              {formData.registration.bullet_points.map((point, index) => (
+              {formData.registration?.bullet_points.map((point, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     value={point}
                     onChange={(e) => {
-                      const newPoints = [...formData.registration.bullet_points]
+                      const newPoints = [...formData.registration?.bullet_points]
                       newPoints[index] = e.target.value
                       setFormData(prev => ({
                         ...prev,
@@ -655,7 +663,7 @@ export default function SimpleExamsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newPoints = formData.registration.bullet_points.filter((_, i) => i !== index)
+                      const newPoints = formData.registration?.bullet_points.filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
                         registration: { ...prev.registration, bullet_points: newPoints }
@@ -682,7 +690,7 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Pattern Title</label>
               <Input
-                value={formData.exam_pattern.title}
+                value={formData.exam_pattern?.title}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   exam_pattern: { ...prev.exam_pattern, title: e.target.value }
@@ -694,7 +702,7 @@ export default function SimpleExamsPage() {
               <textarea
                 className="w-full px-3 py-2 border rounded-md"
                 rows={3}
-                value={formData.exam_pattern.description}
+                value={formData.exam_pattern?.description}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   exam_pattern: { ...prev.exam_pattern, description: e.target.value }
@@ -705,7 +713,7 @@ export default function SimpleExamsPage() {
               <label className="block text-sm font-medium mb-2">Total Duration (Minutes)</label>
               <Input
                 type="number"
-                value={formData.exam_pattern.total_duration_mins}
+                value={formData.exam_pattern?.total_duration_mins}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   exam_pattern: { ...prev.exam_pattern, total_duration_mins: parseInt(e.target.value) || 120 }
@@ -715,7 +723,7 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Score Range</label>
               <Input
-                value={formData.exam_pattern.score_range}
+                value={formData.exam_pattern?.score_range}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   exam_pattern: { ...prev.exam_pattern, score_range: e.target.value }
@@ -725,13 +733,13 @@ export default function SimpleExamsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Table Data</label>
-              {formData.exam_pattern.table_data.map((row, index) => (
+              {formData.exam_pattern?.table_data.map((row, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     placeholder="Section"
                     value={row.section}
                     onChange={(e) => {
-                      const newTableData = [...formData.exam_pattern.table_data]
+                      const newTableData = [...formData.exam_pattern?.table_data]
                       newTableData[index] = { ...row, section: e.target.value }
                       setFormData(prev => ({
                         ...prev,
@@ -744,7 +752,7 @@ export default function SimpleExamsPage() {
                     placeholder="Questions"
                     value={row.questions}
                     onChange={(e) => {
-                      const newTableData = [...formData.exam_pattern.table_data]
+                      const newTableData = [...formData.exam_pattern?.table_data]
                       newTableData[index] = { ...row, questions: parseInt(e.target.value) || 0 }
                       setFormData(prev => ({
                         ...prev,
@@ -757,7 +765,7 @@ export default function SimpleExamsPage() {
                     placeholder="Duration (mins)"
                     value={row.duration_mins}
                     onChange={(e) => {
-                      const newTableData = [...formData.exam_pattern.table_data]
+                      const newTableData = [...formData.exam_pattern?.table_data]
                       newTableData[index] = { ...row, duration_mins: parseInt(e.target.value) || 0 }
                       setFormData(prev => ({
                         ...prev,
@@ -768,7 +776,7 @@ export default function SimpleExamsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newTableData = formData.exam_pattern.table_data.filter((_, i) => i !== index)
+                      const newTableData = formData.exam_pattern?.table_data.filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
                         exam_pattern: { ...prev.exam_pattern, table_data: newTableData }
@@ -795,7 +803,7 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Dates Title</label>
               <Input
-                value={formData.exam_dates.title}
+                value={formData.exam_dates?.title}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   exam_dates: { ...prev.exam_dates, title: e.target.value }
@@ -804,13 +812,13 @@ export default function SimpleExamsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Important Dates</label>
-              {formData.exam_dates.important_dates.map((date, index) => (
+              {formData.exam_dates?.important_dates.map((date, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     placeholder="Event"
                     value={date.event}
                     onChange={(e) => {
-                      const newDates = [...formData.exam_dates.important_dates]
+                      const newDates = [...formData.exam_dates?.important_dates]
                       newDates[index] = { ...date, event: e.target.value }
                       setFormData(prev => ({
                         ...prev,
@@ -822,7 +830,7 @@ export default function SimpleExamsPage() {
                     type="date"
                     value={date.date ? new Date(date.date).toISOString().split('T')[0] : ''}
                     onChange={(e) => {
-                      const newDates = [...formData.exam_dates.important_dates]
+                      const newDates = [...formData.exam_dates?.important_dates]
                       newDates[index] = { ...date, date: new Date(e.target.value) }
                       setFormData(prev => ({
                         ...prev,
@@ -833,7 +841,7 @@ export default function SimpleExamsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newDates = formData.exam_dates.important_dates.filter((_, i) => i !== index)
+                      const newDates = formData.exam_dates?.important_dates.filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
                         exam_dates: { ...prev.exam_dates, important_dates: newDates }
@@ -860,7 +868,7 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Results Title</label>
               <Input
-                value={formData.result_statistics.title}
+                value={formData.result_statistics?.title}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   result_statistics: { ...prev.result_statistics, title: e.target.value }
@@ -872,7 +880,7 @@ export default function SimpleExamsPage() {
               <textarea
                 className="w-full px-3 py-2 border rounded-md"
                 rows={3}
-                value={formData.result_statistics.description}
+                value={formData.result_statistics?.description}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   result_statistics: { ...prev.result_statistics, description: e.target.value }
@@ -882,7 +890,7 @@ export default function SimpleExamsPage() {
             <div>
               <label className="block text-sm font-medium mb-2">Passing Criteria</label>
               <Input
-                value={formData.result_statistics.passing_criteria}
+                value={formData.result_statistics?.passing_criteria}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   result_statistics: { ...prev.result_statistics, passing_criteria: e.target.value }
@@ -894,7 +902,7 @@ export default function SimpleExamsPage() {
               <label className="block text-sm font-medium mb-2">Total Marks</label>
               <Input
                 type="number"
-                value={formData.result_statistics.total_marks}
+                value={formData.result_statistics?.total_marks}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   result_statistics: { ...prev.result_statistics, total_marks: parseInt(e.target.value) || 100 }
@@ -905,7 +913,7 @@ export default function SimpleExamsPage() {
               <label className="block text-sm font-medium mb-2">Passing Marks</label>
               <Input
                 type="number"
-                value={formData.result_statistics.passing_marks}
+                value={formData.result_statistics?.passing_marks}
                 onChange={(e) => setFormData(prev => ({
                   ...prev,
                   result_statistics: { ...prev.result_statistics, passing_marks: parseInt(e.target.value) || 40 }

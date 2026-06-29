@@ -10,7 +10,7 @@ export async function GET(request: Request) {
     
     const page = parseInt(searchParams.get('page') || '1');
     const limit = searchParams.get('limit') ? parseInt(searchParams.get('limit') || '12') : null;
-    const search = searchParams.get('search');
+    const search = searchParams.get('search')?.trim();
     const countrySlug = searchParams.get('country');
     const exam = searchParams.get('exam');
     const collegeType = searchParams.get('college_type');
@@ -19,10 +19,10 @@ export async function GET(request: Request) {
     
     const query: Record<string, unknown> = { is_active: true };
     
-    if (search) {
+    if (search && search.length >= 2) {
       query.$or = [
         { name: { $regex: search, $options: 'i' } },
-        { about_content: { $regex: search, $options: 'i' } }
+        { slug: { $regex: search, $options: 'i' } }
       ];
     }
     
@@ -47,24 +47,26 @@ export async function GET(request: Request) {
       query.college_type = collegeType;
     }
     
-    const total = await College.countDocuments(query);
-    
     let selectFields = 'name slug country_ref fees duration establishment_year ranking banner_url college_type overview fees_structure key_highlights';
     if (limit && limit > 50) {
       selectFields = 'name slug country_ref college_type';
     }
-    
+
     const collegesQuery = College.find(query)
       .select(selectFields)
       .populate('country_ref', 'name slug flag')
       .sort({ ranking: 1, name: 1 })
-      .skip(skip);
-    
+      .skip(skip)
+      .lean();
+
     if (limit) {
       collegesQuery.limit(limit);
     }
-    
-    const colleges = await collegesQuery.lean();
+
+    const [total, colleges] = await Promise.all([
+      College.countDocuments(query),
+      collegesQuery,
+    ]);
     
     const response = NextResponse.json({
       success: true,
@@ -83,6 +85,8 @@ export async function GET(request: Request) {
       'Cache-Control',
       'public, s-maxage=180, stale-while-revalidate=300'
     );
+    response.headers.set('CDN-Cache-Control', 'public, s-maxage=300');
+    response.headers.set('Vercel-CDN-Cache-Control', 'public, s-maxage=300');
     
     return response;
   } catch (error) {

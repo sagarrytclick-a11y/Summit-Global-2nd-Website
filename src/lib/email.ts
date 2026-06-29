@@ -20,7 +20,6 @@ export async function sendEmail(options: EmailOptions) {
       text: options.text,
     } as any) // Type assertion to bypass Resend type issues
 
-    console.log('Email sent successfully:', data)
     return { success: true, data }
   } catch (error) {
     console.error('Email send error:', error)
@@ -43,7 +42,7 @@ export const emailTemplates = {
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white; text-align: center;">
           <h1 style="margin: 0; font-size: 28px;">New Student Enquiry</h1>
-          <p style="margin: 10px 0 0 0; opacity: 0.9;">Education Times Abroad</p>
+          <p style="margin: 10px 0 0 0; opacity: 0.9;">Summit Global</p>
         </div>
         
         <div style="background: #f8f9fa; padding: 30px; border-radius: 10px; margin: 20px 0;">
@@ -83,13 +82,13 @@ export const emailTemplates = {
         </div>
         
         <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
-          <p>This enquiry was submitted through the Education Times Abroad website.</p>
+          <p>This enquiry was submitted through the Summit Global website.</p>
           <p>Please respond to the student as soon as possible.</p>
         </div>
       </div>
     `,
     text: `
-      New Student Enquiry - Education Times Abroad
+      New Student Enquiry - Summit Global
       
       Student Details:
       Name: ${data.name}
@@ -99,13 +98,13 @@ export const emailTemplates = {
       Interest: ${data.interest === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'}
       ${data.message ? `Message: ${data.message}` : ''}
       
-      This enquiry was submitted through the Education Times Abroad website.
+      This enquiry was submitted through the Summit Global website.
       Please respond to the student as soon as possible.
     `
   }),
 
   enquiryConfirmation: (data: { name: string; interest: string }) => ({
-    subject: 'Thank You for Your Enquiry - Education Times Abroad',
+    subject: 'Thank You for Your Enquiry - Summit Global',
     html: `
       <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
         <div style="background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); padding: 30px; border-radius: 10px; color: white; text-align: center;">
@@ -118,7 +117,7 @@ export const emailTemplates = {
           
           <p style="line-height: 1.6; color: #555; margin-bottom: 20px;">
             Thank you for your interest in <strong>${data.interest === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'}</strong> 
-            programs at Education Times Abroad. We have successfully received your enquiry and our team will get back to you shortly.
+            programs at Summit Global. We have successfully received your enquiry and our team will get back to you shortly.
           </p>
           
           <div style="background: white; padding: 20px; border-radius: 8px; border-left: 4px solid #28a745;">
@@ -134,16 +133,16 @@ export const emailTemplates = {
         
         <div style="text-align: center; padding: 20px; color: #666; font-size: 14px;">
           <p>Need immediate assistance? Contact us at support@education-times-abroad.com</p>
-          <p style="margin-top: 10px;">Best regards,<br/>The Education Times Abroad Team</p>
+          <p style="margin-top: 10px;">Best regards,<br/>The Summit Global Team</p>
         </div>
       </div>
     `,
     text: `
-      Thank You for Your Enquiry - Education Times Abroad
+      Thank You for Your Enquiry - Summit Global
       
       Hello ${data.name},
       
-      Thank you for your interest in ${data.interest === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'} programs at Education Times Abroad. 
+      Thank you for your interest in ${data.interest === 'study-abroad' ? 'Study Abroad' : 'MBBS Abroad'} programs at Summit Global. 
       We have successfully received your enquiry and our team will get back to you shortly.
       
       What happens next?
@@ -155,7 +154,7 @@ export const emailTemplates = {
       Need immediate assistance? Contact us at support@education-times-abroad.com
       
       Best regards,
-      The Education Times Abroad Team
+      The Summit Global Team
     `
   })
 }

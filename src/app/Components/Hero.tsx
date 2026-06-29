@@ -1,142 +1,180 @@
 "use client";
 
 import React from 'react';
-import { ArrowRight, GraduationCap, Globe, ShieldCheck, CheckCircle2, MapPin } from 'lucide-react';
+import {
+  ArrowRight,
+  BadgeCheck,
+  CalendarDays,
+  CircleCheckBig,
+  Globe2,
+  PhoneCall,
+  Sparkles,
+  Trophy,
+  Users,
+} from 'lucide-react';
 import Link from 'next/link';
 
 const Hero: React.FC = () => {
   return (
-    <section id="home" className="relative min-h-screen flex items-center bg-[#F8FAFC] pt-20 pb-16 overflow-hidden">
+    <section id="home" className="relative overflow-hidden pt-6 pb-6  px-4 sm:px-6 lg:px-8">
+      <div className="pointer-events-none absolute inset-0">
+        <div className="absolute right-0 top-8 h-80 w-80 rounded-full bg-slate-100/80 blur-[120px]" />
+      </div>
 
-      {/* Dynamic Background Elements */}
-      <div className="absolute top-0 right-0 w-1/2 h-full bg-blue-600/5 -skew-x-12 transform origin-top" />
-      <div className="absolute top-40 -left-20 w-80 h-80 bg-blue-400 rounded-full blur-[100px] opacity-20 animate-pulse" />
-
-      <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-20 items-center">
-
-          {/* LEFT COLUMN - Messaging */}
-          <div className="flex flex-col items-start text-left">
-
-            {/* Trust Badge */}
-            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm mb-6">
-              <span className="relative flex h-2 w-2">
-                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
-                <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500"></span>
-              </span>
-              <span className="text-[11px] font-bold text-slate-600 uppercase tracking-widest">NMC & WHO Approved Universities</span>
-            </div>
-
-            {/* Main Heading */}
-            <h1 className="text-5xl md:text-6xl xl:text-[75px] font-black text-slate-900 leading-[1.05] tracking-tight mb-8">
-              Your MBBS Dream <br />
-              <span className="relative inline-block">
-                <span className="relative z-10 text-primary">Starts Abroad</span>
-                {/* Abstract underline effect */}
-                <span className="absolute bottom-2 left-0 w-full h-4 bg-secondary/20 -z-10 rounded-full opacity-60"></span>
-              </span>
-              <br />
-              <span className="relative inline-flex flex-wrap items-center gap-3">
-                {/* Universal Highlight */}
-                <span className="relative z-10 px-5 py-1.5 text-white bg-slate-900 rounded-2xl shadow-xl shadow-slate-200">
-                  Zero Donation
-                </span>
-                {/* Sub-text inside heading for clarity */}
-                <span className="text-2xl md:text-3xl font-bold text-slate-400">
-                  NMC Approved
-                </span>
-              </span>
-            </h1>
-
-            <p className="text-lg md:text-xl text-slate-600 max-w-xl leading-relaxed mb-10">
-              Complete MBBS abroad at NMC & WHO approved universities. World-class medical education in <span className="text-slate-900 font-semibold underline decoration-accent">Bangladesh, Russia, Georgia</span> with lowest tuition fees guaranteed.
-            </p>
-
-            {/* Feature Checkmarks (MBBS Focused) */}
-            <div className="grid grid-cols-2 gap-y-3 gap-x-6 mb-10">
-              {['NMC Approved Universities', 'Clinical Rotations', 'Affordable Tuition Fees', 'FMGE Preparation'].map((text) => (
-                <div key={text} className="flex items-center gap-2">
-                  <CheckCircle2 size={18} className="text-accent shrink-0" />
-                  <span className="text-sm font-medium text-slate-700">{text}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex flex-col sm:flex-row items-center gap-4 w-full sm:w-auto">
-              <Link
-                href="/colleges"
-                className="group w-full sm:w-auto px-10 py-5 bg-primary text-white font-bold rounded-2xl hover:bg-primary/90 transition-all shadow-xl shadow-primary/30 flex items-center justify-center gap-3 text-lg hover:-translate-y-1"
-              >
-                Find My College
-                <ArrowRight size={20} className="group-hover:translate-x-1 transition-transform" />
-              </Link>
-
-              <Link
-                href="/countries"
-                className="group w-full sm:w-auto px-8 py-5 rounded-2xl border-2 border-slate-200 bg-white hover:border-primary transition-all flex items-center justify-center gap-3"
-              >
-                <Globe size={20} className="text-primary" />
-                <span className="text-base font-bold text-slate-900">Explore Countries</span>
-              </Link>
-            </div>
+      <div className="relative mx-auto grid max-w-7xl gap-14 py-0 lg:grid-cols-[1.02fr_0.98fr] lg:items-center lg:py-0">
+        <div className="space-y-8">
+          <div className="inline-flex items-center gap-2 rounded-full border border-[#f59e0b]/20 bg-[#f59e0b]/10 px-4 py-2 text-xs font-semibold uppercase tracking-[0.18em] text-[#f59e0b]">
+            <Sparkles size={14} />
+            India&apos;s #1 Abroad Admissions Consultancy
           </div>
 
-          {/* RIGHT COLUMN - Visuals */}
-          <div className="relative pt-10 lg:pt-0">
-            {/* Experience Card (Floating) */}
-            <div className="absolute -top-4 -right-4 md:right-0 z-20 bg-white p-4 rounded-2xl shadow-2xl border border-slate-100 flex items-center gap-4 animate-float">
-              <div className="w-12 h-12 bg-secondary/20 rounded-full flex items-center justify-center text-primary">
-                <ShieldCheck size={28} />
-              </div>
-              <div>
-                <p className="text-xs text-slate-500 font-bold uppercase tracking-tighter">Guaranteed</p>
-                <p className="text-sm font-black text-slate-900">Direct Admissions</p>
-              </div>
+          <div className="space-y-6">
+            <div className="inline-flex items-center gap-2 rounded-full bg-white px-4 py-2 text-xs font-bold uppercase tracking-[0.18em] text-slate-500 shadow-sm ring-1 ring-slate-100">
+              <BadgeCheck size={14} className="text-[#f59e0b]" />
+              Transparent Guidance. Better Outcomes.
             </div>
 
-            <div className="grid grid-cols-12 gap-4 h-[450px] md:h-[550px]">
-              {/* Main Image - Medical Students */}
-              <div className="col-span-8 h-full relative group">
-                <div className="absolute inset-0 bg-blue-600 rounded-[2rem] rotate-3 transition-transform group-hover:rotate-1" />
-                <div className="relative h-full rounded-[2rem] overflow-hidden border-4 border-white shadow-xl">
-                  <img
-                    src="https://images.unsplash.com/photo-1576091160550-2173dba999ef?w=800&q=80"
-                    alt="MBBS Students Abroad"
-                    loading="lazy"
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent flex items-end p-8">
-                    <p className="text-white font-medium italic text-sm">"Safe campus and quality education for international students"</p>
-                  </div>
-                </div>
-              </div>
+            <h1 className="max-w-4xl text-5xl font-black leading-[0.95] tracking-tight text-[#0F172A] sm:text-6xl xl:text-7xl">
+              Your Trusted Path
+              <span className="mt-2 block text-[#f59e0b]">MBBS &amp; Study Abroad</span>
+              Starts Right Here
+            </h1>
 
-              {/* Side Images */}
-              <div className="col-span-4 flex flex-col gap-4 h-full">
-                <div className="h-1/2 rounded-[2rem] overflow-hidden border-4 border-white shadow-lg">
-                  <img src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=400&q=80" className="w-full h-full object-cover" alt="Hospital" loading="lazy" />
-                </div>
-                <div className="h-1/2 rounded-[2rem] overflow-hidden border-4 border-white shadow-lg bg-primary flex items-center justify-center text-center p-4">
-                  <div>
-                    <p className="text-white font-black text-2xl">100%</p>
-                    <p className="text-secondary text-[10px] font-bold uppercase">Transparency</p>
-                  </div>
-                </div>
-              </div>
-            </div>
+            <p className="max-w-2xl text-base leading-8 text-slate-500 sm:text-lg">
+              Summit Global helps students and parents with university shortlisting, scholarships,
+              admissions, documentation, visa support, and pre-departure guidance through one
+              clear and structured process.
+            </p>
+          </div>
 
-            {/* Country Tags Overlay */}
-            <div className="mt-8 flex flex-wrap gap-3 justify-center lg:justify-start">
-              {['Bangladesh', 'Russia', 'Uzbekistan', 'Georgia', 'Egypt', 'Kazakhstan'].map((country) => (
-                <span key={country} className="px-4 py-2 bg-white rounded-xl text-sm font-bold text-slate-700 shadow-sm border border-slate-100 flex items-center gap-2">
-                  <div className="w-1.5 h-1.5 rounded-full bg-accent" />
+          <div className="grid max-w-2xl gap-3 sm:grid-cols-2">
+            {[
+              'Personalized admission roadmap',
+              'Scholarship and visa support',
+              'Trusted university partnerships',
+              'Student-first counselling',
+            ].map((text) => (
+              <div
+                key={text}
+                className="flex items-center gap-3 rounded-2xl border border-slate-100 bg-white px-4 py-4 shadow-[0_10px_30px_rgba(15,23,42,0.03)]"
+              >
+                <CircleCheckBig size={18} className="shrink-0 text-[#f59e0b]" />
+                <span className="text-sm font-semibold text-slate-700">{text}</span>
+              </div>
+            ))}
+          </div>
+
+          <div className="flex flex-col gap-4 pt-1 sm:flex-row">
+            <Link
+              href="/contact"
+              className="inline-flex items-center justify-center gap-3 rounded-2xl bg-[#f59e0b] px-8 py-4 text-base font-bold text-white transition-all duration-200 hover:bg-[#d97706] hover:shadow-lg hover:shadow-amber-500/15"
+            >
+              <CalendarDays size={18} />
+              Book Free Counselling
+            </Link>
+            <Link
+              href="/study-abroad"
+              className="inline-flex items-center justify-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-4 text-base font-bold text-[#0F172A] transition-all duration-200 hover:bg-slate-50"
+            >
+              <PhoneCall size={18} />
+              Explore Programs
+              <ArrowRight size={16} />
+            </Link>
+          </div>
+
+          <div className="space-y-5 pt-2">
+            <div className="flex flex-wrap gap-3">
+              {['Russia', 'Georgia', 'Kazakhstan', 'Uzbekistan', 'Philippines', 'Bangladesh'].map((country) => (
+                <span
+                  key={country}
+                  className="rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-semibold text-slate-700 shadow-sm"
+                >
                   {country}
                 </span>
               ))}
             </div>
+
+            <div className="grid max-w-3xl grid-cols-2 gap-4 sm:grid-cols-4">
+              {[
+                { value: '12K+', label: 'Students Placed' },
+                { value: '30+', label: 'Countries' },
+                { value: '500+', label: 'Partner Universities' },
+                { value: '98%', label: 'Visa Success' },
+              ].map((item) => (
+                <div key={item.label} className="rounded-2xl border border-slate-100 bg-white px-4 py-4 shadow-sm">
+                  <p className="text-3xl font-black text-[#0F172A]">{item.value}</p>
+                  <p className="mt-1 text-[11px] font-bold uppercase tracking-[0.16em] text-slate-400">
+                    {item.label}
+                  </p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+
+        <div className="relative min-h-[560px] lg:min-h-[640px]">
+          <div className="absolute right-0 top-10 h-[78%] w-[82%] rounded-[2rem] bg-[var(--surface-navy)]" />
+          <div className="absolute left-0 top-0 h-[62%] w-[66%] overflow-hidden rounded-[2rem] border-8 border-white shadow-[0_30px_80px_rgba(15,23,42,0.12)]">
+            <img
+              src="https://i.pinimg.com/736x/db/3b/1a/db3b1a2d9ed8b906a294ec242cbf214d.jpg"
+              alt="Students planning MBBS abroad"
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
           </div>
 
+          <div className="absolute bottom-0 right-6 h-[46%] w-[56%] overflow-hidden rounded-[2rem] border-8 border-white shadow-[0_24px_70px_rgba(15,23,42,0.12)]">
+            <img
+              src="https://i.pinimg.com/736x/43/05/d0/4305d05a291c79a9ef27ca65429308b7.jpg"
+              alt="Students exploring global education options"
+              loading="lazy"
+              className="h-full w-full object-cover"
+            />
+          </div>
+
+          <div className="absolute right-4 top-12 rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-slate-50 p-2 text-[#0F172A]">
+                <Trophy size={18} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Admission Rate</p>
+                <p className="text-base font-extrabold text-[#0F172A]">98% Success</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute left-6 top-[52%] rounded-2xl border border-slate-100 bg-white/95 p-4 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-sm">
+            <div className="flex items-center gap-3">
+              <div className="rounded-xl bg-amber-50 p-2 text-[#f59e0b]">
+                <Users size={18} />
+              </div>
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-wider text-slate-400">Students Guided</p>
+                <p className="text-base font-extrabold text-[#0F172A]">12,000+</p>
+              </div>
+            </div>
+          </div>
+
+          <div className="absolute bottom-5 left-8 right-16 rounded-[1.5rem] border border-white/60 bg-white/95 p-5 shadow-[0_10px_30px_rgba(0,0,0,0.08)] backdrop-blur-sm">
+            <div className="flex items-start justify-between gap-4">
+              <div>
+                <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-slate-400">Top Program</p>
+                <p className="mt-1 text-lg font-black text-[#0F172A]">MBBS Russia 2026</p>
+                <p className="mt-1 text-sm text-slate-500">
+                  High-value destinations, strong counselling, and complete admission support.
+                </p>
+              </div>
+              <div className="flex gap-2">
+                <div className="rounded-2xl bg-amber-50 p-3 text-[#f59e0b]">
+                  <Sparkles size={20} />
+                </div>
+                <div className="rounded-2xl bg-slate-50 p-3 text-[var(--surface-navy)]">
+                  <Globe2 size={20} />
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>

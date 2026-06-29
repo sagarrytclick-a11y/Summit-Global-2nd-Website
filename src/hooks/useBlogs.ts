@@ -1,6 +1,6 @@
 import { useQuery } from '@tanstack/react-query'
 
-interface Blog {
+export interface Blog {
   _id: string
   title: string
   slug: string
@@ -19,7 +19,7 @@ interface Blog {
   updatedAt: string
 }
 
-interface BlogsResponse {
+export interface BlogsResponse {
   blogs: Blog[]
   total: number
   page: number
@@ -84,7 +84,7 @@ const fetchBlogBySlug = async (slug: string): Promise<Blog> => {
 }
 
 // Hook for paginated blogs
-export function useBlogs(page: number, search: string, category: string) {
+export function useBlogs(page: number, search: string, category: string, initialData?: BlogsResponse) {
   return useQuery({
     queryKey: ['blogs', 'paginated', page, search, category],
     queryFn: () => fetchBlogs({ 
@@ -96,6 +96,7 @@ export function useBlogs(page: number, search: string, category: string) {
     gcTime: 10 * 60 * 1000, // 10 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    initialData,
   })
 }
  

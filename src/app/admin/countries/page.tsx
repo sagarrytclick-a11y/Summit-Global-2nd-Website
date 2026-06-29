@@ -75,36 +75,45 @@ export default function CountriesPage() {
   const deleteCountryMutation = useDeleteCountry()
 
 
-  const columns = [
+  const columns: Array<{
+    key: keyof Country | string;
+    title: string;
+    render?: (value: unknown, record: Country, index: number) => React.ReactNode;
+    width?: string;
+  }> = [
     {
-      key: 'name' as keyof Country,
+      key: 'name',
       title: 'Country Name',
-      render: (value: string, record: Country) => (
+      render: (value: unknown, record: Country) => (
         <div className="flex items-center space-x-2">
           <span className="text-2xl">{record.flag}</span>
-          <span className="font-medium">{value}</span>
+          <span className="font-medium">{value as string}</span>
         </div>
       )
     },
     {
-      key: 'slug' as keyof Country,
+      key: 'slug',
       title: 'Slug'
     },
     {
-      key: 'is_active' as keyof Country,
+      key: 'is_active',
       title: 'Status',
-      render: (value: boolean) => (
-        <div className={`flex items-center justify-center ${value ? 'bg-blue-600' : 'bg-gray-600'} text-white w-16 rounded-lg px-1 py-1 gap-1`}>
-          <p className="text-center text-xs font-medium">{value ? 'active' : 'inactive'}</p>
-        </div>
-      )
+      render: (value: unknown) => {
+        const isActive = Boolean(value);
+        return (
+          <div className={`flex items-center justify-center ${isActive ? 'bg-black' : 'bg-zinc-500'} text-white w-16 rounded-lg px-1 py-1 gap-1`}>
+            <p className="text-center text-xs font-medium">{isActive ? 'active' : 'inactive'}</p>
+          </div>
+        );
+      }
     },
     {
-      key: 'createdAt' as keyof Country,
+      key: 'createdAt',
       title: 'Created',
-      render: (value: string) => {
-        const date = new Date(value)
-        return date.toLocaleDateString('en-US')
+      render: (value: unknown) => {
+        const dateStr = value as string;
+        const date = new Date(dateStr);
+        return date.toLocaleDateString('en-US');
       }
     }
   ]
@@ -253,12 +262,12 @@ export default function CountriesPage() {
       {/* Header with Add button */}
       <div className="flex items-center justify-between">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">All Countries</h2>
-            <p className="text-sm text-gray-500">
+            <h2 className="text-lg font-semibold text-white">All Countries</h2>
+            <p className="text-sm text-zinc-400">
               {totalCount} countries total
             </p>
           </div>
-          <Button onClick={handleAddCountry} className="flex items-center space-x-2">
+          <Button onClick={handleAddCountry} className="flex items-center space-x-2 bg-white text-black hover:bg-zinc-200">
             <Plus className="h-4 w-4" />
             <span>Add Country</span>
           </Button>
@@ -268,23 +277,23 @@ export default function CountriesPage() {
       <div className="flex flex-col sm:flex-row gap-4">
         <div className="flex-1">
           <div className="relative">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400 w-4 h-4" />
+            <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-zinc-500" />
             <Input
               placeholder="Search countries by name or description..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              className="pl-10"
+              className="border-white/10 bg-zinc-950 pl-10 text-white placeholder:text-zinc-500"
             />
           </div>
         </div>
         <Select value={selectedStatus} onValueChange={setSelectedStatus}>
-          <SelectTrigger className="w-40">
+          <SelectTrigger className="w-40 border-white/10 bg-zinc-950 text-white">
             <SelectValue placeholder="Filter by status" />
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="all">All Status</SelectItem>
-            <SelectItem value="active">Active</SelectItem>
-            <SelectItem value="inactive">Inactive</SelectItem>
+          <SelectContent className="border-white/10 bg-zinc-950 text-white">
+            <SelectItem className="text-white focus:bg-zinc-900 focus:text-white" value="all">All Status</SelectItem>
+            <SelectItem className="text-white focus:bg-zinc-900 focus:text-white" value="active">Active</SelectItem>
+            <SelectItem className="text-white focus:bg-zinc-900 focus:text-white" value="inactive">Inactive</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -300,9 +309,9 @@ export default function CountriesPage() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-lg border">
+          <div className="flex flex-col items-center justify-between gap-4 rounded-lg border border-white/10 bg-zinc-950 p-4 sm:flex-row">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-zinc-400">
                 Showing {((currentPage - 1) * 10) + 1}-{Math.min(currentPage * 10, totalCount)} of {totalCount} countries
               </span>
             </div>
@@ -397,7 +406,7 @@ export default function CountriesPage() {
           loading={deleteCountryMutation.isPending}
           size="sm"
         >
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <div className="flex items-center space-x-2 text-sm text-zinc-400">
             <Globe className="h-4 w-4" />
             <span>{countryToDelete?.name}</span>
           </div>

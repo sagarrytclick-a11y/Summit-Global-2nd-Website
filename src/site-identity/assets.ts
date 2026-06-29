@@ -5,8 +5,13 @@ export const SITE_ASSETS = {
   // Logo variants
   logo: {
     main: "/logo.svg",
-    favicon: "/logo.svg",
-    appleTouchIcon: "/logo.svg",
+    favicon: "/favicon.png",
+    appleTouchIcon: "/favicon.png",
+  },
+
+  icons: {
+    icon192: "/favicon.png",
+    icon512: "/favicon.png",
   },
 
 

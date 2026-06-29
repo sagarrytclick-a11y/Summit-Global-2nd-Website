@@ -52,38 +52,39 @@ export function AdminModal({
   if (!open) return null
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/50">
-      <div className={`w-full ${sizeClasses[size]} bg-white rounded-lg shadow-xl border max-h-[90vh] overflow-y-auto`}>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/65 p-4 backdrop-blur-sm">
+      <div className={`w-full ${sizeClasses[size]} max-h-[90vh] overflow-y-auto rounded-[1.5rem] border border-white/10 bg-zinc-950 text-white shadow-[0_24px_80px_rgba(0,0,0,0.4)]`}>
         {/* Header */}
-        <div className="flex items-center justify-between p-6 border-b">
+        <div className="flex items-center justify-between border-b border-white/10 p-6">
           <div>
-            <h2 className="text-lg font-semibold">{title}</h2>
+            <h2 className="text-lg font-semibold text-white">{title}</h2>
             {description && (
-              <p className="text-sm text-gray-500 mt-1">{description}</p>
+              <p className="mt-1 text-sm text-zinc-400">{description}</p>
             )}
           </div>
           <Button
             variant="ghost"
             size="sm"
             onClick={handleCancel}
-            className="h-8 w-8 p-0"
+            className="h-8 w-8 rounded-full border border-white/10 p-0 hover:bg-zinc-800"
           >
             <X className="h-4 w-4" />
           </Button>
         </div>
         
         {/* Content */}
-        <div className="p-6">
+        <div className="bg-zinc-950 p-6">
           {children}
         </div>
 
         {/* Footer */}
         {showFooter && (
-          <div className="flex justify-end space-x-3 p-6 border-t bg-gray-50">
+          <div className="flex justify-end space-x-3 border-t border-white/10 bg-zinc-950 p-6">
             <Button
               variant="outline"
               onClick={handleCancel}
               disabled={loading}
+              className="border-white/10 bg-zinc-900 text-white hover:bg-zinc-800"
             >
               {cancelText}
             </Button>
@@ -91,6 +92,7 @@ export function AdminModal({
               <Button
                 onClick={handleConfirm}
                 disabled={loading}
+                className="bg-black text-white hover:bg-zinc-800"
               >
                 {loading ? 'Saving...' : confirmText}
               </Button>

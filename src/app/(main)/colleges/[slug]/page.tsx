@@ -1,6 +1,5 @@
 import { Metadata } from 'next'
-import { notFound } from 'next/navigation'
-import CollegeDetailPage from './CollegeDetailPage'
+import CollegeDetailRedesign from './CollegeDetailRedesign'
 
 interface CollegePageProps {
   params: Promise<{ slug: string }>
@@ -10,13 +9,13 @@ export async function generateMetadata({ params }: CollegePageProps): Promise<Me
   const { slug } = await params
   
   return {
-    title: `${slug} - Education Times Abroad`,
-    description: 'Learn more about this college',
+    title: `${slug} - Summit Global`,
+    description: 'Explore this college for MBBS abroad and study abroad planning',
   }
 }
 
 export default async function CollegePage({ params }: CollegePageProps) {
   const { slug } = await params
   
-  return <CollegeDetailPage slug={slug} />
+  return <CollegeDetailRedesign slug={slug} />
 }

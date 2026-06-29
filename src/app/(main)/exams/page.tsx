@@ -2,9 +2,11 @@
 
 import React, { useState, useMemo, useCallback } from 'react'
 import Link from 'next/link'
-import { Search, Globe, Calendar, Building, Clock, FileText, ArrowRight, X, LayoutGrid, AlertCircle, RefreshCw, Award, Building2, ArrowUpRight } from 'lucide-react'
+import { Search, Calendar, Clock, FileText, X, LayoutGrid, AlertCircle, RefreshCw, Award, Building2, ArrowUpRight, Sparkles, RefreshCwIcon } from 'lucide-react'
 import FAQ from "@/app/Components/FAQ"
 import { useExams } from '@/hooks/useExams'
+import { useFormModal } from '@/context/FormModalContext'
+import { ExamListPageSkeleton } from '@/app/Components/PublicPageSkeletons'
 
 interface Exam {
   _id: string
@@ -29,6 +31,7 @@ export default function ExamsPage() {
   const [searchTerm, setSearchTerm] = useState('')
   const [selectedType, setSelectedType] = useState<string>('all')
   const [selectedMode, setSelectedMode] = useState<string>('all')
+  const { openModal } = useFormModal()
 
   const { 
     data: exams = [], 
@@ -70,65 +73,67 @@ export default function ExamsPage() {
   }, [])
 
   // ExamCard Component
-  const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, frequency, description, slug }: any) => (
+  interface ExamCardProps {
+    name: string;
+    short_name?: string;
+    exam_type?: string;
+    conducting_body?: string;
+    exam_mode?: string;
+    frequency?: string;
+    description?: string;
+    slug: string;
+  }
+  
+  const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, frequency, description, slug }: ExamCardProps) => (
     <Link href={`/exams/${slug}`} className="group block h-full">
-      <div className="relative h-full bg-white rounded-xl border-2 border-slate-200 shadow-[0_4px_20px_rgb(0,0,0,0.04)] hover:shadow-[0_12px_30px_rgba(59,130,246,0.12)] hover:border-blue-400 transition-all duration-500 flex flex-col p-6 overflow-hidden hover:-translate-y-1">
-        
-        {/* Decorative Background Pattern */}
-        <div className="absolute top-0 right-0 w-24 h-24 bg-blue-50/30 rounded-bl-full -mr-12 -mt-12 group-hover:bg-blue-100/50 transition-colors duration-500" />
-
-        {/* Header Section */}
-        <div className="flex items-start justify-between mb-4 relative">
-          {/* Floating Icon */}
+      <div className="relative flex h-full flex-col overflow-hidden rounded-[2rem] border border-slate-100 bg-white p-6 shadow-sm transition-all duration-300 hover:-translate-y-1 hover:shadow-lg">
+        <div className="flex items-start justify-between">
           <div className="relative">
-            <div className="w-12 h-12 bg-white rounded-xl flex items-center justify-center text-blue-600 shadow-lg border border-slate-50 group-hover:scale-105 group-hover:rotate-2 transition-transform duration-500 relative z-10">
+            <div className="relative z-10 flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-navy)] text-amber-300 transition-transform duration-300 group-hover:scale-105">
               <FileText size={24} />
             </div>
-            <div className="absolute inset-0 bg-blue-200 blur-xl opacity-15 group-hover:opacity-30 transition-opacity" />
           </div>
           
-          <div className="bg-blue-50 p-1.5 rounded-lg text-blue-600 group-hover:bg-blue-600 group-hover:text-white transition-all duration-500">
+          <div className="rounded-xl bg-amber-50 p-1.5 text-amber-600 transition-all duration-300 group-hover:bg-amber-500 group-hover:text-white">
             <Award size={16} />
           </div>
         </div>
 
-        <div className="flex-grow">
-          <h3 className="text-xl font-black text-slate-900 mb-1 leading-tight group-hover:text-blue-600 transition-colors">
+        <div className="mt-5 flex-grow">
+          <h3 className="mb-2 text-2xl font-black leading-tight text-slate-900 transition-colors group-hover:text-amber-600">
             {short_name || name}
           </h3>
-          <div className="flex items-center gap-1.5 text-slate-400 text-xs font-bold uppercase mb-3">
-            <span className="w-1.5 h-1.5 rounded-full bg-blue-500 animate-pulse" />
+          <div className="mb-3 flex items-center gap-1.5 text-xs font-bold uppercase text-slate-400">
+            <span className="h-1.5 w-1.5 rounded-full bg-amber-500" />
             <span>{exam_type}</span>
           </div>
           
-          <div className="flex items-center gap-1.5 text-slate-500 text-xs font-bold mb-3">
-            <Building2 size={12} className="text-blue-500" />
+          <div className="mb-3 flex items-center gap-1.5 text-xs font-bold text-slate-500">
+            <Building2 size={12} className="text-amber-500" />
             <span className="uppercase">{conducting_body}</span>
           </div>
 
-          <p className="text-slate-500 text-xs leading-relaxed line-clamp-2 mb-4">
+          <p className="mb-5 line-clamp-3 text-sm leading-7 text-slate-500">
             {description}
           </p>
 
-          {/* Dynamic Tags */}
-          <div className="flex flex-wrap gap-1.5 mb-4">
-            <div className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
-              <Calendar size={12} className="text-blue-600" />
-              <span className="text-[9px] font-black text-slate-600 uppercase">{exam_mode}</span>
+          <div className="flex flex-wrap gap-2">
+            <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
+              <Calendar size={12} className="text-amber-500" />
+              <span className="text-[10px] font-black uppercase text-slate-600">{exam_mode}</span>
             </div>
-            <div className="flex items-center gap-1 bg-slate-50 px-2 py-1 rounded-lg border border-slate-100">
-              <Clock size={12} className="text-blue-600" />
-              <span className="text-[9px] font-black text-slate-600 uppercase">{frequency}</span>
+            <div className="flex items-center gap-1 rounded-full border border-slate-200 bg-slate-50 px-3 py-1.5">
+              <Clock size={12} className="text-amber-500" />
+              <span className="text-[10px] font-black uppercase text-slate-600">{frequency}</span>
             </div>
           </div>
         </div>
 
-        {/* Modern Footer CTA */}
-        <div className="pt-4 border-t border-slate-50 flex items-center justify-between">
-          <span className="text-[9px] font-black text-slate-900 group-hover:text-blue-600 transition-colors uppercase tracking-wider">
+        <div className="mt-6 flex items-center justify-between border-t border-slate-100 pt-4">
+          <span className="text-[10px] font-black uppercase tracking-wider text-slate-900 transition-colors group-hover:text-amber-600">
             Exam Guide
           </span>
-          <div className="w-8 h-8 rounded-full bg-slate-900 text-white flex items-center justify-center group-hover:bg-blue-600 transition-colors shadow-md">
+          <div className="flex h-8 w-8 items-center justify-center rounded-full bg-[var(--surface-navy)] text-white transition-colors group-hover:bg-amber-500">
             <ArrowUpRight size={14} />
           </div>
         </div>
@@ -137,32 +142,25 @@ export default function ExamsPage() {
   )
 
   if (isLoading) {
-    return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center">
-          <div className="w-12 h-12 border-2 border-gray-200 border-t-gray-600 rounded-full animate-spin mx-auto mb-4"></div>
-          <p className="text-gray-500 text-sm">Loading exams...</p>
-        </div>
-      </div>
-    )
+    return <ExamListPageSkeleton />
   }
 
   if (error) {
     return (
-      <div className="min-h-screen bg-white flex items-center justify-center">
-        <div className="text-center max-w-md mx-auto px-4">
-          <div className="w-12 h-12 bg-red-50 rounded-full flex items-center justify-center mx-auto mb-4">
-            <AlertCircle className="w-6 h-6 text-red-600" />
+      <div className="flex min-h-screen items-center justify-center bg-white">
+        <div className="mx-auto max-w-md px-4 text-center">
+          <div className="mx-auto mb-4 flex h-12 w-12 items-center justify-center rounded-full bg-amber-50">
+            <AlertCircle className="h-6 w-6 text-amber-600" />
           </div>
-          <h2 className="text-xl font-semibold text-gray-900 mb-2">Failed to Load Exams</h2>
-          <p className="text-gray-500 mb-6 text-sm">
+          <h2 className="mb-2 text-xl font-semibold text-slate-900">Failed to Load Exams</h2>
+          <p className="mb-6 text-sm text-slate-500">
             {error instanceof Error ? error.message : 'An unexpected error occurred'}
           </p>
           <button 
             onClick={() => refetch()}
-            className="bg-gray-900 hover:bg-gray-800 text-white px-4 py-2 rounded-lg text-sm font-medium transition-colors"
+            className="rounded-xl bg-[var(--surface-navy)] px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800"
           >
-            <RefreshCw className="w-4 h-4 mr-2 inline" />
+            <RefreshCwIcon className="mr-2 inline h-4 w-4" />
             Try Again
           </button>
         </div>
@@ -171,50 +169,84 @@ export default function ExamsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 via-white to-green-50">
-      {/* Simple Header */}
-      <div className="bg-white border-b border-blue-100 shadow-sm">
-        <div className="max-w-6xl mx-auto px-4 py-8">
-          <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+    <div className="min-h-screen bg-[#FAFAFA]">
+      <section className="border-b border-slate-100 bg-white">
+        <div className="mx-auto max-w-7xl px-4 py-14 sm:px-6 lg:px-8 lg:py-16">
+          <div className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr] lg:items-end">
             <div>
-              <h1 className="text-3xl font-light text-gray-900 mb-2">
-                Entrance <span className="font-semibold text-blue-700">Exams</span>
+              <div className="inline-flex items-center gap-2 rounded-full border border-amber-200 bg-amber-50 px-4 py-2 text-xs font-black uppercase tracking-[0.18em] text-amber-700">
+                <Sparkles className="h-3.5 w-3.5" />
+                Exam Library
+              </div>
+              <h1 className="mt-6 max-w-4xl text-4xl font-black tracking-tight text-slate-950 md:text-6xl">
+                Entrance exams that shape your
+                <span className="text-amber-500"> MBBS Abroad & Study Abroad</span> journey
               </h1>
-              <p className="text-gray-700 text-sm font-medium">
-                Explore {filteredExams.length} global entrance examinations
+              <p className="mt-5 max-w-2xl text-base leading-8 text-slate-500 md:text-lg">
+                Explore medical entrance pathways, language tests, aptitude exams, and international admission requirements in one structured place.
               </p>
             </div>
-            <div className="flex items-center gap-3 bg-blue-700 p-3 rounded-xl text-white">
-              <div className="w-10 h-10 bg-white/20 backdrop-blur rounded-lg flex items-center justify-center">
-                <FileText size={20} className="text-white" />
+            <div className="grid gap-4 sm:grid-cols-2">
+              <div className="rounded-[1.75rem] border border-slate-100 bg-slate-50 p-5 shadow-sm">
+                <div className="flex items-center gap-4">
+                  <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-[var(--surface-navy)] text-amber-300">
+                    <FileText size={20} />
+                  </div>
+                  <div>
+                    <p className="text-3xl font-black text-slate-950">{filteredExams.length}</p>
+                    <p className="text-xs font-bold uppercase tracking-[0.18em] text-slate-400">Visible Exams</p>
+                  </div>
+                </div>
               </div>
-              <div>
-                <p className="text-xl font-light text-white">{filteredExams.length}</p>
-                <p className="text-xs text-white/80">Exams</p>
+              <div className="rounded-[1.75rem] border border-slate-100 bg-[var(--surface-navy)] p-5 text-white shadow-sm">
+                <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-300">Need Direction?</p>
+                <p className="mt-3 text-lg font-black leading-snug">Talk to our team to choose the right exam path.</p>
+                <button
+                  onClick={openModal}
+                  className="mt-4 inline-flex h-11 items-center justify-center rounded-xl bg-amber-500 px-5 text-sm font-black text-slate-950 transition-colors hover:bg-amber-400"
+                >
+                  Get Free Guidance
+                </button>
               </div>
             </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Simple Filters */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
-        <div className="bg-white rounded-xl p-4 shadow-sm border border-blue-100">
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-3">
+      <section className="mx-auto max-w-7xl px-4 pt-8 sm:px-6 lg:px-8">
+        <div className="grid gap-4 md:grid-cols-3">
+          <div className="rounded-[1.5rem] border border-slate-100 bg-white p-5 shadow-sm">
+            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Built For</p>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-700">Students preparing for MBBS Abroad, study abroad, and related admission pathways.</p>
+          </div>
+          <div className="rounded-[1.5rem] border border-slate-100 bg-white p-5 shadow-sm">
+            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Includes</p>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-700">Exam modes, frequency, conducting bodies, and quick summaries for faster comparison.</p>
+          </div>
+          <div className="rounded-[1.5rem] border border-slate-100 bg-white p-5 shadow-sm">
+            <p className="text-[11px] font-black uppercase tracking-[0.16em] text-slate-400">Use It For</p>
+            <p className="mt-3 text-sm font-bold leading-7 text-slate-700">Shortlisting requirements before applications, counselling, and country selection.</p>
+          </div>
+        </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 py-8 sm:px-6 lg:px-8">
+        <div className="rounded-[2rem] border border-slate-100 bg-white p-5 shadow-sm">
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-4">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-blue-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-slate-400" />
               <input
-                placeholder="Search exams..."
+                placeholder="Search exams for admission pathways..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 focus:bg-white"
+                className="w-full rounded-xl border border-slate-200 bg-slate-50 py-3 pl-10 pr-3 text-sm outline-none transition-all focus:border-amber-400 focus:bg-white"
               />
             </div>
 
             <select
               value={selectedType}
               onChange={(e) => setSelectedType(e.target.value)}
-              className="w-full px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 focus:bg-white"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none transition-all focus:border-amber-400 focus:bg-white"
             >
               <option value="all">All Types</option>
               {examTypes.map((t) => (
@@ -225,7 +257,7 @@ export default function ExamsPage() {
             <select
               value={selectedMode}
               onChange={(e) => setSelectedMode(e.target.value)}
-              className="w-full px-3 py-2 bg-blue-50 border border-blue-200 rounded-lg text-sm focus:outline-none focus:border-blue-400 focus:bg-white"
+              className="w-full rounded-xl border border-slate-200 bg-slate-50 px-3 py-3 text-sm outline-none transition-all focus:border-amber-400 focus:bg-white"
             >
               <option value="all">All Modes</option>
               {examModes.map((m) => (
@@ -235,27 +267,26 @@ export default function ExamsPage() {
 
             <button
               onClick={resetFilters}
-              className="w-full px-3 py-2 bg-gradient-to-r from-red-50 to-pink-50 border border-red-200 rounded-lg text-sm text-red-600 hover:text-red-700 hover:bg-red-100 transition-colors flex items-center justify-center gap-2"
+              className="flex w-full items-center justify-center gap-2 rounded-xl border border-slate-200 bg-white px-3 py-3 text-sm font-semibold text-slate-600 transition-colors hover:border-amber-300 hover:text-amber-600"
             >
               <X size={14} />
               Clear Filters
             </button>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* Exams Grid */}
-      <div className="max-w-6xl mx-auto px-4 py-6">
+      <section className="mx-auto max-w-7xl px-4 pb-10 sm:px-6 lg:px-8">
         {filteredExams.length === 0 ? (
-          <div className="text-center py-16">
-            <div className="w-16 h-16 bg-gradient-to-br from-blue-100 to-green-100 rounded-full flex items-center justify-center mx-auto mb-4">
-              <LayoutGrid size={24} className="text-blue-600" />
+          <div className="py-16 text-center">
+            <div className="mx-auto mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-amber-50">
+              <LayoutGrid size={24} className="text-amber-500" />
             </div>
-            <h3 className="text-lg font-semibold text-gray-900 mb-2">No exams found</h3>
-            <p className="text-gray-700 text-sm font-medium">Try adjusting your search or filters</p>
+            <h3 className="mb-2 text-lg font-semibold text-slate-900">No exams found</h3>
+            <p className="text-sm font-medium text-slate-500">Try adjusting your search or filters</p>
           </div>
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
             {filteredExams.map((exam) => (
               <ExamCard
                 key={exam._id}
@@ -274,13 +305,29 @@ export default function ExamsPage() {
 
         {/* End of results */}
         {filteredExams.length > 0 && (
-          <div className="text-center py-8 border-t border-blue-100 mt-8">
-            <p className="text-gray-700 text-sm font-medium">
+          <div className="mt-8 border-t border-slate-200 py-8 text-center">
+            <p className="text-sm font-medium text-slate-500">
               Showing all {filteredExams.length} exams
             </p>
           </div>
         )}
-      </div>
+      </section>
+
+      <section className="mx-auto max-w-7xl px-4 pb-12 sm:px-6 lg:px-8">
+        <div className="rounded-[2.5rem] bg-[var(--surface-navy)] p-8 text-white shadow-sm md:p-10">
+          <p className="text-[11px] font-black uppercase tracking-[0.18em] text-amber-300">Counselling Support</p>
+          <h2 className="mt-4 text-3xl font-black tracking-tight">Need help selecting the right exam for your admission route?</h2>
+          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-300">
+            We help students understand required exams, sequence their preparation, and match test plans with country and college choices.
+          </p>
+          <button
+            onClick={openModal}
+            className="mt-8 inline-flex h-14 items-center justify-center rounded-2xl bg-amber-500 px-8 font-black text-slate-950 transition-colors hover:bg-amber-400"
+          >
+            Book Free Counselling
+          </button>
+        </div>
+      </section>
       
       <FAQ />
     </div>

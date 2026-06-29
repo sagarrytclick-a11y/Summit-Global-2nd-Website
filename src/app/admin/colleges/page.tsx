@@ -187,11 +187,16 @@ export default function CollegesPage() {
 
   // Remove client-side filtering since we're doing server-side filtering
 
-  const columns = [
+  const columns: Array<{
+    key: keyof College | string;
+    title: string;
+    render: (value: unknown, record: College, index: number) => React.ReactNode;
+    width?: string;
+  }> = [
     {
       key: 'name',
       title: 'College Name',
-      render: (value: string, record: College) => {
+      render: (value: unknown, record: College) => {
         const countryName = !record.country_ref
           ? 'No country'
           : typeof record.country_ref === 'string'
@@ -200,8 +205,8 @@ export default function CollegesPage() {
 
         return (
           <div>
-            <div className="font-medium">{value}</div>
-            <div className="text-sm text-gray-500">{countryName}</div>
+            <div className="font-medium">{value as string}</div>
+            <div className="text-sm text-zinc-400">{countryName}</div>
           </div>
         )
       }
@@ -209,52 +214,57 @@ export default function CollegesPage() {
     {
       key: 'exams',
       title: 'Exams',
-      render: (value: string[]) => (
-        <div className="flex flex-wrap gap-1">
-          {value?.slice(0, 2).map((exam, index) => (
-            <Badge key={index} variant="outline" className="text-xs">
-              {exam}
-            </Badge>
-          ))}
-          {value?.length > 2 && (
-            <Badge variant="outline" className="text-xs">
-              +{value.length - 2}
-            </Badge>
-          )}
-        </div>
-      )
+      render: (value: unknown) => {
+        const examList = Array.isArray(value) ? value : []
+        return (
+          <div className="flex flex-wrap gap-1">
+            {examList.slice(0, 2).map((exam: unknown, index: number) => (
+              <Badge key={index} variant="outline" className="border-white/10 bg-zinc-900 text-xs text-white">
+                {exam as string}
+              </Badge>
+            ))}
+            {examList.length > 2 && (
+              <Badge variant="outline" className="border-white/10 bg-zinc-900 text-xs text-white">
+                +{examList.length - 2}
+              </Badge>
+            )}
+          </div>
+        )
+      }
     },
     {
       key: 'fees',
       title: 'Fees',
-      render: (value: number, record: College) => {
-        if (record.fees_structure && record.fees_structure.courses.length > 0) {
+      render: (value: unknown, record: College) => {
+        if (record.fees_structure && record.fees_structure.courses && record.fees_structure.courses.length > 0) {
           return record.fees_structure.courses[0].annual_tuition_fee || 'N/A'
         }
-        return value ? `$${value.toLocaleString()}/year` : 'N/A'
+        const numValue = typeof value === 'number' ? value : undefined
+        return numValue ? `$${numValue.toLocaleString()}/year` : 'N/A'
       }
     },
     {
       key: 'duration',
       title: 'Duration',
-      render: (value: string, record: College) => {
-        if (record.fees_structure && record.fees_structure.courses.length > 0) {
+      render: (value: unknown, record: College) => {
+        if (record.fees_structure && record.fees_structure.courses && record.fees_structure.courses.length > 0) {
           return record.fees_structure.courses[0].duration || 'N/A'
         }
-        return value || 'N/A'
+        return (value as string) || 'N/A'
       }
     },
     {
       key: 'banner_url',
       title: 'Banner',
-      render: (value: string) => {
-        if (!value) return 'N/A'
+      render: (value: unknown) => {
+        const url = value as string | undefined
+        if (!url) return 'N/A'
         return (
           <a
-            href={value}
+            href={url}
             target="_blank"
             rel="noopener noreferrer"
-            className="text-blue-600 hover:text-blue-800 text-sm underline"
+            className="text-sm text-white underline hover:text-zinc-300"
           >
             View Banner
           </a>
@@ -264,17 +274,18 @@ export default function CollegesPage() {
     {
       key: 'establishment_year',
       title: 'Est. Year',
-      render: (value: string) => value || '-'
+      render: (value: unknown) => (value as string) || '-'
     },
     {
       key: 'ranking',
       title: 'Ranking',
-      render: (value: string) => {
-        if (!value || value === 'N/A' || value === 'n/a') return value || '-'
+      render: (value: unknown) => {
+        const strValue = value as string | undefined
+        if (!strValue || strValue === 'N/A' || strValue === 'n/a') return strValue || '-'
 
         // Check if it's a simple string that's not JSON
-        if (typeof value === 'string' && !value.startsWith('{') && !value.startsWith('[')) {
-          return value
+        if (typeof strValue === 'string' && !strValue.startsWith('{') && !strValue.startsWith('[')) {
+          return strValue
         }
 
         try {
@@ -283,17 +294,17 @@ export default function CollegesPage() {
           return (
             <div className="space-y-1">
               {rankingData.country_ranking && (
-                <div className="text-sm">
-                  <span className="text-gray-500">Country:</span> #{rankingData.country_ranking}
+                <div className="text-sm text-white">
+                  <span className="text-zinc-400">Country:</span> #{rankingData.country_ranking}
                 </div>
               )}
               {rankingData.world_ranking && (
-                <div className="text-sm">
-                  <span className="text-gray-500">World:</span> #{rankingData.world_ranking}
+                <div className="text-sm text-white">
+                  <span className="text-zinc-400">World:</span> #{rankingData.world_ranking}
                 </div>
               )}
-              {rankingData.accreditation && rankingData.accreditation.length > 0 && (
-                <div className="text-xs text-gray-400">
+              {rankingData.accreditation && Array.isArray(rankingData.accreditation) && rankingData.accreditation.length > 0 && (
+                <div className="text-xs text-zinc-500">
                   {rankingData.accreditation.length} accreditation(s)
                 </div>
               )}
@@ -301,24 +312,28 @@ export default function CollegesPage() {
           )
         } catch (error) {
           console.error('Error parsing ranking data:', error)
-          return <span className="text-xs text-gray-400">Invalid data</span>
+          return <span className="text-xs text-zinc-500">Invalid data</span>
         }
       }
     },
     {
       key: 'is_active',
       title: 'Status',
-      render: (value: boolean) => (
-        <Badge variant={value ? 'default' : 'secondary'}>
-          {value ? 'active' : 'inactive'}
-        </Badge>
-      )
+      render: (value: unknown) => {
+        const isActive = Boolean(value)
+        return (
+          <Badge className={isActive ? 'border border-white/10 bg-white text-black' : 'border border-white/10 bg-zinc-800 text-white'}>
+            {isActive ? 'active' : 'inactive'}
+          </Badge>
+        )
+      }
     },
     {
       key: 'createdAt',
       title: 'Created',
-      render: (value: string) => {
-        const date = new Date(value)
+      render: (value: unknown) => {
+        const dateStr = value as string
+        const date = new Date(dateStr)
         return date.toLocaleDateString('en-US')
       }
     }
@@ -655,12 +670,12 @@ export default function CollegesPage() {
         {/* Filters and Add button */}
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div>
-            <h2 className="text-lg font-semibold text-gray-900">All Colleges</h2>
-            <p className="text-sm text-gray-500">
+            <h2 className="text-lg font-semibold text-white">All Colleges</h2>
+            <p className="text-sm text-zinc-400">
               {totalCount} colleges total
             </p>
           </div>
-          <Button onClick={handleAddCollege} className="flex items-center space-x-2">
+          <Button onClick={handleAddCollege} className="flex items-center space-x-2 bg-white text-black hover:bg-zinc-200">
             <Plus className="h-4 w-4" />
             <span>Add College</span>
           </Button>
@@ -670,25 +685,25 @@ export default function CollegesPage() {
         <div className="flex flex-col sm:flex-row gap-4">
           <div className="flex-1">
             <div className="relative">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
+              <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 transform text-zinc-500" />
               <Input
                 placeholder="Search by college name..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="border-white/10 bg-zinc-950 pl-10 text-white placeholder:text-zinc-500"
               />
             </div>
           </div>
           <div className="w-full sm:w-48">
             <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-              <SelectTrigger>
-                <Filter className="h-4 w-4 mr-2" />
+              <SelectTrigger className="border-white/10 bg-zinc-950 text-white">
+                <Filter className="mr-2 h-4 w-4 text-zinc-500" />
                 <SelectValue placeholder="Filter by country" />
               </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Countries</SelectItem>
+              <SelectContent className="border-white/10 bg-zinc-950 text-white">
+                <SelectItem className="text-white focus:bg-zinc-900 focus:text-white" value="all">All Countries</SelectItem>
                 {dummyCountries.map((country) => (
-                  <SelectItem key={country.id} value={country.slug}>
+                  <SelectItem className="text-white focus:bg-zinc-900 focus:text-white" key={country.id} value={country.slug}>
                     {country.flag} {country.name}
                   </SelectItem>
                 ))}
@@ -708,9 +723,9 @@ export default function CollegesPage() {
 
         {/* Pagination Controls */}
         {totalPages > 1 && (
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-4 p-4 bg-white rounded-lg border">
+          <div className="flex flex-col items-center justify-between gap-4 rounded-lg border border-white/10 bg-zinc-950 p-4 sm:flex-row">
             <div className="flex items-center gap-2">
-              <span className="text-sm text-gray-600">
+              <span className="text-sm text-zinc-400">
                 Showing {((currentPage - 1) * 10) + 1}-{Math.min(currentPage * 10, totalCount)} of {totalCount} colleges
               </span>
             </div>
@@ -778,11 +793,16 @@ export default function CollegesPage() {
         >
           <ComprehensiveCollegeForm
             data={formData}
-            countries={countries.map((c: any, index: number) => ({
-              ...c,
-              _id: (c as any)._id || (c as any).id || `country-${index}`
-            }))}
-            onChange={(field: string, value: any) => {
+            countries={countries.map((c: unknown, index: number) => {
+              const country = c as Record<string, unknown>;
+              return {
+                _id: (country._id || country.id || `country-${index}`) as string,
+                name: (country.name || 'Unknown Country') as string,
+                slug: (country.slug || `country-${index}`) as string,
+                flag: (country.flag || '🌍') as string
+              };
+            })}
+            onChange={(field: string, value: unknown) => {
               console.log('🔍 [ADMIN] Form field changed:', field, '=', value);
               console.log('🔍 [ADMIN] Current formData before change:', formData);
               setFormData(prev => {
@@ -814,7 +834,7 @@ export default function CollegesPage() {
           loading={deleteCollegeMutation.isPending}
           size="sm"
         >
-          <div className="flex items-center space-x-2 text-sm text-gray-600">
+          <div className="flex items-center space-x-2 text-sm text-zinc-400">
             <GraduationCap className="h-4 w-4" />
             <span>{collegeToDelete?.name}</span>
           </div>

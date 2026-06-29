@@ -3,158 +3,179 @@ import React from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
 import {
-  GraduationCap,
-  Globe,
+  Instagram,
+  Linkedin,
+  Facebook,
+  Youtube,
   Mail,
   Phone,
-  SendHorizontal,
   MapPin,
   MessageCircle
 } from 'lucide-react';
-import { SITE_IDENTITY } from "@/site-identity";
+import { SITE_CONTACT, SITE_IDENTITY } from "@/config/site-config";
 import { useContactInfo, createMailtoLink, createTelLink, createWhatsAppLink } from "@/hooks/useContactInfo";
 import { useFormModal } from '@/context/FormModalContext';
 
 const Footer = () => {
-  const { emails, phones, socials, address } = useContactInfo();
+  const { emails, phones, address } = useContactInfo();
   const { openModal } = useFormModal();
+  const socialLinks = [
+    { label: 'Instagram', href: SITE_CONTACT.socials.instagram, icon: <Instagram className="h-4 w-4 sm:h-5 sm:w-5" /> },
+    { label: 'LinkedIn', href: SITE_CONTACT.socials.linkedin, icon: <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" /> },
+    { label: 'X', href: SITE_CONTACT.socials.twitter, icon: <span className="text-sm font-black sm:text-base">X</span> },
+    { label: 'YouTube', href: SITE_CONTACT.socials.youtube, icon: <Youtube className="h-4 w-4 sm:h-5 sm:w-5" /> },
+    { label: 'Facebook', href: SITE_CONTACT.socials.facebook, icon: <Facebook className="h-4 w-4 sm:h-5 sm:w-5" /> },
+  ].filter((item) => Boolean(item.href));
 
   return (
-    <footer className="bg-gradient-to-br from-blue-900 via-blue-800 to-blue-900 pt-24 pb-12 px-6 border-t border-blue-700 relative overflow-hidden">
-      {/* Background Elements */}
-      <div className="absolute top-0 left-0 w-full h-full">
-        <div className="absolute top-20 right-20 w-96 h-96 bg-blue-500 rounded-full blur-[150px] opacity-5" />
-        <div className="absolute bottom-20 left-20 w-80 h-80 bg-blue-400 rounded-full blur-[120px] opacity-5" />
+    <footer className="brand-panel relative overflow-hidden px-6 pb-10 pt-20">
+      <div className="absolute inset-0">
+        <div className="absolute left-10 top-10 h-64 w-64 rounded-full bg-amber-300/8 blur-[120px]" />
       </div>
 
-      <div className="max-w-7xl mx-auto relative z-10">
-        {/* Newsletter CTA Section */}
+      <div className="relative mx-auto max-w-7xl">
+        <div className="mb-12 grid grid-cols-1 gap-8 rounded-[1.5rem] border border-white/10 bg-white/5 p-8 lg:grid-cols-[1.15fr_0.85fr]">
+          <div className="space-y-5">
+            <div className="inline-flex items-center gap-2 rounded-full border border-amber-400/20 bg-amber-400/10 px-4 py-2 text-xs font-bold uppercase tracking-[0.2em] text-amber-300">
+              Summit Global
+            </div>
+            <h2 className="text-3xl font-black text-white sm:text-4xl">
+              Start your MBBS and study abroad journey with a team you can trust.
+            </h2>
+            <p className="max-w-2xl text-base leading-8 text-slate-200">
+              Admissions, scholarships, visa support, and university shortlisting built around a clear,
+              transparent process for students and parents.
+            </p>
+          </div>
+          <div className="flex flex-col justify-center gap-4 sm:flex-row lg:flex-col">
+            <button
+              onClick={openModal}
+              className="btn-primary inline-flex items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold"
+            >
+              <Phone size={18} />
+              Free Counselling
+            </button>
+            <Link
+              href="/colleges"
+              className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-6 py-4 font-bold text-white transition-all duration-200 hover:bg-white/15"
+            >
+              Explore Universities
+            </Link>
+          </div>
+        </div>
 
-
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-12 mb-12 sm:mb-16">
-
-          {/* Brand Section */}
+        <div className="mb-12 grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-4">
           <div className="flex flex-col gap-4 sm:gap-6 col-span-1 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3">
-              <div className="relative">
+              <div className="relative rounded-2xl bg-white p-2 shadow-lg shadow-black/10">
                 <Image
-                  src={`/favicon.png`}
+                  src={SITE_IDENTITY.assets.logo.main}
                   alt={SITE_IDENTITY.name}
-                  width={50}
-                  height={50}
-                  className="rounded-lg"
+                  width={150}
+                  height={48}
+                  className="h-10 w-auto rounded-lg object-contain"
                 />
               </div>
-              <div className="flex flex-col">
-                <span className="text-lg sm:text-xl lg:text-2xl font-bold text-white">
+              <div className="flex flex-col text-white">
+                <span className="text-lg sm:text-xl lg:text-2xl font-bold">
                   Summit Global
+                </span>
+                <span className="text-xs font-semibold uppercase tracking-[0.24em] text-slate-300">
+                  Trusted partner for India & abroad
                 </span>
               </div>
             </div>
-            <p className="text-gray-300 leading-relaxed text-sm sm:text-[15px] max-w-xs">
+            <p className="max-w-xs text-sm leading-7 text-slate-200 sm:text-[15px]">
               {SITE_IDENTITY.description}
             </p>
-            <div className="flex gap-3 sm:gap-4 text-gray-400">
-              <a
-                href={socials.instagram}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="hover:text-blue-400 hover:scale-110 transition-all duration-200"
-              >
-                <Globe className="w-4 h-4 sm:w-5 sm:h-5" />
-              </a>
-              <a
-                href={createMailtoLink(emails.info)}
-                className="hover:text-blue-400 hover:scale-110 transition-all duration-200"
-              >
-                <Mail className="w-4 h-4 sm:w-5 sm:h-5" />
-              </a>
-              <a
-                href={createTelLink(phones.primary)}
-                className="hover:text-blue-400 hover:scale-110 transition-all duration-200"
-              >
-                <Phone className="w-4 h-4 sm:w-5 sm:h-5" />
-              </a>
+            <div className="flex flex-wrap gap-3 text-slate-200 sm:gap-4">
+              {socialLinks.map((item) => (
+                <a
+                  key={item.label}
+                  href={item.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={item.label}
+                  className="flex h-11 w-11 items-center justify-center rounded-full border border-white/12 bg-white/10 transition-all duration-200 hover:scale-105 hover:text-amber-300"
+                >
+                  {item.icon}
+                </a>
+              ))}
+           
+            
             </div>
           </div>
 
-          {/* Services Section */}
           <div>
-            <h4 className="font-bold text-white mb-6 tracking-wide">SERVICES</h4>
-            <ul className="flex flex-col gap-4 text-gray-300 text-[15px]">
-              <li><Link href="/colleges" className="hover:text-blue-400 hover:translate-x-1 transition-all duration-200 inline-block">Study Abroad Programs</Link></li>
-              <li><Link href="/mbbs-abroad" className="hover:text-blue-400 hover:translate-x-1 transition-all duration-200 inline-block">MBBS Abroad</Link></li>
-              <li><Link href="/exams" className="hover:text-blue-400 hover:translate-x-1 transition-all duration-200 inline-block">Entrance Exam Prep</Link></li>
-              <li><Link href="/blogs" className="hover:text-blue-400 hover:translate-x-1 transition-all duration-200 inline-block">Career Guidance</Link></li>
-              <li><Link href="/contact" className="hover:text-blue-400 hover:translate-x-1 transition-all duration-200 inline-block">Admission Counseling</Link></li>
-              <li><Link href="/study-abroad" className="hover:text-blue-400 hover:translate-x-1 transition-all duration-200 inline-block">University Selection</Link></li>
+            <h4 className="mb-6 text-sm font-black uppercase tracking-[0.24em] text-slate-300">Services</h4>
+            <ul className="flex flex-col gap-4 text-[15px] text-slate-200">
+              <li><Link href="/colleges" className="inline-block transition-all duration-200 hover:translate-x-1 hover:text-amber-300">Study Abroad Programs</Link></li>
+              <li><Link href="/mbbs-abroad" className="inline-block transition-all duration-200 hover:translate-x-1 hover:text-amber-300">MBBS Abroad</Link></li>
+              <li><Link href="/exams" className="inline-block transition-all duration-200 hover:translate-x-1 hover:text-amber-300">Entrance Exam Prep</Link></li>
+              <li><Link href="/blogs" className="inline-block transition-all duration-200 hover:translate-x-1 hover:text-amber-300">Career Guidance</Link></li>
+              <li><Link href="/contact" className="inline-block transition-all duration-200 hover:translate-x-1 hover:text-amber-300">Admission Counseling</Link></li>
+              <li><Link href="/study-abroad" className="inline-block transition-all duration-200 hover:translate-x-1 hover:text-amber-300">University Selection</Link></li>
             </ul>
           </div>
 
-          {/* Contact Section */}
           <div>
-            <h4 className="font-bold text-white mb-6 tracking-wide">CONTACT US</h4>
+            <h4 className="mb-6 text-sm font-black uppercase tracking-[0.24em] text-slate-300">Contact</h4>
             <div className="flex flex-col gap-4">
-              <div className="flex items-center gap-3 text-gray-300 text-[15px]">
-                <Phone size={16} className="text-blue-400" />
-                <a href={createTelLink(phones.primary)} className="hover:text-blue-400 transition-colors">
+              <div className="flex items-center gap-3 text-[15px] text-slate-200">
+                <Phone size={16} className="text-amber-300" />
+                <a href={createTelLink(phones.primary)} className="transition-colors hover:text-amber-300">
                   {phones.primary}
                 </a>
               </div>
               {phones.additional.length > 0 && (
-                <div className="flex items-center gap-3 text-gray-300 text-[15px]">
-                  <Phone size={16} className="text-blue-400" />
-                  <a href={createTelLink(phones.additional[0])} className="hover:text-blue-400 transition-colors">
+                <div className="flex items-center gap-3 text-[15px] text-slate-200">
+                  <Phone size={16} className="text-amber-300" />
+                  <a href={createTelLink(phones.additional[0])} className="transition-colors hover:text-amber-300">
                     {phones.additional[0]}
                   </a>
                 </div>
               )}
-              <div className="flex items-center gap-3 text-gray-300 text-[15px]">
-                <Mail size={16} className="text-blue-400" />
-                <a href={createMailtoLink(emails.info)} className="hover:text-blue-400 transition-colors">
+              <div className="flex items-center gap-3 text-[15px] text-slate-200">
+                <Mail size={16} className="text-amber-300" />
+                <a href={createMailtoLink(emails.info)} className="transition-colors hover:text-amber-300">
                   {emails.info}
                 </a>
               </div>
-              <div className="flex items-center gap-3 text-gray-300 text-[15px]">
-                <MessageCircle size={16} className="text-blue-400" />
-                <a href={createWhatsAppLink(phones.primaryRaw)} className="hover:text-blue-400 transition-colors">
+              <div className="flex items-center gap-3 text-[15px] text-slate-200">
+                <MessageCircle size={16} className="text-amber-300" />
+                <a href={createWhatsAppLink(phones.primaryRaw)} className="transition-colors hover:text-amber-300">
                   WhatsApp
                 </a>
               </div>
-              <div className="flex items-start gap-3 text-gray-300 text-[15px]">
-                <MapPin size={50} className="text-blue-400 mt-1" />
+              <div className="flex items-start gap-3 text-[15px] text-slate-200">
+                <MapPin size={50} className="mt-1 text-amber-300" />
                 <span className="leading-relaxed">{address.full}</span>
               </div>
             </div>
           </div>
 
-          {/* Newsletter Section */}
           <div className="lg:col-span-1">
-            <h4 className="font-bold text-white mb-6 tracking-wide">STAY UPDATED</h4>
-            <p className="text-gray-300 text-[15px] mb-6">
-              Subscribe to our newsletter for scholarship updates and exclusive insights.
-            </p>
-
-            {/* Book Consultancy Button */}
-            <button
-              onClick={openModal}
-              className="w-full bg-gradient-to-r from-blue-500 to-blue-600 hover:from-blue-600 hover:to-blue-700 text-white font-semibold py-3 px-6 rounded-full transition-all duration-300 transform hover:scale-105 shadow-lg hover:shadow-xl flex items-center justify-center gap-2"
-            >
-              <Phone size={18} />
-              Book a Consultancy
-            </button>
+            <h4 className="mb-6 text-sm font-black uppercase tracking-[0.24em] text-slate-300">Trust Signals</h4>
+            <div className="space-y-3">
+              {["Trusted MBBS guidance", "Transparent fee process", "Partner university network", "Student-first support"].map((item) => (
+                <div key={item} className="rounded-2xl border border-white/10 bg-white/5 px-4 py-3 text-sm font-semibold text-slate-100">
+                  {item}
+                </div>
+              ))}
+            </div>
+          
+           
           </div>
         </div>
 
-        {/* Bottom Bar */}
-        <div className="pt-8 sm:pt-12 lg:pt-16 border-t border-slate-700/50">
+        <div className="border-t border-white/10 pt-8 sm:pt-12 lg:pt-16">
           <div className="flex flex-col gap-8 sm:gap-12 mb-6 sm:mb-8">
             <div className="text-center lg:text-center">
-              <p className="text-gray-300 text-xs sm:text-sm mb-2 font-medium">© {SITE_IDENTITY.business.established} {SITE_IDENTITY.name}. All rights reserved.</p>
-              <p className="text-gray-400 text-xs">{SITE_IDENTITY.tagline}</p>
+              <p className="mb-2 text-xs font-medium text-slate-200 sm:text-sm">© {SITE_IDENTITY.business.established} {SITE_IDENTITY.name}. All rights reserved.</p>
+              <p className="text-xs text-slate-300">{SITE_IDENTITY.tagline}</p>
             </div>
             <div className="mt-8 text-center max-w-4xl mx-auto">
-              <p className="text-gray-400 text-xs leading-relaxed">
+              <p className="text-xs leading-relaxed text-slate-300">
                 Disclaimer: Summit Global provides guidance and counseling services
                 based on experience and available information. We do not guarantee admission,
                 visa approval, or outcomes, as final decisions are made by respective
@@ -162,44 +183,41 @@ const Footer = () => {
               </p>
             </div>
 
-            <div className="flex flex-wrap justify-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm">
-              <Link href="/privacy" className="text-gray-400 hover:text-blue-400 hover:scale-105 transition-all duration-200">Privacy Policy</Link>
-              <Link href="/term" className="text-gray-400 hover:text-blue-400 hover:scale-105 transition-all duration-200">Terms of Service</Link>
-              <Link href="#" className="text-gray-400 hover:text-blue-400 hover:scale-105 transition-all duration-200">Cookie Policy</Link>
-              <Link href="/contact" className="text-gray-400 hover:text-blue-400 hover:scale-105 transition-all duration-200">Contact Us</Link>
-
+            <div className="flex flex-wrap justify-center gap-4 text-xs sm:gap-6 sm:text-sm lg:gap-8">
+              <Link href="/privacy" className="text-slate-300 transition-all duration-200 hover:scale-105 hover:text-amber-300">Privacy Policy</Link>
+              <Link href="/term" className="text-slate-300 transition-all duration-200 hover:scale-105 hover:text-amber-300">Terms of Service</Link>
+              <Link href="#" className="text-slate-300 transition-all duration-200 hover:scale-105 hover:text-amber-300">Cookie Policy</Link>
+              <Link href="/contact" className="text-slate-300 transition-all duration-200 hover:scale-105 hover:text-amber-300">Contact Us</Link>
             </div>
 
-            {/* Social Proof */}
-            <div className="flex flex-col sm:flex-row items-center justify-center gap-4 sm:gap-6 text-gray-300 text-xs sm:text-sm">
+            <div className="flex flex-col items-center justify-center gap-4 text-xs text-slate-200 sm:flex-row sm:gap-6 sm:text-sm">
               <div className="flex items-center gap-2">
-                <span className="text-blue-400 text-sm sm:text-lg">●</span>
+                <span className="text-sm text-amber-300 sm:text-lg">●</span>
                 <span className="font-medium">24/7 Support</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-blue-400 text-sm sm:text-lg">●</span>
+                <span className="text-sm text-amber-300 sm:text-lg">●</span>
                 <span className="font-medium">100% Secure</span>
               </div>
             </div>
           </div>
 
-          {/* Additional Trust Indicators */}
-          <div className="pt-6 sm:pt-8 border-t border-slate-700/30">
-            <div className="flex flex-wrap justify-center items-center gap-4 sm:gap-6 lg:gap-8 text-xs sm:text-sm text-gray-400">
+          <div className="border-t border-white/10 pt-6 sm:pt-8">
+            <div className="flex flex-wrap items-center justify-center gap-4 text-xs text-slate-300 sm:gap-6 sm:text-sm lg:gap-8">
               <div className="flex items-center gap-2">
-                <span className="text-blue-400">🔒</span>
+                <span className="text-amber-300">🔒</span>
                 <span>SSL Secured</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-blue-400">📧</span>
+                <span className="text-amber-300">📧</span>
                 <span>GDPR Compliant</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-blue-400">🏆</span>
+                <span className="text-amber-300">🏆</span>
                 <span>ISO Certified</span>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-yellow-400">⭐</span>
+                <span className="text-amber-300">⭐</span>
                 <span>4.9/5 Trustpilot</span>
               </div>
             </div>

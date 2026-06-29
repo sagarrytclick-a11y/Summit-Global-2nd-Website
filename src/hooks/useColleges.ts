@@ -1,6 +1,6 @@
 import { useQuery, useInfiniteQuery } from '@tanstack/react-query'
 
-interface College {
+export interface College {
   _id: string
   name: string
   slug: string
@@ -59,7 +59,7 @@ interface College {
   }
 }
 
-interface CollegesResponse {
+export interface CollegesResponse {
   colleges: College[]
   total: number
   page: number
@@ -157,7 +157,14 @@ export function useCollege(slug: string) {
 }
 
 // Hook for paginated colleges list
-export function useColleges(page: number, search: string, country: string, exam: string, collegeType: string) {
+export function useColleges(
+  page: number,
+  search: string,
+  country: string,
+  exam: string,
+  collegeType: string,
+  initialData?: CollegesResponse
+) {
   return useQuery({
     queryKey: ['colleges', 'paginated', page, search, country, exam, collegeType],
     queryFn: () => fetchColleges({ 
@@ -171,6 +178,7 @@ export function useColleges(page: number, search: string, country: string, exam:
     gcTime: 5 * 60 * 1000, // 5 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    initialData,
   })
 }
 

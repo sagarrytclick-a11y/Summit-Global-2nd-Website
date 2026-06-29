@@ -18,7 +18,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Aravind Iyer",
     course: "MS IN COMPUTER SCIENCE, STANFORD",
-    quote: "Education Times Abroad turned my Ivy League dream into reality. From shortlisting universities to my SOP review, their attention to detail was incredible. I even secured a $20k scholarship!",
+    quote: "Summit Global turned my Ivy League dream into reality. From shortlisting universities to my SOP review, their attention to detail was incredible. I even secured a $20k scholarship!",
     image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400",
     location: "Mumbai, India"
   },
@@ -32,7 +32,7 @@ const testimonials: Testimonial[] = [
   {
     name: "Rohan Deshmukh",
     course: "MENG, UNIVERSITY OF TORONTO",
-    quote: "I was worried about my education loan and financial docs. Education Times Abroad's tie-ups with banks made the process seamless. I'm now studying in Canada without any financial stress.",
+    quote: "I was worried about my education loan and financial docs. Summit Global's tie-ups with banks made the process seamless. I'm now studying in Canada without any financial stress.",
     image: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400",
     location: "Pune, India"
   },
@@ -57,27 +57,24 @@ export default function StudentTestimonials() {
   }, [emblaApi]);
 
   return (
-    <section id="testimonials" className="bg-gradient-to-br from-slate-50 via-blue-50/20 to-white py-16 sm:py-24 relative overflow-hidden">
-      {/* Background Decorative Blobs */}
+    <section id="testimonials" className="section-home relative overflow-hidden py-16 sm:py-24">
       <div className="absolute top-0 left-0 w-full h-full pointer-events-none">
-        <div className="absolute top-20 right-10 w-80 h-80 bg-blue-100 rounded-full blur-[120px] opacity-40" />
-        <div className="absolute bottom-20 left-10 w-96 h-96 bg-blue-200 rounded-full blur-[100px] opacity-30" />
+        <div className="absolute top-20 right-10 h-80 w-80 rounded-full bg-amber-300/20 blur-[120px] opacity-40" />
       </div>
 
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 relative z-10">
         {/* Header Section */}
         <div className="text-center mb-12 sm:mb-16">
-          <div className="inline-flex items-center gap-2 bg-blue-100 text-blue-700 px-4 py-2 rounded-full text-sm font-bold mb-6">
-            <span className="animate-pulse">🌍</span>
+          <div className="eyebrow">
             Most Trusted Consultants
           </div>
 
-          <h2 className="text-4xl md:text-6xl font-black text-slate-900 mb-6 tracking-tight">
+          <h2 className="mb-6 mt-6 text-4xl font-black tracking-tight text-[var(--surface-navy)] md:text-6xl">
             Success Stories from <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-blue-800">Our Global Students</span>
+            <span className="heading-gold">Our Global Students</span>
           </h2>
 
-          <div className="flex flex-wrap justify-center gap-6 text-slate-600 font-medium italic">
+          <div className="flex flex-wrap justify-center gap-6 font-medium italic text-slate-500">
             <span>"99% Visa Success Rate"</span>
             <span className="hidden sm:block">•</span>
             <span>"₹2Cr+ Scholarships Secured"</span>
@@ -90,9 +87,9 @@ export default function StudentTestimonials() {
             <div className="flex">
               {testimonials.map((item, index) => (
                 <div key={index} className="flex-[0_0_100%] min-w-0 md:flex-[0_0_50%] lg:flex-[0_0_33.33%] px-3 sm:px-4">
-                  <div className="h-full rounded-3xl border border-slate-100 bg-white p-8 shadow-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 flex flex-col justify-between">
+                  <div className="premium-card-light flex h-full flex-col justify-between rounded-3xl p-8 transition-all duration-300 hover:-translate-y-1">
                     <div>
-                      <Quote className="text-blue-200 mb-4" size={40} fill="currentColor" />
+                      <Quote className="mb-4 text-amber-200" size={40} fill="currentColor" />
                       <div className="flex gap-1 text-amber-400 mb-4">
                         {Array.from({ length: 5 }).map((_, i) => (
                           <span key={i}>★</span>
@@ -104,7 +101,7 @@ export default function StudentTestimonials() {
                     </div>
 
                     <div className="flex items-center gap-4 pt-6 border-t border-slate-50">
-                      <div className="relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-blue-100">
+                      <div className="relative h-14 w-14 overflow-hidden rounded-full ring-2 ring-amber-200">
                         <Image
                           src={item.image}
                           alt={item.name}
@@ -114,7 +111,7 @@ export default function StudentTestimonials() {
                       </div>
                       <div className="min-w-0">
                         <p className="font-bold text-slate-900 text-base">{item.name}</p>
-                        <p className="text-xs font-bold uppercase text-blue-600 tracking-wider mb-0.5">{item.course}</p>
+                        <p className="mb-0.5 text-xs font-bold uppercase tracking-wider text-amber-500">{item.course}</p>
                         <p className="text-xs text-slate-400">{item.location}</p>
                       </div>
                     </div>
@@ -128,13 +125,13 @@ export default function StudentTestimonials() {
           <div className="flex justify-center mt-12 gap-4">
             <button 
               onClick={scrollPrev}
-              className="group flex h-14 w-14 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-slate-600 transition-all hover:border-blue-500 hover:text-blue-600 shadow-md active:scale-95"
+              className="group flex h-14 w-14 items-center justify-center rounded-full border-2 border-slate-200 bg-white text-slate-600 shadow-md transition-all hover:border-amber-400 hover:text-amber-500 active:scale-95"
             >
               <ArrowLeft size={24} className="transition-transform group-hover:-translate-x-1" />
             </button>
             <button 
               onClick={scrollNext}
-              className="group flex h-14 w-14 items-center justify-center rounded-full bg-blue-600 text-white transition-all hover:bg-blue-700 shadow-lg hover:shadow-blue-200 active:scale-95"
+              className="group flex h-14 w-14 items-center justify-center rounded-full bg-[var(--surface-navy)] text-amber-300 shadow-lg transition-all hover:bg-[var(--surface-navy-2)] active:scale-95"
             >
               <ArrowRight size={24} className="transition-transform group-hover:translate-x-1" />
             </button>

@@ -35,6 +35,7 @@ export interface SiteIdentity {
       linkedin: string;
       facebook?: string;
       twitter?: string;
+      youtube?: string;
     };
   };
   assets: {
@@ -69,9 +70,9 @@ export const SITE_IDENTITY: SiteIdentity = {
   tagline: "Your Gateway to Global Education",
   domain: "summitglobal.com",
   brand: {
-    primaryColor: "#1e2259", // New Deep Blue from logo
+    primaryColor: "#0b1f63",
     secondaryColor: "#ffffff",
-    accentColor: "#108b4b", // New Green from logo for contrast
+    accentColor: "#F59E0B",
   },
   contact: {
     phone: {
@@ -94,6 +95,9 @@ export const SITE_IDENTITY: SiteIdentity = {
       whatsapp: "https://wa.me/919773862945",
       instagram: "https://instagram.com/summitglobal",
       linkedin: "https://linkedin.com/company/summitglobal",
+      facebook: "https://facebook.com/summitglobal",
+      twitter: "https://x.com/summitglobal",
+      youtube: "https://youtube.com/@summitglobal",
     },
   },
   assets: SITE_ASSETS,

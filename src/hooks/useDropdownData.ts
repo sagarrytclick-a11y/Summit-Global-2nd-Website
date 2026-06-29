@@ -1,20 +1,24 @@
 import { useQuery } from '@tanstack/react-query'
 
-interface College {
+export interface DropdownCollege {
   _id: string
   name: string
   slug: string
   college_type?: 'study_abroad' | 'mbbs_abroad'
   category?: string
+  overview?: {
+    description?: string
+  }
 }
 
-interface Exam {
+export interface DropdownExam {
   _id: string
-  short_name: string
+  name?: string
+  short_name?: string
   slug: string
 }
 
-interface Country {
+export interface DropdownCountry {
   _id: string
   name: string
   slug: string
@@ -22,15 +26,15 @@ interface Country {
 }
 
 interface DropdownData {
-  colleges: College[]
-  exams: Exam[]
-  countries: Country[]
+  colleges: DropdownCollege[]
+  exams: DropdownExam[]
+  countries: DropdownCountry[]
   loading: boolean
   error: string | null
 }
 
-const fetchColleges = async (): Promise<College[]> => {
-  const response = await fetch('/api/colleges?limit=200')
+const fetchColleges = async (): Promise<DropdownCollege[]> => {
+  const response = await fetch('/api/colleges?limit=80')
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
   }
@@ -41,7 +45,7 @@ const fetchColleges = async (): Promise<College[]> => {
   return result.data.colleges || []
 }
 
-const fetchExams = async (): Promise<Exam[]> => {
+const fetchExams = async (): Promise<DropdownExam[]> => {
   const response = await fetch('/api/exams')
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
@@ -53,7 +57,7 @@ const fetchExams = async (): Promise<Exam[]> => {
   return result.data
 }
 
-const fetchCountries = async (): Promise<Country[]> => {
+const fetchCountries = async (): Promise<DropdownCountry[]> => {
   const response = await fetch('/api/countries')
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
@@ -65,13 +69,21 @@ const fetchCountries = async (): Promise<Country[]> => {
   return result.data
 }
 
-export function useDropdownData(): DropdownData {
+interface UseDropdownDataOptions {
+  loadColleges?: boolean
+  loadExams?: boolean
+}
+
+export function useDropdownData(options: UseDropdownDataOptions = {}): DropdownData {
+  const { loadColleges = false, loadExams = false } = options
+
   const collegesQuery = useQuery({
     queryKey: ['dropdown-colleges'],
     queryFn: fetchColleges,
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
+    enabled: loadColleges,
   })
 
   const examsQuery = useQuery({
@@ -80,6 +92,7 @@ export function useDropdownData(): DropdownData {
     staleTime: 10 * 60 * 1000, // 10 minutes
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
+    enabled: loadExams,
   })
 
   const countriesQuery = useQuery({
@@ -90,7 +103,10 @@ export function useDropdownData(): DropdownData {
     retry: 2,
   })
 
-  const isLoading = collegesQuery.isLoading || examsQuery.isLoading || countriesQuery.isLoading
+  const isLoading =
+    countriesQuery.isLoading ||
+    (loadColleges && collegesQuery.isLoading) ||
+    (loadExams && examsQuery.isLoading)
   const error = collegesQuery.error || examsQuery.error || countriesQuery.error
 
   return {
