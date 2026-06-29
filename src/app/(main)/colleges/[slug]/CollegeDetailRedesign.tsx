@@ -25,6 +25,8 @@ import RelatedColleges from './RelatedColleges'
 
 interface CollegeDetailPageProps {
   slug: string
+  initialCollege?: any
+  initialRelatedColleges?: any[]
 }
 
 const SectionTitle = ({ eyebrow, title, description }: { eyebrow: string; title: string; description?: string }) => (
@@ -35,10 +37,14 @@ const SectionTitle = ({ eyebrow, title, description }: { eyebrow: string; title:
   </div>
 )
 
-const CollegeDetailRedesign: React.FC<CollegeDetailPageProps> = ({ slug }) => {
+const CollegeDetailRedesign: React.FC<CollegeDetailPageProps> = ({
+  slug,
+  initialCollege,
+  initialRelatedColleges = [],
+}) => {
   const { openModal } = useFormModal()
   const { phones, emails } = useContactInfo()
-  const { data: college, isLoading, error, refetch } = useCollege(slug)
+  const { data: college, isLoading, error, refetch } = useCollege(slug, initialCollege)
 
   const quickFacts = useMemo(() => {
     if (!college) return []
@@ -467,7 +473,12 @@ const CollegeDetailRedesign: React.FC<CollegeDetailPageProps> = ({ slug }) => {
           title="Related colleges you can also explore"
           description="Compare similar options before making your final decision."
         />
-        <RelatedColleges currentCollegeSlug={college.slug} />
+        <RelatedColleges
+          {...({
+            currentCollegeSlug: college.slug,
+            initialColleges: initialRelatedColleges,
+          } as any)}
+        />
       </section>
 
       <FAQ />

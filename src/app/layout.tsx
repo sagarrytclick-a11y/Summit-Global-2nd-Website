@@ -3,7 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { SITE_IDENTITY } from "@/site-identity";
 import { FormModalProvider } from "@/context/FormModalContext";
-import { FormModal } from "@/components/FormModal";
+import FormModalViewport from "@/components/FormModalViewport";
 import { QueryProvider } from "@/providers/QueryProvider";
 
 const bodyFont = Plus_Jakarta_Sans({
@@ -54,7 +54,7 @@ export default function RootLayout({
         <QueryProvider>
           <FormModalProvider>
             {children}
-            <FormModal />
+            <FormModalViewport />
           </FormModalProvider>
         </QueryProvider>
       </body>

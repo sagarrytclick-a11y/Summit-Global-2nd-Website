@@ -1,5 +1,3 @@
-"use client";
-
 import { SITE_IDENTITY } from '@/site-identity';
 
 export interface ContactInfo {

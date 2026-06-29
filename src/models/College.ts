@@ -1,5 +1,4 @@
 import mongoose from "mongoose";
-import { generateSlug } from "@/lib/slug";
 
 const CollegeSchema = new mongoose.Schema(
   {
@@ -185,6 +184,10 @@ const CollegeSchema = new mongoose.Schema(
 CollegeSchema.index({ is_active: 1, college_type: 1, country_ref: 1 });
 CollegeSchema.index({ is_active: 1, createdAt: -1 });
 CollegeSchema.index({ country_ref: 1, createdAt: -1 });
+CollegeSchema.index({ is_active: 1, college_type: 1, createdAt: -1 });
+CollegeSchema.index({ is_active: 1, country_ref: 1, createdAt: -1 });
+CollegeSchema.index({ is_active: 1, exams: 1, createdAt: -1 });
+CollegeSchema.index({ is_active: 1, name: 1 });
 
 export default mongoose.models.College ||
   mongoose.model("College", CollegeSchema);

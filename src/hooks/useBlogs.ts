@@ -101,7 +101,7 @@ export function useBlogs(page: number, search: string, category: string, initial
 }
  
 // Hook for single blog details
-export function useBlog(slug: string) {
+export function useBlog(slug: string, initialData?: Blog) {
   return useQuery({
     queryKey: ['blog', slug],
     queryFn: () => fetchBlogBySlug(slug),
@@ -110,6 +110,7 @@ export function useBlog(slug: string) {
     gcTime: 30 * 60 * 1000, // 30 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    initialData,
   })
 }
 

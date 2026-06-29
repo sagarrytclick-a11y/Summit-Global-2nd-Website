@@ -5,9 +5,8 @@ import Exam from "@/models/Exam";
 export async function GET() {
   try {
     await connectDB();
-    
     const exams = await Exam.find({ is_active: true })
-      .select('name short_name slug description display_order')
+      .select('name short_name slug exam_type conducting_body exam_mode frequency description display_order')
       .sort({ display_order: 1, createdAt: -1 })
       .lean()
     

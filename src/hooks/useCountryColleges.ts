@@ -11,7 +11,7 @@ export interface CountryCollege {
 }
 
 const fetchCollegesByCountry = async (countrySlug: string): Promise<CountryCollege[]> => {
-  const response = await fetch(`/api/colleges?country=${countrySlug}&limit=24`)
+  const response = await fetch(`/api/colleges?country=${countrySlug}&limit=24&view=dropdown`)
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
   }

@@ -51,6 +51,7 @@ export default function Navbar() {
   const [hoveredItem, setHoveredItem] = useState<string | null>(null);
   const [shouldLoadCollegeDropdown, setShouldLoadCollegeDropdown] = useState(false);
   const [shouldLoadExamDropdown, setShouldLoadExamDropdown] = useState(false);
+  const [shouldLoadCountryDropdown, setShouldLoadCountryDropdown] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
   const [debouncedSearch, setDebouncedSearch] = useState('');
   const searchTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -66,6 +67,7 @@ export default function Navbar() {
   const { colleges, exams, countries, loading } = useDropdownData({
     loadColleges: shouldLoadCollegeDropdown,
     loadExams: shouldLoadExamDropdown,
+    loadCountries: shouldLoadCountryDropdown,
   });
 
   const { data: countryColleges = [], isLoading: loadingColleges } = useCountryColleges(selectedCountry);
@@ -87,6 +89,12 @@ export default function Navbar() {
     window.addEventListener("scroll", handleScroll);
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
+
+  useEffect(() => {
+    if (shouldLoadCountryDropdown && !selectedCountry && countries[0]?.slug) {
+      setSelectedCountry(countries[0].slug);
+    }
+  }, [shouldLoadCountryDropdown, selectedCountry, countries]);
 
   const filteredColleges = useMemo(() => {
     let baseColleges: DropdownCollege[] = [];
@@ -208,10 +216,10 @@ export default function Navbar() {
       setShouldLoadExamDropdown(true);
     }
 
-    if (itemName === "Countries" && !selectedCountry && countries[0]?.slug) {
-      setSelectedCountry(countries[0].slug);
+    if (itemName === "Countries") {
+      setShouldLoadCountryDropdown(true);
     }
-  }, [countries, selectedCountry]);
+  }, []);
 
   const closeDesktopDropdown = useCallback(() => {
     setHoveredItem(null);
@@ -485,6 +493,9 @@ export default function Navbar() {
                   }
                   if (nextItem === "Exams") {
                     setShouldLoadExamDropdown(true);
+                  }
+                  if (nextItem === "Countries") {
+                    setShouldLoadCountryDropdown(true);
                   }
                 }}
                 className="w-full py-4 flex items-center justify-between text-[16px] font-bold text-slate-800"

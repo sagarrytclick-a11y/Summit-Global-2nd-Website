@@ -108,4 +108,8 @@ const ExamSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
+ExamSchema.index({ is_active: 1, display_order: 1, createdAt: -1 });
+ExamSchema.index({ is_active: 1, exam_type: 1, createdAt: -1 });
+ExamSchema.index({ is_active: 1, short_name: 1 });
+
 export default mongoose.models.Exam || mongoose.model("Exam", ExamSchema);

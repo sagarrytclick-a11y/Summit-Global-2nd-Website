@@ -2,6 +2,19 @@ import { NextResponse } from "next/server";
 import { connectDB } from "@/lib/db";
 import Blog from "@/models/Blog";
 
+function getPreviewContent(content?: string, maxLength = 220) {
+  if (!content) {
+    return "Read this detailed guide to understand admissions, universities, scholarships, exams, and student planning for MBBS abroad and study abroad pathways."
+  }
+
+  const cleanContent = content.replace(/\s+/g, ' ').trim()
+  if (cleanContent.length <= maxLength) {
+    return cleanContent
+  }
+
+  return `${cleanContent.slice(0, maxLength).trimEnd()}...`
+}
+
 export async function GET(request: Request) {
   try {
     await connectDB();
@@ -27,16 +40,31 @@ export async function GET(request: Request) {
     }
 
     const blogsQuery = Blog.find(query)
-      .select('title slug excerpt category tags banner_url author createdAt updatedAt published_at read_time views content image')
+      .select('title slug category tags author createdAt published_at read_time views content image')
       .sort({ createdAt: -1 })
       .skip((page - 1) * limit)
       .limit(limit)
       .lean();
 
-    const [total, blogs] = await Promise.all([
+    const [total, rawBlogs] = await Promise.all([
       Blog.countDocuments(query),
       blogsQuery,
     ]);
+
+    const blogs = rawBlogs.map((blog) => ({
+      _id: blog._id,
+      title: blog.title,
+      slug: blog.slug,
+      category: blog.category,
+      tags: blog.tags,
+      author: blog.author,
+      createdAt: blog.createdAt,
+      published_at: blog.published_at,
+      read_time: blog.read_time,
+      views: blog.views,
+      image: blog.image,
+      content: getPreviewContent(blog.content),
+    }))
     
     const response = NextResponse.json({
       success: true,

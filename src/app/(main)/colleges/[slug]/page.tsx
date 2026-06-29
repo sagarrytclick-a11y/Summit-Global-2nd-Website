@@ -1,5 +1,6 @@
 import { Metadata } from 'next'
 import CollegeDetailRedesign from './CollegeDetailRedesign'
+import { getCollegeBySlug, getRelatedColleges } from '@/lib/server/public-data'
 
 interface CollegePageProps {
   params: Promise<{ slug: string }>
@@ -16,6 +17,18 @@ export async function generateMetadata({ params }: CollegePageProps): Promise<Me
 
 export default async function CollegePage({ params }: CollegePageProps) {
   const { slug } = await params
-  
-  return <CollegeDetailRedesign slug={slug} />
+  const [initialCollege, initialRelatedColleges] = await Promise.all([
+    getCollegeBySlug(slug),
+    getRelatedColleges(slug),
+  ])
+
+  return (
+    <CollegeDetailRedesign
+      {...({
+        slug,
+        initialCollege,
+        initialRelatedColleges,
+      } as any)}
+    />
+  )
 }

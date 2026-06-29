@@ -1,5 +1,4 @@
 "use client"
-import React from 'react';
 import {
   ArrowRight,
   Calendar,
@@ -11,6 +10,7 @@ import {
   Users
 } from 'lucide-react';
 import { useFormModal } from '@/context/FormModalContext';
+import Image from 'next/image';
 
 const milestones = [
   {
@@ -110,7 +110,7 @@ export default function AboutPage() {
           <div className="relative">
             <div className="overflow-hidden rounded-[2.5rem] border border-slate-100 bg-slate-50 shadow-sm">
               <img
-                src="https://images.unsplash.com/photo-1527613426441-4da17471b66d?w=900&h=700&fit=crop"
+                src="https://i.pinimg.com/736x/63/84/b8/6384b8077a4a56208bcd07a600b16181.jpg"
                 alt="Students planning education abroad"
                 className="h-full w-full object-cover"
               />

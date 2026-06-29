@@ -1,131 +1,26 @@
 "use client";
 
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Link from 'next/link';
-import { MapPin, GraduationCap, DollarSign, Star, ArrowRight, Loader2, Bell, X } from 'lucide-react';
+import { MapPin, GraduationCap, DollarSign, Star, ArrowRight, Bell, X } from 'lucide-react';
 import { CollegeGridSkeleton } from './CollegeCardSkeleton';
+import type { HomeMbbsCollegeData } from '@/lib/server/public-data';
 
-interface College {
-  _id: string;
-  name: string;
-  slug: string;
-  college_type: string;
-  country_ref: {
-    _id: string;
-    name: string;
-    slug: string;
-    flag: string;
-  };
-  establishment_year: string;
-  banner_url: string;
-  overview: {
-    title: string;
-    description: string;
-  };
-  key_highlights: {
-    features: string[];
-  };
-  ranking: {
-    country_ranking: string;
-    world_ranking: string;
-  };
-  fees_structure?: {
-    courses: [{
-      course_name: string;
-      duration: string;
-      annual_tuition_fee: string;
-    }];
-  };
-  fees?: number;
-  duration?: string;
-  legacy_ranking?: string;
-}
+type College = HomeMbbsCollegeData;
 
-const MbbsAbroad: React.FC = () => {
-  const [colleges, setColleges] = useState<College[]>([]);
-  const [displayedColleges, setDisplayedColleges] = useState<College[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [loadingMore, setLoadingMore] = useState(false);
-  const [hasMore, setHasMore] = useState(true);
-  const [currentPage, setCurrentPage] = useState(1);
+const MbbsAbroad: React.FC<{ initialColleges: College[] }> = ({ initialColleges }) => {
   const [showPopup, setShowPopup] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState<string>('all');
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  const colleges = useMemo(() => initialColleges ?? [], [initialColleges]);
 
   useEffect(() => {
-    fetchColleges();
-  }, []);
-
-  const fetchColleges = useCallback(async (page: number = 1, append: boolean = false) => {
-    try {
-      if (!append) {
-        setLoading(true);
-      } else {
-        setLoadingMore(true);
-      }
-
-      const response = await fetch(`/api/colleges?college_type=mbbs_abroad&page=${page}&limit=6`);
-      const result = await response.json();
-
-      const newColleges = Array.isArray(result?.data?.colleges) ? result.data.colleges : [];
-
-      if (result.success && newColleges.length > 0) {
-        
-        if (append) {
-          setColleges(prev => [...prev, ...newColleges]);
-          setDisplayedColleges(prev => [...prev, ...newColleges]);
-        } else {
-          setColleges(newColleges);
-          setDisplayedColleges(newColleges);
-        }
-
-        setHasMore(Boolean(result?.data?.hasNext));
-        setCurrentPage(page);
-      } else {
-        if (!append) {
-          await fetchMBBSFallback();
-        } else {
-          setHasMore(false);
-        }
-      }
-    } catch (error) {
-      console.error('Error fetching MBBS colleges:', error);
-      if (!append) {
-        await fetchMBBSFallback();
-      }
-    } finally {
-      setLoading(false);
-      setLoadingMore(false);
-    }
-  }, []);
-
-  const fetchMBBSFallback = useCallback(async () => {
-    try {
-      const response = await fetch('/api/colleges');
-      const result = await response.json();
-
-      if (result.success) {
-        const allColleges = Array.isArray(result?.data?.colleges) ? result.data.colleges : [];
-        const mbbsColleges = allColleges.filter((college: College) =>
-          college.slug?.toLowerCase().includes('mbbs') ||
-          college.name?.toLowerCase().includes('medical') ||
-          college.name?.toLowerCase().includes('mbbs') ||
-          college.college_type === 'mbbs_abroad'
-        );
-
-        setColleges(mbbsColleges);
-        setDisplayedColleges(mbbsColleges.slice(0, 6));
-        setHasMore(mbbsColleges.length > 6);
-      }
-    } catch (error) {
-      console.error('Error in fallback fetch:', error);
-    }
-  }, []);
+    setVisibleCount(6);
+  }, [selectedCountry, initialColleges]);
 
   const loadMore = async () => {
-    if (hasMore && !loadingMore) {
-      const nextPage = currentPage + 1;
-      await fetchColleges(nextPage, true);
-    }
+    setVisibleCount((prev) => prev + 6);
   };
 
   const getCollegeFees = (college: College): string => {
@@ -157,10 +52,16 @@ const MbbsAbroad: React.FC = () => {
     ...Array.from(new Set(colleges.map((college) => college.country_ref?.name).filter(Boolean))),
   ];
 
-  const visibleColleges =
-    selectedCountry === 'all'
-      ? displayedColleges
-      : displayedColleges.filter((college) => college.country_ref?.name === selectedCountry);
+  const filteredColleges = useMemo(
+    () =>
+      selectedCountry === 'all'
+        ? colleges
+        : colleges.filter((college) => college.country_ref?.name === selectedCountry),
+    [colleges, selectedCountry]
+  );
+
+  const visibleColleges = filteredColleges.slice(0, visibleCount);
+  const hasMore = filteredColleges.length > visibleCount;
 
   // Sticky UI Components (WhatsApp & Notifications)
   const StickyActions = () => (
@@ -210,7 +111,7 @@ const MbbsAbroad: React.FC = () => {
     )
   );
 
-  if (loading) {
+  if (colleges.length === 0) {
     return (
       <>
         <section className="section-home px-4 py-16">
@@ -345,20 +246,13 @@ const MbbsAbroad: React.FC = () => {
             <div className="mb-8 text-center">
               <button
                 onClick={loadMore}
-                disabled={loadingMore}
+                disabled={false}
                 className="mx-auto flex items-center gap-3 rounded-2xl border border-slate-200 bg-white px-8 py-4 font-bold text-slate-900 transition-all hover:border-amber-300/40 hover:bg-amber-50 disabled:opacity-50"
               >
-                {loadingMore ? (
-                  <>
-                    <Loader2 className="animate-spin" size={20} />
-                    Loading...
-                  </>
-                ) : (
-                  <>
-                    Load More Colleges
-                    <ArrowRight size={20} />
-                  </>
-                )}
+                <>
+                  Load More Colleges
+                  <ArrowRight size={20} />
+                </>
               </button>
             </div>
           )}

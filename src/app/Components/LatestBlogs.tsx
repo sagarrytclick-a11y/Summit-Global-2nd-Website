@@ -1,8 +1,10 @@
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
-import { Calendar, Clock, ArrowRight, Tag, FileText, Loader2 } from 'lucide-react';
+import { Calendar, ArrowRight, Tag } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { useQuery } from '@tanstack/react-query';
+import type { HomeBlogCardData } from '@/lib/server/public-data';
 
 interface BlogCardProps {
   title: string;
@@ -21,13 +23,6 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
       month: 'long',
       day: 'numeric'
     });
-  };
-
-  const calculateReadTime = (text: string) => {
-    const wordsPerMinute = 200;
-    const words = text.split(/\s+/).length;
-    const readTime = Math.ceil(words / wordsPerMinute);
-    return `${readTime} min read`;
   };
 
   return (
@@ -104,87 +99,25 @@ const BlogCard = ({ title, slug, category, content, tags, createdAt, image }: Bl
   );
 };
 
-const fetchBlogs = async (): Promise<BlogCardProps[]> => {
-  const response = await fetch('/api/blogs?page=1&limit=12', {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  })
-  
-  if (!response.ok) {
-    throw new Error(`HTTP error! status: ${response.status}`)
-  }
-  
-  const result = await response.json()
-  if (!result.success) {
-    throw new Error(result.message || 'Failed to fetch blogs')
-  }
-  
-  // Transform API data to match BlogCard interface
-  return result.data.blogs.map((blog: any) => ({
-    title: blog.title,
-    slug: blog.slug,
-    category: blog.category || "Blog",
-    content: blog.content || "Read more about this blog post",
-    tags: blog.tags || [],
-    createdAt: blog.createdAt,
-    image: blog.image
-  }))
-}
-
-export default function LatestBlogs() {
-  const { data: blogs = [], isLoading, isError, error } = useQuery({
-    queryKey: ['latest-blogs'],
-    queryFn: fetchBlogs,
-    staleTime: 5 * 60 * 1000, // 5 minutes
-    gcTime: 10 * 60 * 1000, // 10 minutes
-    retry: 2,
-    refetchOnWindowFocus: false,
-  });
-
+export default function LatestBlogs({ initialBlogs }: { initialBlogs: HomeBlogCardData[] }) {
   const [displayedBlogs, setDisplayedBlogs] = React.useState<BlogCardProps[]>([]);
   const [hasMore, setHasMore] = React.useState(true);
   const blogsPerPage = 6;
 
-  // Initialize displayed blogs when data is loaded
   React.useEffect(() => {
-    if (blogs.length > 0 && displayedBlogs.length === 0) {
-      const initialBlogs = blogs.slice(0, blogsPerPage);
-      setDisplayedBlogs(initialBlogs);
-      setHasMore(blogs.length > blogsPerPage);
-    }
-  }, [blogs, displayedBlogs.length, blogsPerPage]);
+    const nextBlogs = initialBlogs.slice(0, blogsPerPage);
+    setDisplayedBlogs(nextBlogs);
+    setHasMore(initialBlogs.length > blogsPerPage);
+  }, [initialBlogs, blogsPerPage]);
 
   const loadMoreBlogs = () => {
-    if (isLoading) return; // Prevent loading more while already loading
-    
     const currentLength = displayedBlogs.length;
-    const nextBlogs = blogs.slice(currentLength, currentLength + blogsPerPage);
+    const nextBlogs = initialBlogs.slice(currentLength, currentLength + blogsPerPage);
     const newDisplayedBlogs = [...displayedBlogs, ...nextBlogs];
     
     setDisplayedBlogs(newDisplayedBlogs);
-    setHasMore(blogs.length > newDisplayedBlogs.length);
+    setHasMore(initialBlogs.length > newDisplayedBlogs.length);
   };
-
-    
-
-  if (isError) {
-    return (
-      <section className="section-home mx-auto max-w-7xl px-4 py-20">
-        <div className="text-center mb-16">
-          <h2 className="mb-4 text-4xl font-black tracking-tighter text-[var(--surface-navy)] md:text-6xl">
-            LATEST <span className="heading-gold">BLOGS</span>
-          </h2>
-          <p className="text-lg font-medium text-slate-500">
-            Educational insights, study tips, and success stories from our experts.
-          </p>
-        </div>
-        <div className="text-center">
-          <p className="text-red-500 text-lg">Failed to load blogs: {error?.message}</p>
-        </div>
-      </section>
-    );
-  }
 
   return (
     <section className="section-home mx-auto max-w-7xl px-4 py-20">
@@ -208,20 +141,13 @@ export default function LatestBlogs() {
         <div className="text-center flex items-center justify-center mt-12">
           <Button 
             onClick={loadMoreBlogs}
-            disabled={isLoading}
+            disabled={false}
             className="btn-primary inline-flex items-center justify-center gap-2 rounded-full px-8 py-4 font-bold disabled:cursor-not-allowed disabled:opacity-50"
           >
-            {isLoading ? (
-              <>
-                <Loader2 className="w-5 h-5 animate-spin" />
-                Loading...
-              </>
-            ) : (
-              <>
+            <>
               <p className='text-center'>Load More Blogs</p>
-                <ArrowRight size={20} />
-              </>
-            )}
+              <ArrowRight size={20} />
+            </>
           </Button>
         </div>
       )}

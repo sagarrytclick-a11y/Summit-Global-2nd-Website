@@ -6,7 +6,6 @@ import { AdminModal } from '@/components/admin/AdminModal'
 import { AdminForm } from '@/components/admin/AdminForm'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-import { Badge } from '@/components/ui/badge'
 import {
   Select,
   SelectContent,
@@ -23,7 +22,6 @@ import {
   DropdownMenuTrigger
 } from '@/components/ui/dropdown-menu'
 import { Plus, Search, MoreHorizontal, Edit, Trash2, Eye, ChevronLeft, ChevronRight } from 'lucide-react'
-import { generateSlug } from '@/lib/slug'
 import { useAdminExams, useSaveExam, useDeleteExam, AdminExam } from '@/hooks/useAdminExams'
 import { useAdmin, Exam } from '@/contexts/AdminContext'
 import { toast } from 'sonner'
@@ -647,12 +645,12 @@ export default function SimpleExamsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Bullet Points</label>
-              {formData.registration?.bullet_points.map((point, index) => (
+              {(formData.registration?.bullet_points ?? []).map((point, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     value={point}
                     onChange={(e) => {
-                      const newPoints = [...formData.registration?.bullet_points]
+                      const newPoints = [...(formData.registration?.bullet_points ?? [])]
                       newPoints[index] = e.target.value
                       setFormData(prev => ({
                         ...prev,
@@ -663,7 +661,7 @@ export default function SimpleExamsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newPoints = formData.registration?.bullet_points.filter((_, i) => i !== index)
+                      const newPoints = (formData.registration?.bullet_points ?? []).filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
                         registration: { ...prev.registration, bullet_points: newPoints }
@@ -678,7 +676,10 @@ export default function SimpleExamsPage() {
                 variant="outline"
                 onClick={() => setFormData(prev => ({
                   ...prev,
-                  registration: { ...prev.registration, bullet_points: [...prev.registration.bullet_points, ''] }
+                  registration: {
+                    ...prev.registration,
+                    bullet_points: [...(prev.registration?.bullet_points ?? []), '']
+                  }
                 }) as AdminExam)}
               >
                 Add Bullet Point
@@ -733,13 +734,13 @@ export default function SimpleExamsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Table Data</label>
-              {formData.exam_pattern?.table_data.map((row, index) => (
+              {(formData.exam_pattern?.table_data ?? []).map((row, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     placeholder="Section"
                     value={row.section}
                     onChange={(e) => {
-                      const newTableData = [...formData.exam_pattern?.table_data]
+                      const newTableData = [...(formData.exam_pattern?.table_data ?? [])]
                       newTableData[index] = { ...row, section: e.target.value }
                       setFormData(prev => ({
                         ...prev,
@@ -752,7 +753,7 @@ export default function SimpleExamsPage() {
                     placeholder="Questions"
                     value={row.questions}
                     onChange={(e) => {
-                      const newTableData = [...formData.exam_pattern?.table_data]
+                      const newTableData = [...(formData.exam_pattern?.table_data ?? [])]
                       newTableData[index] = { ...row, questions: parseInt(e.target.value) || 0 }
                       setFormData(prev => ({
                         ...prev,
@@ -765,7 +766,7 @@ export default function SimpleExamsPage() {
                     placeholder="Duration (mins)"
                     value={row.duration_mins}
                     onChange={(e) => {
-                      const newTableData = [...formData.exam_pattern?.table_data]
+                      const newTableData = [...(formData.exam_pattern?.table_data ?? [])]
                       newTableData[index] = { ...row, duration_mins: parseInt(e.target.value) || 0 }
                       setFormData(prev => ({
                         ...prev,
@@ -776,7 +777,7 @@ export default function SimpleExamsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newTableData = formData.exam_pattern?.table_data.filter((_, i) => i !== index)
+                      const newTableData = (formData.exam_pattern?.table_data ?? []).filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
                         exam_pattern: { ...prev.exam_pattern, table_data: newTableData }
@@ -791,7 +792,10 @@ export default function SimpleExamsPage() {
                 variant="outline"
                 onClick={() => setFormData(prev => ({
                   ...prev,
-                  exam_pattern: { ...prev.exam_pattern, table_data: [...prev.exam_pattern.table_data, { section: '', questions: 0, duration_mins: 0 }] }
+                  exam_pattern: {
+                    ...prev.exam_pattern,
+                    table_data: [...(prev.exam_pattern?.table_data ?? []), { section: '', questions: 0, duration_mins: 0 }]
+                  }
                 }) as AdminExam)}
               >
                 Add Row
@@ -812,13 +816,13 @@ export default function SimpleExamsPage() {
             </div>
             <div>
               <label className="block text-sm font-medium mb-2">Important Dates</label>
-              {formData.exam_dates?.important_dates.map((date, index) => (
+              {(formData.exam_dates?.important_dates ?? []).map((date, index) => (
                 <div key={index} className="flex gap-2 mb-2">
                   <Input
                     placeholder="Event"
                     value={date.event}
                     onChange={(e) => {
-                      const newDates = [...formData.exam_dates?.important_dates]
+                      const newDates = [...(formData.exam_dates?.important_dates ?? [])]
                       newDates[index] = { ...date, event: e.target.value }
                       setFormData(prev => ({
                         ...prev,
@@ -830,7 +834,7 @@ export default function SimpleExamsPage() {
                     type="date"
                     value={date.date ? new Date(date.date).toISOString().split('T')[0] : ''}
                     onChange={(e) => {
-                      const newDates = [...formData.exam_dates?.important_dates]
+                      const newDates = [...(formData.exam_dates?.important_dates ?? [])]
                       newDates[index] = { ...date, date: new Date(e.target.value) }
                       setFormData(prev => ({
                         ...prev,
@@ -841,7 +845,7 @@ export default function SimpleExamsPage() {
                   <Button
                     variant="outline"
                     onClick={() => {
-                      const newDates = formData.exam_dates?.important_dates.filter((_, i) => i !== index)
+                      const newDates = (formData.exam_dates?.important_dates ?? []).filter((_, i) => i !== index)
                       setFormData(prev => ({
                         ...prev,
                         exam_dates: { ...prev.exam_dates, important_dates: newDates }
@@ -856,7 +860,10 @@ export default function SimpleExamsPage() {
                 variant="outline"
                 onClick={() => setFormData(prev => ({
                   ...prev,
-                  exam_dates: { ...prev.exam_dates, important_dates: [...prev.exam_dates.important_dates, { event: '', date: new Date() }] }
+                  exam_dates: {
+                    ...prev.exam_dates,
+                    important_dates: [...(prev.exam_dates?.important_dates ?? []), { event: '', date: new Date() }]
+                  }
                 }) as Exam)}
               >
                 Add Date

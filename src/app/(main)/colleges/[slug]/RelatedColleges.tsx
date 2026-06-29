@@ -1,6 +1,5 @@
 'use client'
 
-import React from 'react'
 import Link from 'next/link'
 import { Badge } from '@/components/ui/badge'
 import { getCountryName } from "@/lib/normalize"
@@ -50,6 +49,7 @@ interface College {
 
 interface RelatedCollegesProps {
   currentCollegeSlug: string
+  initialColleges?: College[]
 }
 
 const fetchRelatedColleges = async (slug: string): Promise<College[]> => {
@@ -71,7 +71,7 @@ const fetchRelatedColleges = async (slug: string): Promise<College[]> => {
     return result.data;
   };
   
-  export default function RelatedColleges({ currentCollegeSlug }: RelatedCollegesProps) {
+  export default function RelatedColleges({ currentCollegeSlug, initialColleges = [] }: RelatedCollegesProps) {
   const { data: colleges = [], isLoading, isError, error } = useQuery({
     queryKey: ['related-colleges', currentCollegeSlug],
     queryFn: () => fetchRelatedColleges(currentCollegeSlug),
@@ -79,6 +79,7 @@ const fetchRelatedColleges = async (slug: string): Promise<College[]> => {
     gcTime: 10 * 60 * 1000, // 10 minutes
     retry: 2,
     refetchOnWindowFocus: false,
+    initialData: initialColleges,
   });
 
   if (isError) {

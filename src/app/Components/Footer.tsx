@@ -1,7 +1,4 @@
-"use client"
-import React from 'react';
 import Link from 'next/link';
-import Image from 'next/image';
 import {
   Instagram,
   Linkedin,
@@ -14,11 +11,10 @@ import {
 } from 'lucide-react';
 import { SITE_CONTACT, SITE_IDENTITY } from "@/config/site-config";
 import { useContactInfo, createMailtoLink, createTelLink, createWhatsAppLink } from "@/hooks/useContactInfo";
-import { useFormModal } from '@/context/FormModalContext';
+import OpenFormButton from '@/components/OpenFormButton';
 
 const Footer = () => {
   const { emails, phones, address } = useContactInfo();
-  const { openModal } = useFormModal();
   const socialLinks = [
     { label: 'Instagram', href: SITE_CONTACT.socials.instagram, icon: <Instagram className="h-4 w-4 sm:h-5 sm:w-5" /> },
     { label: 'LinkedIn', href: SITE_CONTACT.socials.linkedin, icon: <Linkedin className="h-4 w-4 sm:h-5 sm:w-5" /> },
@@ -48,13 +44,12 @@ const Footer = () => {
             </p>
           </div>
           <div className="flex flex-col justify-center gap-4 sm:flex-row lg:flex-col">
-            <button
-              onClick={openModal}
+            <OpenFormButton
               className="btn-primary inline-flex items-center justify-center gap-2 rounded-xl px-6 py-4 font-bold"
             >
               <Phone size={18} />
               Free Counselling
-            </button>
+            </OpenFormButton>
             <Link
               href="/colleges"
               className="inline-flex items-center justify-center gap-2 rounded-xl border border-white/15 bg-white/10 px-6 py-4 font-bold text-white transition-all duration-200 hover:bg-white/15"
@@ -68,12 +63,11 @@ const Footer = () => {
           <div className="flex flex-col gap-4 sm:gap-6 col-span-1 sm:col-span-2 lg:col-span-1">
             <div className="flex items-center gap-3">
               <div className="relative rounded-2xl bg-white p-2 shadow-lg shadow-black/10">
-                <Image
+                <img
                   src={SITE_IDENTITY.assets.logo.main}
                   alt={SITE_IDENTITY.name}
-                  width={150}
-                  height={48}
                   className="h-10 w-auto rounded-lg object-contain"
+                  loading="lazy"
                 />
               </div>
               <div className="flex flex-col text-white">

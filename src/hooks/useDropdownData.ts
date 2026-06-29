@@ -34,7 +34,7 @@ interface DropdownData {
 }
 
 const fetchColleges = async (): Promise<DropdownCollege[]> => {
-  const response = await fetch('/api/colleges?limit=80')
+  const response = await fetch('/api/colleges?limit=80&view=dropdown')
   if (!response.ok) {
     throw new Error(`HTTP error! status: ${response.status}`)
   }
@@ -72,10 +72,11 @@ const fetchCountries = async (): Promise<DropdownCountry[]> => {
 interface UseDropdownDataOptions {
   loadColleges?: boolean
   loadExams?: boolean
+  loadCountries?: boolean
 }
 
 export function useDropdownData(options: UseDropdownDataOptions = {}): DropdownData {
-  const { loadColleges = false, loadExams = false } = options
+  const { loadColleges = false, loadExams = false, loadCountries = false } = options
 
   const collegesQuery = useQuery({
     queryKey: ['dropdown-colleges'],
@@ -101,10 +102,11 @@ export function useDropdownData(options: UseDropdownDataOptions = {}): DropdownD
     staleTime: 15 * 60 * 1000, // 15 minutes
     gcTime: 45 * 60 * 1000, // 45 minutes
     retry: 2,
+    enabled: loadCountries,
   })
 
   const isLoading =
-    countriesQuery.isLoading ||
+    (loadCountries && countriesQuery.isLoading) ||
     (loadColleges && collegesQuery.isLoading) ||
     (loadExams && examsQuery.isLoading)
   const error = collegesQuery.error || examsQuery.error || countriesQuery.error

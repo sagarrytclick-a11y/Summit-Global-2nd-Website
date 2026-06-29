@@ -1,5 +1,3 @@
-"use client";
-
 import EducationTimesAdvantage from "@/app/Components/AdvantageCard";
 import CtaSection from "@/app/Components/CtaSection";
 import EducationStats from "@/app/Components/EducationStats";
@@ -14,18 +12,24 @@ import StudentTestimonials from "@/app/Components/StudentTestimonials";
 import StudyPrograms from "@/app/Components/StudyPrograms";
 import MbbsAbroad from "../Components/MbbsAbroad";
 import MbbsAbroadPopup from "../Components/MbbsAbroadPopup";
+import { getHomepageData } from "@/lib/server/public-data";
 
-const page = () => {
+const page = async () => {
+  const homepageData = await getHomepageData();
+
   return (
     <div className="w-full overflow-x-hidden text-slate-950">
       <Hero />
-      <MbbsAbroad />
-      <PopularCountries />
+      <MbbsAbroad initialColleges={homepageData.mbbsColleges} />
+      <PopularCountries countries={homepageData.countries} />
       <EducationStats />
       <EducationTimesAdvantage />
-      <FeaturedSection />
+      <FeaturedSection
+        featuredColleges={homepageData.featuredColleges}
+        exams={homepageData.featuredExams}
+      />
       <StudyPrograms />
-      <LatestBlogs />
+      <LatestBlogs initialBlogs={homepageData.latestBlogs} />
       <Services />
       <ProcessJourney />
       <StudentTestimonials />

@@ -14,6 +14,7 @@ export async function GET(request: Request) {
     const countrySlug = searchParams.get('country');
     const exam = searchParams.get('exam');
     const collegeType = searchParams.get('college_type');
+    const view = searchParams.get('view') || 'summary';
     
     const skip = limit ? (page - 1) * limit : 0;
     
@@ -47,10 +48,29 @@ export async function GET(request: Request) {
       query.college_type = collegeType;
     }
     
-    let selectFields = 'name slug country_ref fees duration establishment_year ranking banner_url college_type overview fees_structure key_highlights';
-    if (limit && limit > 50) {
-      selectFields = 'name slug country_ref college_type';
-    }
+    const summaryFields = [
+      'name',
+      'slug',
+      'country_ref',
+      'exams',
+      'fees',
+      'duration',
+      'establishment_year',
+      'ranking',
+      'banner_url',
+      'college_type',
+      'about_content',
+      'fees_structure',
+    ].join(' ')
+
+    const dropdownFields = [
+      'name',
+      'slug',
+      'college_type',
+      'overview.description',
+    ].join(' ')
+
+    const selectFields = view === 'dropdown' ? dropdownFields : summaryFields;
 
     const collegesQuery = College.find(query)
       .select(selectFields)

@@ -1,8 +1,6 @@
-"use client"
 import React from 'react';
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
-import { useQuery } from '@tanstack/react-query';
 import { CountryCardSkeleton } from './CountryCardSkeleton';
 
 interface Country {
@@ -58,22 +56,7 @@ const CountryCard = ({ country }: { country: Country }) => (
   </Link>
 );
 
-const PopularCountries = () => {
-  const fetchCountries = async (): Promise<Country[]> => {
-    const response = await fetch('/api/countries', { headers: { 'Content-Type': 'application/json' } });
-    if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-    const result = await response.json();
-    if (!result.success) throw new Error(result.message || 'Failed to fetch');
-    return Array.isArray(result.data) ? result.data : [];
-  };
-  
-  const { data: countries = [], isLoading } = useQuery({
-    queryKey: ['popular-countries'],
-    queryFn: fetchCountries,
-    staleTime: 5 * 60 * 1000,
-    retry: 2,
-  });
-  
+const PopularCountries = ({ countries = [] }: { countries?: Country[] }) => {
   const fallbackCountries: Country[] = [
     { name: 'Russia', flag: '🇷🇺', slug: 'russia', description: 'Top destination for MBBS with NMC approved universities.', is_active: true },
     { name: 'Bangladesh', flag: '🇧🇩', slug: 'bangladesh', description: 'Close to India with similar curriculum.', is_active: true },
@@ -105,7 +88,7 @@ const PopularCountries = () => {
           </p>
         </div>
 
-        {isLoading ? (
+        {countries.length === 0 ? (
           <div className="grid grid-cols-1 gap-6 md:grid-cols-2 xl:grid-cols-4">
             {[...Array(8)].map((_, i) => (
               <CountryCardSkeleton key={i} />

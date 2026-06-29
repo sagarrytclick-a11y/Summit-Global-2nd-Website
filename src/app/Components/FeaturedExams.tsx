@@ -1,12 +1,15 @@
 "use client"
-import React, { useState, useMemo } from 'react';
+import { useState, useMemo } from 'react';
 import Link from 'next/link';
-import { useQuery } from '@tanstack/react-query';
 import {
   MapPin, Trophy, DollarSign, Calendar, ArrowUpRight,
   FileText, Building2, ArrowRight, GraduationCap,
   ChevronRight, Sparkles
 } from 'lucide-react';
+import type {
+  HomeFeaturedCollegeData,
+  HomeFeaturedExamData,
+} from '@/lib/server/public-data';
 
 // --- Interfaces (Kept as per your original structure) ---
 interface FeaturedCollegeApiItem {
@@ -195,12 +198,48 @@ const ExamCard = ({ name, short_name, exam_type, conducting_body, exam_mode, des
 
 // --- Sections & Main Logic ---
 
-export default function FeaturedSection() {
-  const { featuredColleges, exams, isLoading, error } = useFeaturedData();
-  const [collegeCount, setCollegeCount] = useState(6);
-  const [eCount, setECount] = useState(8);
+interface FeaturedSectionProps {
+  featuredColleges: HomeFeaturedCollegeData[]
+  exams: HomeFeaturedExamData[]
+}
 
-  if (error) return <div className="py-20 text-center text-red-500 font-bold">Error loading featured content.</div>;
+export default function FeaturedSection({
+  featuredColleges: featuredCollegeSource,
+  exams: examSource,
+}: FeaturedSectionProps) {
+  const [collegeCount, setCollegeCount] = useState(6);
+  const eCount = 8;
+  const featuredColleges = useMemo(() => {
+    if (!featuredCollegeSource) return [];
+    return featuredCollegeSource.map((college: FeaturedCollegeApiItem) => ({
+      name: college.name,
+      image: college.banner_url || `https://picsum.photos/seed/${college.slug}/600/400`,
+      location: typeof college.country_ref === 'object' ? (college.country_ref?.city || college.country_ref?.name || '') : '',
+      ranking: typeof college.ranking === 'object' ? college.ranking?.country_ranking : (college.ranking || undefined),
+      fees: college.fees_structure?.courses?.[0]?.annual_tuition_fee ?
+        college.fees_structure.courses[0].annual_tuition_fee : college.fees,
+      duration: college.fees_structure?.courses?.[0]?.duration || college.duration,
+      establishment_year: college.establishment_year,
+      slug: college.slug,
+      country: typeof college.country_ref === 'object' ? college.country_ref?.name : undefined,
+      about: college.about_content,
+      college_type: college.college_type || 'University'
+    }));
+  }, [featuredCollegeSource]);
+
+  const transformedExams = useMemo(() => {
+    if (!examSource) return [];
+    return examSource.map((exam: FeaturedExamApiItem) => ({
+      name: exam.name,
+      short_name: exam.short_name,
+      exam_type: exam.exam_type,
+      conducting_body: exam.conducting_body,
+      exam_mode: exam.exam_mode,
+      frequency: exam.frequency,
+      description: exam.description,
+      slug: exam.slug
+    }));
+  }, [examSource]);
 
   return (
     <div className="section-home overflow-hidden py-24 space-y-32">
@@ -222,11 +261,9 @@ export default function FeaturedSection() {
           </Link>
         </div>
 
-        {isLoading ? <SkeletonGrid /> : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
-            {featuredColleges.slice(0, collegeCount).map((college: FeaturedCollegeCardProps) => <FeaturedCollegeCard key={college.slug} {...college} />)}
-          </div>
-        )}
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 lg:gap-10">
+          {featuredColleges.slice(0, collegeCount).map((college) => <FeaturedCollegeCard key={college.slug} {...college} />)}
+        </div>
 
         {collegeCount < featuredColleges.length && (
           <div className="mt-16 flex flex-col md:flex-row items-center justify-center gap-4 text-center">
@@ -250,77 +287,11 @@ export default function FeaturedSection() {
             <p className="text-lg font-medium text-slate-600">Your gateway to medical excellence starts here.</p>
           </div>
 
-          {isLoading ? <SkeletonGrid count={4} /> : (
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
-              {exams.slice(0, eCount).map((exam: ExamCardProps) => <ExamCard key={exam.slug} {...exam} />)}
-            </div>
-          )}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {transformedExams.slice(0, eCount).map((exam: ExamCardProps) => <ExamCard key={exam.slug} {...exam} />)}
+          </div>
         </div>
       </section>
     </div>
   );
 }
-
-// Helper Skeleton Component
-const SkeletonGrid = ({ count = 3 }) => (
-  <div className={`grid grid-cols-1 gap-8 md:grid-cols-2 ${count === 4 ? 'lg:grid-cols-4' : 'lg:grid-cols-3'}`}>
-    {[...Array(count)].map((_, i) => (
-      <div key={i} className="bg-slate-100 h-[400px] rounded-3xl animate-pulse" />
-    ))}
-  </div>
-);
-
-// --- useFeaturedData Hook (Logic remains same as your original) ---
-const useFeaturedData = () => {
-  const { data: collegesData, isLoading: collegesLoading, error: collegesError } = useQuery({
-    queryKey: ['featured-colleges'],
-    queryFn: async () => {
-      const res = await fetch('/api/colleges');
-      const json = await res.json();
-      return json?.data?.colleges || [];
-    }
-  });
-
-  const { data: examsData, isLoading: examsLoading, error: examsError } = useQuery({
-    queryKey: ['featured-exams'],
-    queryFn: async () => {
-      const res = await fetch('/api/exams');
-      const json = await res.json();
-      return json?.data || [];
-    }
-  });
-
-  const featuredColleges = useMemo(() => {
-    if (!collegesData) return [];
-    return collegesData.map((college: FeaturedCollegeApiItem) => ({
-      name: college.name,
-      image: college.banner_url,
-      location: typeof college.country_ref === 'object' ? (college.country_ref?.city || college.country_ref?.name || '') : '',
-      ranking: typeof college.ranking === 'object' ? college.ranking?.country_ranking : (college.ranking || undefined),
-      fees: college.fees_structure?.courses?.[0]?.annual_tuition_fee ? 
-        college.fees_structure.courses[0].annual_tuition_fee : college.fees,
-      duration: college.fees_structure?.courses?.[0]?.duration || college.duration,
-      establishment_year: college.establishment_year,
-      slug: college.slug,
-      country: typeof college.country_ref === 'object' ? college.country_ref?.name : undefined,
-      about: college.about_content,
-      college_type: college.college_type || 'University'
-    }));
-  }, [collegesData]);
-
-  const transformedExams = useMemo(() => {
-    if (!examsData) return [];
-    return examsData.map((exam: FeaturedExamApiItem) => ({
-      name: exam.name,
-      short_name: exam.short_name,
-      exam_type: exam.exam_type,
-      conducting_body: exam.conducting_body,
-      exam_mode: exam.exam_mode,
-      frequency: exam.frequency,
-      description: exam.description,
-      slug: exam.slug
-    }));
-  }, [examsData]);
-
-  return { featuredColleges, exams: transformedExams, isLoading: collegesLoading || examsLoading, error: collegesError || examsError };
-};
