@@ -67,7 +67,7 @@ const MbbsAbroad: React.FC<{ initialColleges: College[] }> = ({ initialColleges 
   const StickyActions = () => (
     <div className="fixed bottom-6 right-6 z-60 flex flex-col gap-3">
       <a
-        href="https://wa.me/919958565973"
+        href="https://wa.me/919354023968"
         target="_blank"
         rel="noopener noreferrer"
         aria-label="Chat on WhatsApp"
