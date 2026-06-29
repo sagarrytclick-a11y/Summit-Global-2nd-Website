@@ -19,28 +19,28 @@ const testimonials: Testimonial[] = [
     name: "Aravind Iyer",
     course: "MS IN COMPUTER SCIENCE, STANFORD",
     quote: "Summit Global turned my Ivy League dream into reality. From shortlisting universities to my SOP review, their attention to detail was incredible. I even secured a $20k scholarship!",
-    image: "https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://i.pinimg.com/736x/02/89/47/0289479c0190249942c6a2cd8dda3469.jpg",
     location: "Mumbai, India"
   },
   {
     name: "Sneha Kapoor",
     course: "MBA, INSEAD FRANCE",
     quote: "The visa process for Europe seemed daunting, but the team handled everything. Their mock interviews gave me the confidence I needed. Best decision for my international career.",
-    image: "https://images.pexels.com/photos/1181682/pexels-photo-1181682.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://i.pinimg.com/736x/7c/f1/cd/7cf1cd277fcca1702c45f15fa50c22a3.jpg",
     location: "Delhi, India"
   },
   {
     name: "Rohan Deshmukh",
     course: "MENG, UNIVERSITY OF TORONTO",
     quote: "I was worried about my education loan and financial docs. Summit Global's tie-ups with banks made the process seamless. I'm now studying in Canada without any financial stress.",
-    image: "https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://i.pinimg.com/736x/13/fa/90/13fa90f2eaff0bc18d1d65904b05c475.jpg",
     location: "Pune, India"
   },
   {
     name: "Ananya Reddy",
     course: "MASTERS IN DATA ANALYTICS, NUS",
     quote: "The personalized guidance is what sets them apart. They didn't just give me a list; they helped me choose the right fit for my career goals in Singapore.",
-    image: "https://images.pexels.com/photos/712513/pexels-photo-712513.jpeg?auto=compress&cs=tinysrgb&w=400",
+    image: "https://i.pinimg.com/736x/92/f0/7a/92f07a26ddbf9325016a46e7bed4865a.jpg",
     location: "Hyderabad, India"
   }
 ];
