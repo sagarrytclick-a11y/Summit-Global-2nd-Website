@@ -38,6 +38,12 @@ const nextConfig: NextConfig = {
         hostname: "encrypted-tbn0.gstatic.com",
         pathname: "/**",
       },
+      {
+        protocol: 'https',
+        hostname: 'i.pinimg.com',
+        port: '',
+        pathname: '/**',
+      }
     ],
   },
 };
